@@ -11,10 +11,10 @@
 		C92BF85213631710003B20F6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF85113631710003B20F6 /* Foundation.framework */; };
 		C92BF85413631710003B20F6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF85313631710003B20F6 /* CoreGraphics.framework */; };
 		C92BF85613631710003B20F6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF85513631710003B20F6 /* CoreData.framework */; };
-		C92BF85F13631710003B20F6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF85E13631710003B20F6 /* main.m */; };
-		C92BF86213631710003B20F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF86113631710003B20F6 /* AppDelegate.m */; };
-		C92BF86513631711003B20F6 /* AcaniChat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C92BF86313631711003B20F6 /* AcaniChat.xcdatamodeld */; };
-		C92BF86B13631711003B20F6 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF86A13631711003B20F6 /* RootViewController.m */; };
+		C92BF8C31363285B003B20F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF8B81363285A003B20F6 /* AppDelegate.m */; };
+		C92BF8C41363285B003B20F6 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF8BB1363285A003B20F6 /* RootViewController.m */; };
+		C92BF8C51363285B003B20F6 /* AcaniChat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C92BF8BD1363285A003B20F6 /* AcaniChat.xcdatamodeld */; };
+		C92BF8C71363285B003B20F6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF8C21363285A003B20F6 /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,14 +23,14 @@
 		C92BF85113631710003B20F6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C92BF85313631710003B20F6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		C92BF85513631710003B20F6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		C92BF85913631710003B20F6 /* AcaniChat-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AcaniChat-Info.plist"; sourceTree = "<group>"; };
-		C92BF85D13631710003B20F6 /* AcaniChat-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AcaniChat-Prefix.pch"; sourceTree = "<group>"; };
-		C92BF85E13631710003B20F6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C92BF86013631710003B20F6 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
-		C92BF86113631710003B20F6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		C92BF86413631711003B20F6 /* AcaniChat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AcaniChat.xcdatamodel; sourceTree = "<group>"; };
-		C92BF86913631711003B20F6 /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
-		C92BF86A13631711003B20F6 /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		C92BF8B71363285A003B20F6 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		C92BF8B81363285A003B20F6 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		C92BF8BA1363285A003B20F6 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		C92BF8BB1363285A003B20F6 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		C92BF8BE1363285A003B20F6 /* AcaniChat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AcaniChat.xcdatamodel; sourceTree = "<group>"; };
+		C92BF8C01363285A003B20F6 /* AcaniChat-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AcaniChat-Info.plist"; sourceTree = "<group>"; };
+		C92BF8C11363285A003B20F6 /* AcaniChat-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AcaniChat-Prefix.pch"; sourceTree = "<group>"; };
+		C92BF8C21363285A003B20F6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +51,7 @@
 		C92BF84013631710003B20F6 = {
 			isa = PBXGroup;
 			children = (
-				C92BF85713631710003B20F6 /* AcaniChat */,
+				C92BF8B61363285A003B20F6 /* Application */,
 				C92BF84E13631710003B20F6 /* Frameworks */,
 				C92BF84C13631710003B20F6 /* Products */,
 			);
@@ -76,27 +76,43 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		C92BF85713631710003B20F6 /* AcaniChat */ = {
+		C92BF8B61363285A003B20F6 /* Application */ = {
 			isa = PBXGroup;
 			children = (
-				C92BF86013631710003B20F6 /* AppDelegate.h */,
-				C92BF86113631710003B20F6 /* AppDelegate.m */,
-				C92BF86913631711003B20F6 /* RootViewController.h */,
-				C92BF86A13631711003B20F6 /* RootViewController.m */,
-				C92BF86313631711003B20F6 /* AcaniChat.xcdatamodeld */,
-				C92BF85813631710003B20F6 /* Supporting Files */,
+				C92BF8B71363285A003B20F6 /* AppDelegate.h */,
+				C92BF8B81363285A003B20F6 /* AppDelegate.m */,
+				C92BF8B91363285A003B20F6 /* Controllers */,
+				C92BF8BC1363285A003B20F6 /* Models */,
+				C92BF8BF1363285A003B20F6 /* Supporting Files */,
 			);
-			path = AcaniChat;
+			path = Application;
 			sourceTree = "<group>";
 		};
-		C92BF85813631710003B20F6 /* Supporting Files */ = {
+		C92BF8B91363285A003B20F6 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				C92BF85913631710003B20F6 /* AcaniChat-Info.plist */,
-				C92BF85D13631710003B20F6 /* AcaniChat-Prefix.pch */,
-				C92BF85E13631710003B20F6 /* main.m */,
+				C92BF8BA1363285A003B20F6 /* RootViewController.h */,
+				C92BF8BB1363285A003B20F6 /* RootViewController.m */,
 			);
-			name = "Supporting Files";
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		C92BF8BC1363285A003B20F6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C92BF8BD1363285A003B20F6 /* AcaniChat.xcdatamodeld */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C92BF8BF1363285A003B20F6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C92BF8C01363285A003B20F6 /* AcaniChat-Info.plist */,
+				C92BF8C11363285A003B20F6 /* AcaniChat-Prefix.pch */,
+				C92BF8C21363285A003B20F6 /* main.m */,
+			);
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,10 +172,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C92BF85F13631710003B20F6 /* main.m in Sources */,
-				C92BF86213631710003B20F6 /* AppDelegate.m in Sources */,
-				C92BF86513631711003B20F6 /* AcaniChat.xcdatamodeld in Sources */,
-				C92BF86B13631711003B20F6 /* RootViewController.m in Sources */,
+				C92BF8C31363285B003B20F6 /* AppDelegate.m in Sources */,
+				C92BF8C41363285B003B20F6 /* RootViewController.m in Sources */,
+				C92BF8C51363285B003B20F6 /* AcaniChat.xcdatamodeld in Sources */,
+				C92BF8C71363285B003B20F6 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,8 +221,8 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AcaniChat/AcaniChat-Prefix.pch";
-				INFOPLIST_FILE = "AcaniChat/AcaniChat-Info.plist";
+				GCC_PREFIX_HEADER = "Application/Supporting Files/AcaniChat-Prefix.pch";
+				INFOPLIST_FILE = "Application/Supporting Files/AcaniChat-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -218,8 +234,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AcaniChat/AcaniChat-Prefix.pch";
-				INFOPLIST_FILE = "AcaniChat/AcaniChat-Info.plist";
+				GCC_PREFIX_HEADER = "Application/Supporting Files/AcaniChat-Prefix.pch";
+				INFOPLIST_FILE = "Application/Supporting Files/AcaniChat-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
@@ -250,12 +266,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		C92BF86313631711003B20F6 /* AcaniChat.xcdatamodeld */ = {
+		C92BF8BD1363285A003B20F6 /* AcaniChat.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				C92BF86413631711003B20F6 /* AcaniChat.xcdatamodel */,
+				C92BF8BE1363285A003B20F6 /* AcaniChat.xcdatamodel */,
 			);
-			currentVersion = C92BF86413631711003B20F6 /* AcaniChat.xcdatamodel */;
+			currentVersion = C92BF8BE1363285A003B20F6 /* AcaniChat.xcdatamodel */;
 			path = AcaniChat.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
