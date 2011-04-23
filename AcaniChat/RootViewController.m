@@ -1,11 +1,3 @@
-//
-//  RootViewController.m
-//  AcaniChat
-//
-//  Created by Matt Di Pasquale on 4/23/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
-//
-
 #import "RootViewController.h"
 
 @interface RootViewController ()

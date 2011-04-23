@@ -1,17 +1,6 @@
-//
-//  main.m
-//  AcaniChat
-//
-//  Created by Matt Di Pasquale on 4/23/11.
-//  Copyright 2011 __MyCompanyName__. All rights reserved.
-//
-
-#import <UIKit/UIKit.h>
-
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    int retVal = UIApplicationMain(argc, argv, nil, nil);
+    int retVal = UIApplicationMain(argc, argv, nil, @"AcaniChatAppDelegate");
     [pool release];
     return retVal;
 }

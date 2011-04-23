@@ -11,13 +11,10 @@
 		C92BF85213631710003B20F6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF85113631710003B20F6 /* Foundation.framework */; };
 		C92BF85413631710003B20F6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF85313631710003B20F6 /* CoreGraphics.framework */; };
 		C92BF85613631710003B20F6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF85513631710003B20F6 /* CoreData.framework */; };
-		C92BF85C13631710003B20F6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C92BF85A13631710003B20F6 /* InfoPlist.strings */; };
 		C92BF85F13631710003B20F6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF85E13631710003B20F6 /* main.m */; };
 		C92BF86213631710003B20F6 /* AcaniChatAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF86113631710003B20F6 /* AcaniChatAppDelegate.m */; };
 		C92BF86513631711003B20F6 /* AcaniChat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C92BF86313631711003B20F6 /* AcaniChat.xcdatamodeld */; };
-		C92BF86813631711003B20F6 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = C92BF86613631711003B20F6 /* MainWindow.xib */; };
 		C92BF86B13631711003B20F6 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF86A13631711003B20F6 /* RootViewController.m */; };
-		C92BF86E13631711003B20F6 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C92BF86C13631711003B20F6 /* RootViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,16 +24,13 @@
 		C92BF85313631710003B20F6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		C92BF85513631710003B20F6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C92BF85913631710003B20F6 /* AcaniChat-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AcaniChat-Info.plist"; sourceTree = "<group>"; };
-		C92BF85B13631710003B20F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C92BF85D13631710003B20F6 /* AcaniChat-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AcaniChat-Prefix.pch"; sourceTree = "<group>"; };
 		C92BF85E13631710003B20F6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C92BF86013631710003B20F6 /* AcaniChatAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AcaniChatAppDelegate.h; sourceTree = "<group>"; };
 		C92BF86113631710003B20F6 /* AcaniChatAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AcaniChatAppDelegate.m; sourceTree = "<group>"; };
 		C92BF86413631711003B20F6 /* AcaniChat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AcaniChat.xcdatamodel; sourceTree = "<group>"; };
-		C92BF86713631711003B20F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		C92BF86913631711003B20F6 /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		C92BF86A13631711003B20F6 /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
-		C92BF86D13631711003B20F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/RootViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,10 +81,8 @@
 			children = (
 				C92BF86013631710003B20F6 /* AcaniChatAppDelegate.h */,
 				C92BF86113631710003B20F6 /* AcaniChatAppDelegate.m */,
-				C92BF86613631711003B20F6 /* MainWindow.xib */,
 				C92BF86913631711003B20F6 /* RootViewController.h */,
 				C92BF86A13631711003B20F6 /* RootViewController.m */,
-				C92BF86C13631711003B20F6 /* RootViewController.xib */,
 				C92BF86313631711003B20F6 /* AcaniChat.xcdatamodeld */,
 				C92BF85813631710003B20F6 /* Supporting Files */,
 			);
@@ -101,7 +93,6 @@
 			isa = PBXGroup;
 			children = (
 				C92BF85913631710003B20F6 /* AcaniChat-Info.plist */,
-				C92BF85A13631710003B20F6 /* InfoPlist.strings */,
 				C92BF85D13631710003B20F6 /* AcaniChat-Prefix.pch */,
 				C92BF85E13631710003B20F6 /* main.m */,
 			);
@@ -155,9 +146,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C92BF85C13631710003B20F6 /* InfoPlist.strings in Resources */,
-				C92BF86813631711003B20F6 /* MainWindow.xib in Resources */,
-				C92BF86E13631711003B20F6 /* RootViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,33 +164,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		C92BF85A13631710003B20F6 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C92BF85B13631710003B20F6 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		C92BF86613631711003B20F6 /* MainWindow.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C92BF86713631711003B20F6 /* en */,
-			);
-			name = MainWindow.xib;
-			sourceTree = "<group>";
-		};
-		C92BF86C13631711003B20F6 /* RootViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C92BF86D13631711003B20F6 /* en */,
-			);
-			name = RootViewController.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		C92BF86F13631711003B20F6 /* Debug */ = {
