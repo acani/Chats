@@ -1,5 +1,5 @@
 #import "AppDelegate.h"
-#import "RootViewController.h"
+#import "ChatViewController.h"
 
 @implementation AppDelegate
 
@@ -26,15 +26,17 @@
 
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
-    // Initialize the window and the usersView & navigation controllers.
-    window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    RootViewController *rootViewController = [[RootViewController alloc] init];
-    rootViewController.managedObjectContext = self.managedObjectContext;
+    ChatViewController *viewController = [[ChatViewController alloc] init];
+    viewController.managedObjectContext = self.managedObjectContext;
+
 	navigationController = [[UINavigationController alloc]
-							initWithRootViewController:rootViewController];
-    [rootViewController release];
+							initWithRootViewController:viewController];
+    [viewController release];
+
+    window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = self.navigationController;
     [window makeKeyAndVisible];
+
     return YES;
 }
 
@@ -43,17 +45,17 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 #pragma mark AppDelegate
 
+- (NSURL *)applicationDocumentsDirectory {
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory
+                                                   inDomains:NSUserDomainMask] lastObject];
+}
+
 - (void)saveContext {
     NSError *error;
     if (self.managedObjectContext != nil && [managedObjectContext hasChanges] &&
         ![managedObjectContext save:&error]) {
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
     }
-}
-
-- (NSURL *)applicationDocumentsDirectory {
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory
-                                                   inDomains:NSUserDomainMask] lastObject];
 }
 
 #pragma mark Core Data stack
