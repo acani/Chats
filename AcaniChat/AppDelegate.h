@@ -1,4 +1,4 @@
-@interface AcaniChatAppDelegate : NSObject <UIApplicationDelegate> {
+@interface AppDelegate : NSObject <UIApplicationDelegate> {
 
 }
 

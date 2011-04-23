@@ -1,7 +1,7 @@
-#import "AcaniChatAppDelegate.h"
+#import "AppDelegate.h"
 #import "RootViewController.h"
 
-@implementation AcaniChatAppDelegate
+@implementation AppDelegate
 
 @synthesize window;
 @synthesize navigationController;
