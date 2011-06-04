@@ -14,7 +14,6 @@
 		C92BF8C31363285B003B20F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF8B81363285A003B20F6 /* AppDelegate.m */; };
 		C92BF8C41363285B003B20F6 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF8BB1363285A003B20F6 /* ChatViewController.m */; };
 		C92BF8C51363285B003B20F6 /* AcaniChat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C92BF8BD1363285A003B20F6 /* AcaniChat.xcdatamodeld */; };
-		C92BF8C71363285B003B20F6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF8C21363285A003B20F6 /* main.m */; };
 		C92D07A01363417A00954810 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92D079F1363417A00954810 /* AudioToolbox.framework */; };
 		C92D07A7136344BE00954810 /* basicsound.wav in Resources */ = {isa = PBXBuildFile; fileRef = C92D07A2136344BE00954810 /* basicsound.wav */; };
 		C92D07A8136344BE00954810 /* ChatBar.png in Resources */ = {isa = PBXBuildFile; fileRef = C92D07A3136344BE00954810 /* ChatBar.png */; };
@@ -23,6 +22,7 @@
 		C92D07AB136344BE00954810 /* SendButton.png in Resources */ = {isa = PBXBuildFile; fileRef = C92D07A6136344BE00954810 /* SendButton.png */; };
 		C92D07B713634A0400954810 /* NSString+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = C92D07B613634A0400954810 /* NSString+Additions.m */; };
 		C92D07BB13634B2800954810 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = C92D07BA13634B2800954810 /* Message.m */; };
+		C99F265E139AB68900192BE5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C99F265C139AB68900192BE5 /* main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,9 +36,6 @@
 		C92BF8BA1363285A003B20F6 /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
 		C92BF8BB1363285A003B20F6 /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		C92BF8BE1363285A003B20F6 /* AcaniChat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AcaniChat.xcdatamodel; sourceTree = "<group>"; };
-		C92BF8C01363285A003B20F6 /* AcaniChat-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AcaniChat-Info.plist"; sourceTree = "<group>"; };
-		C92BF8C11363285A003B20F6 /* AcaniChat-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AcaniChat-Prefix.pch"; sourceTree = "<group>"; };
-		C92BF8C21363285A003B20F6 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		C92D079F1363417A00954810 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C92D07A2136344BE00954810 /* basicsound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = basicsound.wav; sourceTree = "<group>"; };
 		C92D07A3136344BE00954810 /* ChatBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ChatBar.png; sourceTree = "<group>"; };
@@ -53,6 +50,9 @@
 		C92D07C613634FC900954810 /* MIT-LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = "MIT-LICENSE"; sourceTree = "<group>"; };
 		C92D07C713634FC900954810 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		C92D07C813634FC900954810 /* TODO.taskpaper */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO.taskpaper; sourceTree = "<group>"; };
+		C99F265A139AB68900192BE5 /* AcaniChat-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AcaniChat-Info.plist"; sourceTree = "<group>"; };
+		C99F265B139AB68900192BE5 /* AcaniChat-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AcaniChat-Prefix.pch"; sourceTree = "<group>"; };
+		C99F265C139AB68900192BE5 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,8 +77,9 @@
 				C92BF8B61363285A003B20F6 /* Application */,
 				C92D07B413634A0400954810 /* Categories */,
 				C92BF84E13631710003B20F6 /* Frameworks */,
-				C92D07A1136344BE00954810 /* Resources */,
 				C92BF84C13631710003B20F6 /* Products */,
+				C92D07A1136344BE00954810 /* Resources */,
+				C99F2659139AB68900192BE5 /* Supporting Files */,
 				C92D07C613634FC900954810 /* MIT-LICENSE */,
 				C92D07C713634FC900954810 /* README.md */,
 				C92D07C813634FC900954810 /* TODO.taskpaper */,
@@ -112,7 +113,6 @@
 				C92BF8B81363285A003B20F6 /* AppDelegate.m */,
 				C92BF8B91363285A003B20F6 /* Controllers */,
 				C92BF8BC1363285A003B20F6 /* Models */,
-				C92BF8BF1363285A003B20F6 /* Supporting Files */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -136,16 +136,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		C92BF8BF1363285A003B20F6 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				C92BF8C01363285A003B20F6 /* AcaniChat-Info.plist */,
-				C92BF8C11363285A003B20F6 /* AcaniChat-Prefix.pch */,
-				C92BF8C21363285A003B20F6 /* main.m */,
-			);
-			path = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		C92D07A1136344BE00954810 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -166,6 +156,16 @@
 				C92D07B613634A0400954810 /* NSString+Additions.m */,
 			);
 			path = Categories;
+			sourceTree = "<group>";
+		};
+		C99F2659139AB68900192BE5 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C99F265A139AB68900192BE5 /* AcaniChat-Info.plist */,
+				C99F265B139AB68900192BE5 /* AcaniChat-Prefix.pch */,
+				C99F265C139AB68900192BE5 /* main.m */,
+			);
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -233,9 +233,9 @@
 				C92BF8C31363285B003B20F6 /* AppDelegate.m in Sources */,
 				C92BF8C41363285B003B20F6 /* ChatViewController.m in Sources */,
 				C92BF8C51363285B003B20F6 /* AcaniChat.xcdatamodeld in Sources */,
-				C92BF8C71363285B003B20F6 /* main.m in Sources */,
 				C92D07B713634A0400954810 /* NSString+Additions.m in Sources */,
 				C92D07BB13634B2800954810 /* Message.m in Sources */,
+				C99F265E139AB68900192BE5 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,8 +281,8 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Application/Supporting Files/AcaniChat-Prefix.pch";
-				INFOPLIST_FILE = "Application/Supporting Files/AcaniChat-Info.plist";
+				GCC_PREFIX_HEADER = "Supporting Files/AcaniChat-Prefix.pch";
+				INFOPLIST_FILE = "Supporting Files/AcaniChat-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -294,8 +294,8 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Application/Supporting Files/AcaniChat-Prefix.pch";
-				INFOPLIST_FILE = "Application/Supporting Files/AcaniChat-Info.plist";
+				GCC_PREFIX_HEADER = "Supporting Files/AcaniChat-Prefix.pch";
+				INFOPLIST_FILE = "Supporting Files/AcaniChat-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
