@@ -8,8 +8,8 @@
 // Same => [UIColor colorWithRed:219.0/255.0 green:226.0/255.0 blue:237.0/255.0 alpha:1.0];
 #define CHAT_BACKGROUND_COLOR [UIColor colorWithRed:0.859f green:0.886f blue:0.929f alpha:1.0f]
 
-#define VIEW_WIDTH    self.view.frame.size.width
-#define VIEW_HEIGHT    self.view.frame.size.height
+#define VIEW_WIDTH    self.contentView.frame.size.width
+#define VIEW_HEIGHT    self.contentView.frame.size.height
 
 #define RESET_CHAT_BAR_HEIGHT    SET_CHAT_BAR_HEIGHT(kChatBarHeight1)
 #define EXPAND_CHAT_BAR_HEIGHT    SET_CHAT_BAR_HEIGHT(kChatBarHeight4)
@@ -39,6 +39,8 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 
 @synthesize receiveMessageSound;
 
+@synthesize contentView;
+
 @synthesize chatContent;
 
 @synthesize chatBar;
@@ -52,10 +54,18 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 @synthesize fetchedResultsController;
 @synthesize managedObjectContext;
 
+@synthesize clearballoon;
+@synthesize greenballoon;
+
+@synthesize keyboardIsShowing;
+
+
 #pragma mark NSObject
 
 - (void)dealloc {
     if (receiveMessageSound) AudioServicesDisposeSystemSoundID(receiveMessageSound);
+    
+    [contentView release];
     
     [chatContent release];
     
@@ -77,6 +87,8 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 - (void)viewDidUnload {
     [super viewDidUnload];
     
+    self.contentView = nil;
+    
     self.chatContent = nil;
     
     self.sendButton = nil;
@@ -87,6 +99,10 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     self.previousSentDate = nil;
     
     self.fetchedResultsController = nil;
+    
+    self.clearballoon = nil;
+    self.greenballoon = nil;
+    
     // Leave managedObjectContext since it's not recreated in viewDidLoad
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -96,8 +112,19 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     // Create contentView.
     CGRect navFrame = [[UIScreen mainScreen] applicationFrame];
     navFrame.size.height -= self.navigationController.navigationBar.frame.size.height;
-    UIView *contentView = [[UIView alloc] initWithFrame:navFrame];
+
+    self.view = [[UIView alloc] initWithFrame:navFrame];
+    self.view.backgroundColor = CHAT_BACKGROUND_COLOR; // shown during rotation    
+    
+    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 
+                                                                0.0f, 
+                                                                navFrame.size.width,
+                                                                navFrame.size.height)];
+    
     contentView.backgroundColor = CHAT_BACKGROUND_COLOR; // shown during rotation
+    contentView.autoresizingMask = UIViewAutoresizingNone;
+    
+    [self.view addSubview:self.contentView];
     
     // Create chatContent.
     chatContent = [[UITableView alloc] initWithFrame:
@@ -164,9 +191,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     
     [contentView addSubview:chatBar];
     [contentView sendSubviewToBack:chatBar];
-    
-    self.view = contentView;
-    [contentView release];
 }
 
 - (void)viewDidLoad {
@@ -179,6 +203,11 @@ static CGFloat const kChatBarHeight4    = 94.0f;
                                                  name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification object:nil];
+    
+    // optimization FTW
+    self.clearballoon = [[UIImage imageNamed:@"ChatBubbleGray"] stretchableImageWithLeftCapWidth:23.0f topCapHeight:15.0f];
+    self.greenballoon = [[UIImage imageNamed:@"ChatBubbleGreen"] stretchableImageWithLeftCapWidth:15.0f topCapHeight:13.0f];
+
     
 //    // Test with lots of messages.
 //    NSDate *before = [NSDate date];
@@ -273,11 +302,13 @@ static CGFloat const kChatBarHeight4    = 94.0f;
                     textView.scrollEnabled = NO;
                 }
                 textView.contentOffset = CGPointMake(0.0f, 6.0f); // fix quirk
-            } else if (previousContentHeight <= kContentHeightMax) { // grow
+                [self scrollToBottomAnimated:YES];
+           } else if (previousContentHeight <= kContentHeightMax) { // grow
                 textView.scrollEnabled = YES;
                 textView.contentOffset = CGPointMake(0.0f, contentHeight-68.0f); // shift to bottom
                 if (previousContentHeight < kContentHeightMax) {
                     EXPAND_CHAT_BAR_HEIGHT;
+                    [self scrollToBottomAnimated:YES];
                 }
             }
         }
@@ -329,55 +360,55 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 }
 
 // Prepare to resize for keyboard.
-- (void)keyboardWillShow:(NSNotification *)notification {
-//    NSDictionary *userInfo = [notification userInfo];
-//    CGRect bounds;
-//    [(NSValue *)[userInfo objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&bounds];
-
-//    // Resize text view
-//    CGRect aFrame = chatInput.frame;
-//    aFrame.size.height -= bounds.size.height;
-//    chatInput.frame = aFrame;
+- (void)keyboardWillShow:(NSNotification *)notification 
+{
+ 	NSDictionary *userInfo = [notification userInfo];
     
-    [self slideFrameUp];
-    // These methods can do better.
-    // They should check for version of iPhone OS.
-    // And use appropriate methods to determine:
-    //   animation movement, speed, duration, etc.
+    // Get animation info from userInfo
+    NSTimeInterval animationDuration;
+    UIViewAnimationCurve animationCurve;
+    
+    [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
+    [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
+    
+	keyboardIsShowing = YES;
+    
+    [self slideFrame:YES 
+               curve:animationCurve 
+            duration:animationDuration];
 }
 
 // Expand textview on keyboard dismissal
-- (void)keyboardWillHide:(NSNotification *)notification {
-//    NSDictionary *userInfo = [notification userInfo];
-//    CGRect bounds;
-//    [(NSValue *)[userInfo objectForKey:UIKeyboardBoundsUserInfoKey] getValue:&bounds];
+- (void)keyboardWillHide:(NSNotification *)notification 
+{
+ 	NSDictionary *userInfo = [notification userInfo];
     
-    [self slideFrameDown];
-}
-
-- (void)slideFrameUp {
-    [self slideFrame:YES];
-}
-
-- (void)slideFrameDown {
-    [self slideFrame:NO];
+    // Get animation info from userInfo
+    NSTimeInterval animationDuration;
+    UIViewAnimationCurve animationCurve;
+    
+    [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
+    [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
+    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
+    
+	keyboardIsShowing = NO;
+    
+    [self slideFrame:NO 
+               curve:animationCurve 
+            duration:animationDuration];
 }
 
 // Shorten height of UIView when keyboard pops up
 // TODO: Test on different SDK versions; make more flexible if desired.
-- (void)slideFrame:(BOOL)up {
-    CGFloat movementDistance;
-    
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    movementDistance = orientation == UIInterfaceOrientationPortrait ||
-    orientation == UIInterfaceOrientationPortraitUpsideDown ? 216.0f : 162.0f;
-    
+- (void)slideFrame:(BOOL)up curve:(UIViewAnimationCurve)curve duration:(NSTimeInterval)duration
+{
     [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    [UIView setAnimationDuration:0.3];
-    CGRect viewFrame = self.view.frame;
-    viewFrame.size.height += up ? -movementDistance : movementDistance;
-    self.view.frame = viewFrame;
+    [UIView setAnimationCurve:curve];
+    [UIView setAnimationDuration:duration];
+    CGRect viewFrame = self.contentView.frame;
+    viewFrame.size.height -= keyboardEndFrame.size.height;
+    self.contentView.frame = viewFrame;
     [UIView commitAnimations];
     
     [self scrollToBottomAnimated:YES];
@@ -442,6 +473,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
         RESET_CHAT_BAR_HEIGHT;
         chatInput.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 3.0f, 0.0f);
         chatInput.contentOffset = CGPointMake(0.0f, 6.0f); // fix quirk
+        [self scrollToBottomAnimated:YES];       
     }
 }
 
@@ -638,8 +670,7 @@ static NSString *kMessageCell = @"MessageCell";
         msgBackground.frame = CGRectMake(chatContent.frame.size.width-size.width-34.0f-editWidth,
                                          kMessageFontSize-13.0f, size.width+34.0f,
                                          size.height+12.0f);
-        bubbleImage = [[UIImage imageNamed:@"ChatBubbleGreen.png"]
-                       stretchableImageWithLeftCapWidth:15.0f topCapHeight:13.0f];
+        bubbleImage = self.greenballoon;
         msgText.frame = CGRectMake(chatContent.frame.size.width-size.width-22.0f-editWidth,
                                    kMessageFontSize-9.0f, size.width+5.0f, size.height);
         msgBackground.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
@@ -649,8 +680,7 @@ static NSString *kMessageCell = @"MessageCell";
     } else { // left bubble
         msgBackground.frame = CGRectMake(0.0f, kMessageFontSize-13.0f,
                                          size.width+34.0f, size.height+12.0f);
-        bubbleImage = [[UIImage imageNamed:@"ChatBubbleGray.png"]
-                       stretchableImageWithLeftCapWidth:23.0f topCapHeight:15.0f];
+        bubbleImage = self.clearballoon;
         msgText.frame = CGRectMake(22.0f, kMessageFontSize-9.0f, size.width+5.0f, size.height);
         msgBackground.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         msgText.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
@@ -796,6 +826,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             [chatContent insertRowsAtIndexPaths:indexPaths
                                withRowAnimation:UITableViewRowAnimationNone];
             [indexPaths release];
+            [self scrollToBottomAnimated:YES];
             break;
         }
         case NSFetchedResultsChangeDelete: {
