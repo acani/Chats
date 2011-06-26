@@ -28,6 +28,9 @@
 
 #define ClearConversationButtonIndex 0
 
+// 15 mins between messages before we show the date
+#define SECONDS_BETWEEN_MESSAGES        (60*15)
+
 static CGFloat const kSentDateFontSize = 13.0f;
 static CGFloat const kMessageFontSize   = 16.0f;   // 15.0f, 14.0f
 static CGFloat const kMessageTextWidth  = 180.0f;
@@ -49,7 +52,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 @synthesize sendButton;
 
 @synthesize cellMap;
-@synthesize previousSentDate;
 
 @synthesize fetchedResultsController;
 @synthesize managedObjectContext;
@@ -74,7 +76,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     [chatBar release];
     
     [cellMap release];
-    [previousSentDate release];
     
     [fetchedResultsController release];
     [managedObjectContext release];
@@ -96,7 +97,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     self.chatBar = nil;
     
     self.cellMap = nil;
-    self.previousSentDate = nil;
     
     self.fetchedResultsController = nil;
     
@@ -232,7 +232,8 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     // Construct cellMap from fetchedObjects.
     cellMap = [[NSMutableArray alloc]
                initWithCapacity:[[fetchedResultsController fetchedObjects] count]*2];
-    previousSentDate = [[NSDate alloc] initWithTimeIntervalSince1970:0.0];
+    
+   
     for (Message *message in [fetchedResultsController fetchedObjects]) {
         [self addMessage:message];
     }
@@ -478,17 +479,41 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 }
 
 // Returns number of objects added to cellMap (1 or 2).
-- (NSUInteger)addMessage:(Message *)message {
+- (NSUInteger)addMessage:(Message *)message 
+{
     // Show sentDates at most every 15 minutes.
     NSDate *currentSentDate = [message sentDate];
     NSUInteger numberOfObjectsAdded = 1;
-    if ([currentSentDate timeIntervalSinceDate:previousSentDate] > 15) { // change to mins: 15*60
+    NSUInteger prevIndex = [cellMap count] - 1;
+    
+    // Show sentDates at most every 15 minutes.
+
+    if([cellMap count])
+    {
+        BOOL prevIsMessage = [[cellMap objectAtIndex:prevIndex] isKindOfClass:[Message class]];
+        if(prevIsMessage)
+        {
+            Message * temp = [cellMap objectAtIndex:prevIndex];
+            NSDate * previousSentDate = temp.sentDate;
+            // if there has been more than a 15 min gap between this and the previous message!
+            if([currentSentDate timeIntervalSinceDate:previousSentDate] > SECONDS_BETWEEN_MESSAGES) 
+            { 
+                [cellMap addObject:currentSentDate];
+                numberOfObjectsAdded = 2;
+            }
+        }
+    }
+    else
+    {
+        // there are NO messages, definitely add a timestamp!
         [cellMap addObject:currentSentDate];
-        self.previousSentDate = currentSentDate;
         numberOfObjectsAdded = 2;
     }
+    
     [cellMap addObject:message];
+    
     return numberOfObjectsAdded;
+
 }
 
 // Returns number of objects removed from cellMap (1 or 2).
@@ -548,8 +573,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
             }
             
             [cellMap removeAllObjects];
-            [previousSentDate release];                           // reset previousSentDate
-            previousSentDate = [[NSDate alloc] initWithTimeIntervalSince1970:0.0];
             [chatContent reloadData];
             
             [self setEditing:NO animated:NO];

@@ -21,7 +21,6 @@ UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDel
 @property (nonatomic, retain) UIButton *sendButton;
 
 @property (nonatomic, copy) NSMutableArray *cellMap;
-@property (nonatomic, retain) NSDate *previousSentDate;
 
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
