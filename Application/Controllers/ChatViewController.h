@@ -4,11 +4,15 @@
 
 @interface ChatViewController : UIViewController <NSFetchedResultsControllerDelegate,
 UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDelegate> {
+    
+    CGRect keyboardEndFrame;
+
 
 }
 
 @property (nonatomic, assign) SystemSoundID receiveMessageSound;
 
+@property (nonatomic, retain) UIView        *contentView;
 @property (nonatomic, retain) UITableView *chatContent;
 
 @property (nonatomic, retain) UIImageView *chatBar;
@@ -17,10 +21,14 @@ UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDel
 @property (nonatomic, retain) UIButton *sendButton;
 
 @property (nonatomic, copy) NSMutableArray *cellMap;
-@property (nonatomic, retain) NSDate *previousSentDate;
 
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
+
+@property (nonatomic, retain) UIImage       *clearballoon;
+@property (nonatomic, retain) UIImage       *greenballoon;
+
+@property (nonatomic, assign) BOOL          keyboardIsShowing;
 
 - (void)enableSendButton;
 - (void)disableSendButton;
@@ -28,9 +36,7 @@ UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDel
 
 - (void)keyboardWillShow:(NSNotification *)notification;
 - (void)keyboardWillHide:(NSNotification *)notification;
-- (void)slideFrameUp;
-- (void)slideFrameDown;
-- (void)slideFrame:(BOOL)up;
+- (void)slideFrame:(BOOL)up curve:(UIViewAnimationCurve)curve duration:(NSTimeInterval)duration;
 - (void)scrollToBottomAnimated:(BOOL)animated;
 
 - (void)sendMessage;
