@@ -28,7 +28,7 @@ AcaniChat:
 			- Portrait => landscape: vertical position should stay at bottom @issue
 			- Fix horizontal positioning of messages @issue
 			- Landscape => portrait while composing: fill entire window (don't show black background) @issue
-				- Try changing chatContent.contentInset (like Sam does) instead of height for slideFrameUp
+				- Try changing chatContent.contentInset (like Sam does) instead of height for resizeViewWithOptions:
 
 	Core Data:
 		- Add Conversation model (Conversation is like a channel in Redis Pub/Sub)
