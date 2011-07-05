@@ -58,9 +58,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 @synthesize clearballoon;
 @synthesize greenballoon;
 
-@synthesize keyboardIsShowing;
-
-
 #pragma mark NSObject
 
 - (void)dealloc {
@@ -351,9 +348,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
     [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
     [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
-    
-	keyboardIsShowing = YES;
-    
+
     [self slideFrame:YES 
                curve:animationCurve 
             duration:animationDuration];
@@ -371,9 +366,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
     [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
     [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
-    
-	keyboardIsShowing = NO;
-    
+
     [self slideFrame:NO
                curve:animationCurve 
             duration:animationDuration];

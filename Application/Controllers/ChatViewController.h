@@ -28,8 +28,6 @@ UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDel
 @property (nonatomic, retain) UIImage       *clearballoon;
 @property (nonatomic, retain) UIImage       *greenballoon;
 
-@property (nonatomic, assign) BOOL          keyboardIsShowing;
-
 - (void)enableSendButton;
 - (void)disableSendButton;
 - (void)resetSendButton;
