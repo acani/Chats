@@ -43,7 +43,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 @synthesize receiveMessageSound;
 
 @synthesize contentView;
-
 @synthesize chatContent;
 
 @synthesize chatBar;
@@ -68,7 +67,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     if (receiveMessageSound) AudioServicesDisposeSystemSoundID(receiveMessageSound);
     
     [contentView release];
-    
     [chatContent release];
     
     [sendButton release];
@@ -89,7 +87,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     [super viewDidUnload];
     
     self.contentView = nil;
-    
     self.chatContent = nil;
     
     self.sendButton = nil;
@@ -618,7 +615,7 @@ static NSString *kMessageCell = @"MessageCell";
             // Create message sentDate lable
             msgSentDate = [[UILabel alloc] initWithFrame:
                             CGRectMake(-2.0f, 0.0f,
-                                       chatContent.frame.size.width, kSentDateFontSize+5.0f)];
+                                       tableView.frame.size.width, kSentDateFontSize+5.0f)];
             msgSentDate.autoresizingMask = UIViewAutoresizingFlexibleWidth;
             msgSentDate.clearsContextBeforeDrawing = NO;
             msgSentDate.tag = SENT_DATE_TAG;
@@ -689,12 +686,12 @@ static NSString *kMessageCell = @"MessageCell";
                                            lineBreakMode:UILineBreakModeWordWrap];
     UIImage *bubbleImage;
     if (!([indexPath row] % 3)) { // right bubble
-        CGFloat editWidth = chatContent.editing ? 32.0f : 0.0f;
-        msgBackground.frame = CGRectMake(chatContent.frame.size.width-size.width-34.0f-editWidth,
+        CGFloat editWidth = tableView.editing ? 32.0f : 0.0f;
+        msgBackground.frame = CGRectMake(tableView.frame.size.width-size.width-34.0f-editWidth,
                                          kMessageFontSize-13.0f, size.width+34.0f,
                                          size.height+12.0f);
         bubbleImage = self.greenballoon;
-        msgText.frame = CGRectMake(chatContent.frame.size.width-size.width-22.0f-editWidth,
+        msgText.frame = CGRectMake(tableView.frame.size.width-size.width-22.0f-editWidth,
                                    kMessageFontSize-9.0f, size.width+5.0f, size.height);
         msgBackground.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         msgText.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
@@ -727,7 +724,7 @@ static NSString *kMessageCell = @"MessageCell";
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return [[cellMap objectAtIndex:[indexPath row]] isKindOfClass:[Message class]];
-//    return [[chatContent cellForRowAtIndexPath:indexPath] reuseIdentifier] == kMessageCell;
+//    return [[tableView cellForRowAtIndexPath:indexPath] reuseIdentifier] == kMessageCell;
 }
 
 // Override to support editing the table view.
