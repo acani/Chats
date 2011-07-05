@@ -223,6 +223,11 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     [self scrollToBottomAnimated:NO];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [chatInput resignFirstResponder];
+    [self viewDidDisappear:animated];
+}
+
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations.
@@ -335,51 +340,44 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     sendButton.titleLabel.alpha = 0.5f; // Sam S. says 0.4f
 }
 
-// Prepare to resize for keyboard.
-- (void)keyboardWillShow:(NSNotification *)notification 
-{
- 	NSDictionary *userInfo = [notification userInfo];
-    
-    // Get animation info from userInfo
-    NSTimeInterval animationDuration;
-    UIViewAnimationCurve animationCurve;
-    
-    [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
-    [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
-    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
 
-    [self slideFrame:YES 
-               curve:animationCurve 
-            duration:animationDuration];
+# pragma mark Keyboard Notifications
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    [self resizeViewWithOptions:[notification userInfo]];
 }
 
-// Expand textview on keyboard dismissal
-- (void)keyboardWillHide:(NSNotification *)notification 
-{
- 	NSDictionary *userInfo = [notification userInfo];
-    
-    // Get animation info from userInfo
-    NSTimeInterval animationDuration;
-    UIViewAnimationCurve animationCurve;
-    
-    [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
-    [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
-    [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
-
-    [self slideFrame:NO
-               curve:animationCurve 
-            duration:animationDuration];
+- (void)keyboardWillHide:(NSNotification *)notification {
+    [self resizeViewWithOptions:[notification userInfo]];
 }
 
-// Shorten height of UIView when keyboard pops up
-// TODO: Test on different SDK versions; make more flexible if desired.
-- (void)slideFrame:(BOOL)up curve:(UIViewAnimationCurve)curve duration:(NSTimeInterval)duration
-{
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationCurve:curve];
-    [UIView setAnimationDuration:duration];
+- (void)resizeViewWithOptions:(NSDictionary *)options {    
+    NSTimeInterval animationDuration;
+    UIViewAnimationCurve animationCurve;
+    CGRect keyboardEndFrame;
+    [[options objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
+    [[options objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
+    [[options objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
+
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationCurve:animationCurve];
+    [UIView setAnimationDuration:animationDuration];
     CGRect viewFrame = self.view.frame;
-    viewFrame.size.height -= keyboardEndFrame.size.height;
+    NSLog(@"viewFrame y: %@", NSStringFromCGRect(viewFrame));
+
+//    // For testing.
+//    NSLog(@"keyboardEnd: %@", NSStringFromCGRect(keyboardEndFrame));
+//    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]
+//                             initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+//                             target:chatInput action:@selector(resignFirstResponder)];
+//    self.navigationItem.leftBarButtonItem = doneButton;
+//    [doneButton release];
+
+    CGRect keyboardFrameEndRelative = [self.view convertRect:keyboardEndFrame fromView:nil];
+    NSLog(@"self.view: %@", self.view);
+    NSLog(@"keyboardFrameEndRelative: %@", NSStringFromCGRect(keyboardFrameEndRelative));
+
+    viewFrame.size.height =  keyboardFrameEndRelative.origin.y;
     self.view.frame = viewFrame;
     [UIView commitAnimations];
     

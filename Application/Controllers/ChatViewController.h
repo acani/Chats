@@ -4,9 +4,6 @@
 
 @interface ChatViewController : UIViewController <NSFetchedResultsControllerDelegate,
 UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDelegate> {
-    
-    CGRect keyboardEndFrame;
-
 
 }
 
@@ -33,7 +30,7 @@ UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDel
 
 - (void)keyboardWillShow:(NSNotification *)notification;
 - (void)keyboardWillHide:(NSNotification *)notification;
-- (void)slideFrame:(BOOL)up curve:(UIViewAnimationCurve)curve duration:(NSTimeInterval)duration;
+- (void)resizeViewWithOptions:(NSDictionary *)options;
 - (void)scrollToBottomAnimated:(BOOL)animated;
 
 - (void)sendMessage;
