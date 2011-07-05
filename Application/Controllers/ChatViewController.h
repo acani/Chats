@@ -13,7 +13,6 @@ UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDel
 
 @property (nonatomic, assign) SystemSoundID receiveMessageSound;
 
-@property (nonatomic, retain) UIView *contentView;
 @property (nonatomic, retain) UITableView *chatContent;
 
 @property (nonatomic, retain) UIImageView *chatBar;
