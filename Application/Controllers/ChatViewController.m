@@ -8,8 +8,8 @@
 // Same => [UIColor colorWithRed:219.0/255.0 green:226.0/255.0 blue:237.0/255.0 alpha:1.0];
 #define CHAT_BACKGROUND_COLOR [UIColor colorWithRed:0.859f green:0.886f blue:0.929f alpha:1.0f]
 
-#define VIEW_WIDTH    self.contentView.frame.size.width
-#define VIEW_HEIGHT    self.contentView.frame.size.height
+#define VIEW_WIDTH    self.view.frame.size.width
+#define VIEW_HEIGHT    self.view.frame.size.height
 
 #define RESET_CHAT_BAR_HEIGHT    SET_CHAT_BAR_HEIGHT(kChatBarHeight1)
 #define EXPAND_CHAT_BAR_HEIGHT    SET_CHAT_BAR_HEIGHT(kChatBarHeight4)
@@ -42,7 +42,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 
 @synthesize receiveMessageSound;
 
-@synthesize contentView;
 @synthesize chatContent;
 
 @synthesize chatBar;
@@ -66,12 +65,11 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 - (void)dealloc {
     if (receiveMessageSound) AudioServicesDisposeSystemSoundID(receiveMessageSound);
     
-    [contentView release];
     [chatContent release];
     
-    [sendButton release];
-    [chatInput release];
     [chatBar release];
+    [chatInput release];
+    [sendButton release];
     
     [cellMap release];
     
@@ -84,14 +82,11 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 #pragma mark UIViewController
 
 - (void)viewDidUnload {
-    [super viewDidUnload];
-    
-    self.contentView = nil;
     self.chatContent = nil;
     
-    self.sendButton = nil;
-    self.chatInput = nil;
     self.chatBar = nil;
+    self.chatInput = nil;
+    self.sendButton = nil;
     
     self.cellMap = nil;
     
@@ -103,30 +98,27 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     // Leave managedObjectContext since it's not recreated in viewDidLoad
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super viewDidUnload];
 }
 
-- (void)loadView {
-    // Create contentView.
-    CGRect navFrame = [[UIScreen mainScreen] applicationFrame];
-    navFrame.size.height -= self.navigationController.navigationBar.frame.size.height;
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    NSLog(@"viewDidLoad");
 
-    self.view = [[UIView alloc] initWithFrame:navFrame];
+    self.title = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+    
+    // Listen for keyboard.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+
     self.view.backgroundColor = CHAT_BACKGROUND_COLOR; // shown during rotation    
-    
-    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 
-                                                                0.0f, 
-                                                                navFrame.size.width,
-                                                                navFrame.size.height)];
-    
-    contentView.backgroundColor = CHAT_BACKGROUND_COLOR; // shown during rotation
-    contentView.autoresizingMask = UIViewAutoresizingNone;
-    
-    [self.view addSubview:self.contentView];
     
     // Create chatContent.
     chatContent = [[UITableView alloc] initWithFrame:
-                   CGRectMake(0.0f, 0.0f, contentView.frame.size.width,
-                              contentView.frame.size.height-kChatBarHeight1)];
+                   CGRectMake(0.0f, 0.0f, self.view.frame.size.width,
+                              self.view.frame.size.height-kChatBarHeight1)];
     chatContent.clearsContextBeforeDrawing = NO;
     chatContent.delegate = self;
     chatContent.dataSource = self;
@@ -135,12 +127,12 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     chatContent.separatorStyle = UITableViewCellSeparatorStyleNone;
     chatContent.autoresizingMask = UIViewAutoresizingFlexibleWidth |
     UIViewAutoresizingFlexibleHeight;
-    [contentView addSubview:chatContent];
+    [self.view addSubview:chatContent];
     
     // Create chatBar.
     chatBar = [[UIImageView alloc] initWithFrame:
-               CGRectMake(0.0f, contentView.frame.size.height-kChatBarHeight1,
-                          contentView.frame.size.width, kChatBarHeight1)];
+               CGRectMake(0.0f, self.view.frame.size.height-kChatBarHeight1,
+                          self.view.frame.size.width, kChatBarHeight1)];
     chatBar.clearsContextBeforeDrawing = NO;
     chatBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin |
     UIViewAutoresizingFlexibleWidth;
@@ -186,20 +178,8 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     [self resetSendButton]; // disable initially
     [chatBar addSubview:sendButton];
     
-    [contentView addSubview:chatBar];
-    [contentView sendSubviewToBack:chatBar];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    self.title = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
-    
-    // Listen for keyboard.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
+    [self.view addSubview:chatBar];
+    [self.view sendSubviewToBack:chatBar];
     
     // optimization FTW
     self.clearballoon = [[UIImage imageNamed:@"ChatBubbleGray"] stretchableImageWithLeftCapWidth:23.0f topCapHeight:15.0f];
@@ -241,6 +221,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated]; // below: work around for [chatContent flashScrollIndicators]
+    NSLog(@"viewWillAppear");
     [chatContent performSelector:@selector(flashScrollIndicators) withObject:nil afterDelay:0.0];
     [self scrollToBottomAnimated:NO];
 }
@@ -392,7 +373,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     
 	keyboardIsShowing = NO;
     
-    [self slideFrame:NO 
+    [self slideFrame:NO
                curve:animationCurve 
             duration:animationDuration];
 }
@@ -404,9 +385,9 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationCurve:curve];
     [UIView setAnimationDuration:duration];
-    CGRect viewFrame = self.contentView.frame;
+    CGRect viewFrame = self.view.frame;
     viewFrame.size.height -= keyboardEndFrame.size.height;
-    self.contentView.frame = viewFrame;
+    self.view.frame = viewFrame;
     [UIView commitAnimations];
     
     [self scrollToBottomAnimated:YES];
