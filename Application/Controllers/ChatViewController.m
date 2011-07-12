@@ -55,9 +55,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 @synthesize fetchedResultsController;
 @synthesize managedObjectContext;
 
-@synthesize clearballoon;
-@synthesize greenballoon;
-
 #pragma mark NSObject
 
 - (void)dealloc {
@@ -89,10 +86,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     self.cellMap = nil;
     
     self.fetchedResultsController = nil;
-    
-    self.clearballoon = nil;
-    self.greenballoon = nil;
-    
+
     // Leave managedObjectContext since it's not recreated in viewDidLoad
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -178,11 +172,6 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     
     [self.view addSubview:chatBar];
     [self.view sendSubviewToBack:chatBar];
-    
-    // optimization FTW
-    self.clearballoon = [[UIImage imageNamed:@"ChatBubbleGray"] stretchableImageWithLeftCapWidth:23.0f topCapHeight:15.0f];
-    self.greenballoon = [[UIImage imageNamed:@"ChatBubbleGreen"] stretchableImageWithLeftCapWidth:15.0f topCapHeight:13.0f];
-
     
 //    // Test with lots of messages.
 //    NSDate *before = [NSDate date];
@@ -663,7 +652,8 @@ static NSString *kMessageCell = @"MessageCell";
         msgBackground.frame = CGRectMake(tableView.frame.size.width-size.width-34.0f-editWidth,
                                          kMessageFontSize-13.0f, size.width+34.0f,
                                          size.height+12.0f);
-        bubbleImage = self.greenballoon;
+        bubbleImage = [[UIImage imageNamed:@"ChatBubbleGreen.png"]
+                       stretchableImageWithLeftCapWidth:15 topCapHeight:13];
         msgText.frame = CGRectMake(tableView.frame.size.width-size.width-22.0f-editWidth,
                                    kMessageFontSize-9.0f, size.width+5.0f, size.height);
         msgBackground.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
@@ -673,7 +663,8 @@ static NSString *kMessageCell = @"MessageCell";
     } else { // left bubble
         msgBackground.frame = CGRectMake(0.0f, kMessageFontSize-13.0f,
                                          size.width+34.0f, size.height+12.0f);
-        bubbleImage = self.clearballoon;
+        bubbleImage = [[UIImage imageNamed:@"ChatBubbleGray.png"]
+                       stretchableImageWithLeftCapWidth:23 topCapHeight:15];
         msgText.frame = CGRectMake(22.0f, kMessageFontSize-9.0f, size.width+5.0f, size.height);
         msgBackground.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         msgText.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
