@@ -21,9 +21,6 @@ UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDel
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
 
-@property (nonatomic, retain) UIImage       *clearballoon;
-@property (nonatomic, retain) UIImage       *greenballoon;
-
 - (void)enableSendButton;
 - (void)disableSendButton;
 - (void)resetSendButton;
