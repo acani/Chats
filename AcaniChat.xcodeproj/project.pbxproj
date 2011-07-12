@@ -23,6 +23,8 @@
 		C92D07B713634A0400954810 /* NSString+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = C92D07B613634A0400954810 /* NSString+Additions.m */; };
 		C92D07BB13634B2800954810 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = C92D07BA13634B2800954810 /* Message.m */; };
 		C99F265E139AB68900192BE5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C99F265C139AB68900192BE5 /* main.m */; };
+		C9C78E6913CC069700EDBB79 /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C78E6813CC069700EDBB79 /* Conversation.m */; };
+		C9C90E031363743E009626F1 /* ConversationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C90E021363743E009626F1 /* ConversationsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +55,10 @@
 		C99F265A139AB68900192BE5 /* AcaniChat-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AcaniChat-Info.plist"; sourceTree = "<group>"; };
 		C99F265B139AB68900192BE5 /* AcaniChat-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AcaniChat-Prefix.pch"; sourceTree = "<group>"; };
 		C99F265C139AB68900192BE5 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		C9C78E6713CC069700EDBB79 /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Conversation.h; path = ../../../AcaniChat/Application/Models/Conversation.h; sourceTree = "<group>"; };
+		C9C78E6813CC069700EDBB79 /* Conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Conversation.m; path = ../../../AcaniChat/Application/Models/Conversation.m; sourceTree = "<group>"; };
+		C9C90E011363743E009626F1 /* ConversationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationsViewController.h; sourceTree = "<group>"; };
+		C9C90E021363743E009626F1 /* ConversationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +128,8 @@
 			children = (
 				C92BF8BA1363285A003B20F6 /* ChatViewController.h */,
 				C92BF8BB1363285A003B20F6 /* ChatViewController.m */,
+				C9C90E011363743E009626F1 /* ConversationsViewController.h */,
+				C9C90E021363743E009626F1 /* ConversationsViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -130,6 +138,8 @@
 			isa = PBXGroup;
 			children = (
 				C92BF8BD1363285A003B20F6 /* AcaniChat.xcdatamodeld */,
+				C9C78E6713CC069700EDBB79 /* Conversation.h */,
+				C9C78E6813CC069700EDBB79 /* Conversation.m */,
 				C92D07B913634B2800954810 /* Message.h */,
 				C92D07BA13634B2800954810 /* Message.m */,
 			);
@@ -236,6 +246,8 @@
 				C92D07B713634A0400954810 /* NSString+Additions.m in Sources */,
 				C92D07BB13634B2800954810 /* Message.m in Sources */,
 				C99F265E139AB68900192BE5 /* main.m in Sources */,
+				C9C90E031363743E009626F1 /* ConversationsViewController.m in Sources */,
+				C9C78E6913CC069700EDBB79 /* Conversation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

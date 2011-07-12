@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
-#import "ChatViewController.h"
+#import "ConversationsViewController.h"
+#import "Conversation.h"
 
 @implementation AppDelegate
 
@@ -25,16 +26,44 @@
 #pragma mark UIApplicationDelegate
 
 - (BOOL)application:(UIApplication *)application
-didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
-    ChatViewController *viewController = [[ChatViewController alloc] init];
+didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    ConversationsViewController *viewController = [[ConversationsViewController alloc] init];
     viewController.managedObjectContext = self.managedObjectContext;
+
+//    // Run once: Create a new conversation. Add all messages to it. Store it in Core Data.
+//    Conversation *conversation = (Conversation *)[NSEntityDescription
+//                                                  insertNewObjectForEntityForName:@"Conversation"
+//                                                  inManagedObjectContext:managedObjectContext];
+//    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+//    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Message"
+//                                              inManagedObjectContext:managedObjectContext];
+//    [fetchRequest setEntity:entity];
+//    
+//    //// Fetches the oldest message in conversation. TODO: Optimize & memoize.
+//    //// When added as a transformable, indexed, transient attribute, got: 'NSInvalidArgumentException',
+//    //// reason: 'keypath lastMessage.sentDate not found in entity <NSSQLEntity Conversation id=1>'
+//    // Have the NSManagedObjectContext execute a NSFetchRequest instead.
+//    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sentDate"
+//                                                                   ascending:NO];
+//    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+//    [sortDescriptor release];
+//    [fetchRequest setSortDescriptors:sortDescriptors];
+//    [sortDescriptors release];
+//    
+//    NSArray *fetchedObjects = [managedObjectContext executeFetchRequest:fetchRequest error:NULL];    
+//    [fetchRequest release];
+//    
+//    if ([fetchedObjects count] > 0) {
+//        [conversation addMessages:[NSSet setWithArray:fetchedObjects]];
+//        conversation.lastMessage = [fetchedObjects objectAtIndex:0];
+//    }
 
 	navigationController = [[UINavigationController alloc]
 							initWithRootViewController:viewController];
     [viewController release];
 
     window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = self.navigationController;
+    window.rootViewController = navigationController;
     [window makeKeyAndVisible];
 
     return YES;
