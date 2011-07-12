@@ -191,7 +191,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 //    }
 //    NSLog(@"Saving messages to disc takes %f seconds", [before timeIntervalSinceNow]);
     
-    [self fetchMessages];
+    [self fetchResults];
     
     // Construct cellMap from fetchedObjects.
     cellMap = [[NSMutableArray alloc]
@@ -202,7 +202,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
         [self addMessage:message];
     }
     
-    // TODO: Implement edit mode like iPhone Messages does. (Icebox)
+    // TODO: Implement check-box edit mode like iPhone Messages does. (Icebox)
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
@@ -218,9 +218,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     [self viewDidDisappear:animated];
 }
 
-// Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations.
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
@@ -292,7 +290,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
         }
         textView.contentOffset = CGPointMake(0.0f, 6.0f); // fix quirk
     }
-    
+
     // Enable sendButton if chatInput has non-blank text, disable otherwise.
     if (rightTrimmedText.length > 0) {
         [self enableSendButton];
@@ -441,7 +439,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 - (NSUInteger)addMessage:(Message *)message 
 {
     // Show sentDates at most every 15 minutes.
-    NSDate *currentSentDate = [message sentDate];
+    NSDate *currentSentDate = message.sentDate;
     NSUInteger numberOfObjectsAdded = 1;
     NSUInteger prevIndex = [cellMap count] - 1;
     
@@ -528,7 +526,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
             fetchedResultsController.delegate = self;              // reconnect after mass delete
             if (![fetchedResultsController performFetch:&error]) { // resync controller
                 // TODO: Handle the error appropriately.
-                NSLog(@"fetchMessages error %@, %@", error, [error userInfo]);
+                NSLog(@"fetchResults error %@, %@", error, [error userInfo]);
             }
             
             [cellMap removeAllObjects];
@@ -697,7 +695,7 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         NSObject *object = [cellMap objectAtIndex:[indexPath row]];
-        if ([object isKindOfClass:[NSData class]]) {
+        if ([object isKindOfClass:[NSDate class]]) {
             return;
         }
         
@@ -743,12 +741,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 #pragma mark NSFetchedResultsController
 
-- (void)fetchMessages {
-    
-    if (fetchedResultsController != nil) {
-        return;
-    }
-    
+- (void)fetchResults {
+    if (fetchedResultsController) return;
+
     // Create and configure a fetch request.
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Message"
@@ -775,7 +770,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSError *error;
     if (![fetchedResultsController performFetch:&error]) {
         // TODO: Handle the error appropriately.
-        NSLog(@"fetchMessages error %@, %@", error, [error userInfo]);
+        NSLog(@"fetchResults error %@, %@", error, [error userInfo]);
     }
 }    
 

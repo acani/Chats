@@ -37,6 +37,6 @@ UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDel
 - (NSUInteger)removeMessageAtIndex:(NSUInteger)index;
 - (void)clearAll;
 
-- (void)fetchMessages;
+- (void)fetchResults;
 
 @end
