@@ -22,7 +22,7 @@ AcaniChat:
 		- Animate message send (going from chatInput to chatContent)
 		- Use checkbox editing style and add Delete & Forward buttons @filebug
 		- File bug with Apple about whitespace around messages before sending @filebug
-		- Get high-res images for chat bubbles & send button (and decrease width of send button)
+		- Get high-res images for send button (and decrease width of send button)
 
 		Landscape Rotation:
 			- Portrait => landscape: vertical position should stay at bottom @issue
