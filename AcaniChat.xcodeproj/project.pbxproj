@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		363AE19613EC32A000F3C4B1 /* ChatBubbleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 363AE19413EC32A000F3C4B1 /* ChatBubbleGray@2x.png */; };
+		363AE19713EC32A000F3C4B1 /* ChatBubbleGreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 363AE19513EC32A000F3C4B1 /* ChatBubbleGreen@2x.png */; };
 		C92BF85013631710003B20F6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF84F13631710003B20F6 /* UIKit.framework */; };
 		C92BF85213631710003B20F6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF85113631710003B20F6 /* Foundation.framework */; };
 		C92BF85413631710003B20F6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF85313631710003B20F6 /* CoreGraphics.framework */; };
@@ -26,6 +28,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		363AE19413EC32A000F3C4B1 /* ChatBubbleGray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ChatBubbleGray@2x.png"; sourceTree = "<group>"; };
+		363AE19513EC32A000F3C4B1 /* ChatBubbleGreen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ChatBubbleGreen@2x.png"; sourceTree = "<group>"; };
 		C92BF84B13631710003B20F6 /* AcaniChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AcaniChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C92BF84F13631710003B20F6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C92BF85113631710003B20F6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -46,7 +50,6 @@
 		C92D07B613634A0400954810 /* NSString+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Additions.m"; sourceTree = "<group>"; };
 		C92D07B913634B2800954810 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		C92D07BA13634B2800954810 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
-		C92D07C413634FA800954810 /* chatview-screenshot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatview-screenshot.png"; sourceTree = "<group>"; };
 		C92D07C613634FC900954810 /* MIT-LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = "MIT-LICENSE"; sourceTree = "<group>"; };
 		C92D07C713634FC900954810 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		C92D07C813634FC900954810 /* TODO.taskpaper */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO.taskpaper; sourceTree = "<group>"; };
@@ -139,11 +142,12 @@
 		C92D07A1136344BE00954810 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				C92D07C413634FA800954810 /* chatview-screenshot.png */,
 				C92D07A2136344BE00954810 /* basicsound.wav */,
 				C92D07A3136344BE00954810 /* ChatBar.png */,
 				C92D07A4136344BE00954810 /* ChatBubbleGray.png */,
+				363AE19413EC32A000F3C4B1 /* ChatBubbleGray@2x.png */,
 				C92D07A5136344BE00954810 /* ChatBubbleGreen.png */,
+				363AE19513EC32A000F3C4B1 /* ChatBubbleGreen@2x.png */,
 				C92D07A6136344BE00954810 /* SendButton.png */,
 			);
 			path = Resources;
@@ -218,7 +222,9 @@
 				C92D07A7136344BE00954810 /* basicsound.wav in Resources */,
 				C92D07A8136344BE00954810 /* ChatBar.png in Resources */,
 				C92D07A9136344BE00954810 /* ChatBubbleGray.png in Resources */,
+				363AE19613EC32A000F3C4B1 /* ChatBubbleGray@2x.png in Resources */,
 				C92D07AA136344BE00954810 /* ChatBubbleGreen.png in Resources */,
+				363AE19713EC32A000F3C4B1 /* ChatBubbleGreen@2x.png in Resources */,
 				C92D07AB136344BE00954810 /* SendButton.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
