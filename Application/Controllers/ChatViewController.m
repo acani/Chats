@@ -633,7 +633,7 @@ static NSString *kMessageCell = @"MessageCell";
 //            cell.contentView.backgroundColor = [UIColor orangeColor];
 //            msgSentDate.backgroundColor = [UIColor orangeColor];
         } else {
-            msgSentDate = (UILabel *)[cell.contentView viewWithTag:SENT_DATE_TAG];
+            msgSentDate = (UILabel *)[cell viewWithTag:SENT_DATE_TAG];
         }
         
         static NSDateFormatter *dateFormatter = nil;
