@@ -215,7 +215,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 
 - (void)viewDidDisappear:(BOOL)animated {
     [chatInput resignFirstResponder];
-    [self viewDidDisappear:animated];
+    [super viewDidDisappear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
