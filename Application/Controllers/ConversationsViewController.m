@@ -143,4 +143,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     }
 }    
 
+- (void) pushComposeViewController {
+    ChatViewController *chatViewController = [[ChatViewController alloc] init];
+    chatViewController.managedObjectContext = managedObjectContext;
+    [self.navigationController pushViewController:chatViewController animated:YES];
+    [chatViewController release];
+}
 @end
