@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		025167CF14C3BA1F00D2A951 /* ChatBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167CE14C3BA1F00D2A951 /* ChatBar.m */; };
+		025167D514C3CCE000D2A951 /* Defines.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167D414C3CCDF00D2A951 /* Defines.m */; };
+		025167D914C3F53800D2A951 /* TVCell_Date.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167D814C3F53800D2A951 /* TVCell_Date.m */; };
 		363AE19613EC32A000F3C4B1 /* ChatBubbleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 363AE19413EC32A000F3C4B1 /* ChatBubbleGray@2x.png */; };
 		363AE19713EC32A000F3C4B1 /* ChatBubbleGreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 363AE19513EC32A000F3C4B1 /* ChatBubbleGreen@2x.png */; };
 		C92BF85013631710003B20F6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF84F13631710003B20F6 /* UIKit.framework */; };
@@ -30,6 +33,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		025167CD14C3BA1F00D2A951 /* ChatBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatBar.h; path = Application/Views/ChatBar.h; sourceTree = SOURCE_ROOT; };
+		025167CE14C3BA1F00D2A951 /* ChatBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatBar.m; path = Application/Views/ChatBar.m; sourceTree = SOURCE_ROOT; };
+		025167D314C3CCDF00D2A951 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
+		025167D414C3CCDF00D2A951 /* Defines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Defines.m; sourceTree = "<group>"; };
+		025167D714C3F53800D2A951 /* TVCell_Date.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TVCell_Date.h; path = TableViewCells/TVCell_Date.h; sourceTree = "<group>"; };
+		025167D814C3F53800D2A951 /* TVCell_Date.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TVCell_Date.m; path = TableViewCells/TVCell_Date.m; sourceTree = "<group>"; };
 		363AE19413EC32A000F3C4B1 /* ChatBubbleGray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ChatBubbleGray@2x.png"; sourceTree = "<group>"; };
 		363AE19513EC32A000F3C4B1 /* ChatBubbleGreen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ChatBubbleGreen@2x.png"; sourceTree = "<group>"; };
 		C92BF84B13631710003B20F6 /* AcaniChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AcaniChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,6 +89,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		025167D614C3F4E400D2A951 /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				025167D714C3F53800D2A951 /* TVCell_Date.h */,
+				025167D814C3F53800D2A951 /* TVCell_Date.m */,
+			);
+			name = TableViewCells;
+			sourceTree = "<group>";
+		};
 		C92BF84013631710003B20F6 = {
 			isa = PBXGroup;
 			children = (
@@ -118,6 +136,7 @@
 		C92BF8B61363285A003B20F6 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				025167D614C3F4E400D2A951 /* TableViewCells */,
 				C92BF8B71363285A003B20F6 /* AppDelegate.h */,
 				C92BF8B81363285A003B20F6 /* AppDelegate.m */,
 				C92BF8B91363285A003B20F6 /* Controllers */,
@@ -133,6 +152,10 @@
 				C92BF8BB1363285A003B20F6 /* ChatViewController.m */,
 				C9C90E011363743E009626F1 /* ConversationsViewController.h */,
 				C9C90E021363743E009626F1 /* ConversationsViewController.m */,
+				025167CD14C3BA1F00D2A951 /* ChatBar.h */,
+				025167CE14C3BA1F00D2A951 /* ChatBar.m */,
+				025167D314C3CCDF00D2A951 /* Defines.h */,
+				025167D414C3CCDF00D2A951 /* Defines.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -254,6 +277,9 @@
 				C99F265E139AB68900192BE5 /* main.m in Sources */,
 				C9C90E031363743E009626F1 /* ConversationsViewController.m in Sources */,
 				C9C78E6913CC069700EDBB79 /* Conversation.m in Sources */,
+				025167CF14C3BA1F00D2A951 /* ChatBar.m in Sources */,
+				025167D514C3CCE000D2A951 /* Defines.m in Sources */,
+				025167D914C3F53800D2A951 /* TVCell_Date.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
