@@ -13,11 +13,11 @@
     UILabel *msgSentDate;
 }
 
-@property (nonatomic, retain) NSDate * date;
+@property (nonatomic, strong) NSDate * date;
 
 
 
-@property (nonatomic, retain) NSDateFormatter * dateFormatter;
+@property (nonatomic, strong) NSDateFormatter * dateFormatter;
 
 - (id) initWithReuseIdentifier:(NSString *)reuseIdentifier;
 

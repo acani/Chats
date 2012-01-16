@@ -7,7 +7,9 @@
 #import "TVCell_Date.h"
 #import "TVCell_Message.h"
 
-#define ClearConversationButtonIndex 0
+
+#import "ChatViewController+Mutability.h"
+#import "ChatViewController+Keyboard.h"
 
 
 
@@ -27,9 +29,6 @@ VIEW_WIDTH, HEIGHT);\
 [UIView commitAnimations]
 
 
-// 15 mins between messages before we show the date
-#define SECONDS_BETWEEN_MESSAGES        (60*15)
-
 
 @implementation ChatViewController
 
@@ -48,25 +47,12 @@ VIEW_WIDTH, HEIGHT);\
 
 - (void)dealloc {
     if (receiveMessageSound) AudioServicesDisposeSystemSoundID(receiveMessageSound);
-    
-    [chatContent release];
-    
-    [chatBar release];
-
-    
-    [cellMap release];
-    
-    [fetchedResultsController release];
-    [managedObjectContext release];
-    
-    [super dealloc];
 }
 
 #pragma mark UIViewController
 
 - (void)viewDidUnload {
     self.chatContent = nil;
-    
     self.chatBar = nil;
 
     self.cellMap = nil;
@@ -86,10 +72,7 @@ VIEW_WIDTH, HEIGHT);\
     self.title = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
     
     // Listen for keyboard.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
+    [self registerKeyboard];
 
     self.view.backgroundColor = CHAT_BACKGROUND_COLOR; // shown during rotation    
     
@@ -113,8 +96,6 @@ VIEW_WIDTH, HEIGHT);\
                           self.view.frame.size.width, kChatBarHeight1)];
 
     chatBar.delegate= self;
-
-    chatBar.backgroundColor = [UIColor redColor];
     
     [self.view addSubview:chatBar];
     [self.view sendSubviewToBack:chatBar];
@@ -183,7 +164,6 @@ VIEW_WIDTH, HEIGHT);\
         //BAR_BUTTON(NSLocalizedString(@"Clear All", nil),
           //                                           @selector(clearAll));
         self.navigationItem.leftBarButtonItem = clearAllButton;
-        [clearAllButton release];
     } else {
         self.navigationItem.leftBarButtonItem = nil;
     }
@@ -194,67 +174,6 @@ VIEW_WIDTH, HEIGHT);\
 //    }
 }
 
-#pragma mark ChatViewController
-
-
-
-# pragma mark Keyboard Notifications
-
-- (void)keyboardWillShow:(NSNotification *)notification {
-    [self resizeViewWithOptions:[notification userInfo]];
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification {
-    [self resizeViewWithOptions:[notification userInfo]];
-}
-
-- (void)resizeViewWithOptions:(NSDictionary *)options {    
-    NSTimeInterval animationDuration;
-    UIViewAnimationCurve animationCurve;
-    CGRect keyboardEndFrame;
-    [[options objectForKey:UIKeyboardAnimationCurveUserInfoKey] getValue:&animationCurve];
-    [[options objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
-    [[options objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardEndFrame];
-
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationCurve:animationCurve];
-    [UIView setAnimationDuration:animationDuration];
-    CGRect viewFrame = self.view.frame;
-    NSLog(@"viewFrame y: %@", NSStringFromCGRect(viewFrame));
-
-//    // For testing.
-//    NSLog(@"keyboardEnd: %@", NSStringFromCGRect(keyboardEndFrame));
-//    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc]
-//                             initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-//                             target:chatInput action:@selector(resignFirstResponder)];
-//    self.navigationItem.leftBarButtonItem = doneButton;
-//    [doneButton release];
-
-    CGRect keyboardFrameEndRelative = [self.view convertRect:keyboardEndFrame fromView:nil];
-    NSLog(@"self.view: %@", self.view);
-    NSLog(@"keyboardFrameEndRelative: %@", NSStringFromCGRect(keyboardFrameEndRelative));
-
-    viewFrame.size.height =  keyboardFrameEndRelative.origin.y;
-    self.view.frame = viewFrame;
-    [UIView commitAnimations];
-    
-    [self scrollToBottomAnimated:YES];
-    
-    [chatBar resetCharInput];
-    /*
-    chatBar.chatInput.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, 3.0f, 0.0f);
-    chatBar.chatInput.contentOffset = CGPointMake(0.0f, 6.0f); // fix quirk
-     */
-}
-
-- (void)scrollToBottomAnimated:(BOOL)animated {
-    NSInteger bottomRow = [cellMap count] - 1;
-    if (bottomRow >= 0) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:bottomRow inSection:0];
-        [chatContent scrollToRowAtIndexPath:indexPath
-                           atScrollPosition:UITableViewScrollPositionBottom animated:animated];
-    }
-}
 
 #pragma mark Message
 - (void) chatBar:(ChatBar *)chatBar didSendText:(NSString *)text {
@@ -268,7 +187,7 @@ VIEW_WIDTH, HEIGHT);\
     
     // Don't send blank messages.
     if (rightTrimmedMessage.length == 0) {
-        [self clearChatInput];
+        [self.chatBar clearChatInput];
         return;
     }
     
@@ -277,7 +196,7 @@ VIEW_WIDTH, HEIGHT);\
                                       insertNewObjectForEntityForName:@"Message"
                                       inManagedObjectContext:managedObjectContext];
     newMessage.text = rightTrimmedMessage;
-    NSDate *now = [[NSDate alloc] init]; newMessage.sentDate = now; [now release];
+    NSDate *now = [[NSDate alloc] init]; newMessage.sentDate = now; 
 
     NSError *error;
     if (![managedObjectContext save:&error]) {
@@ -291,120 +210,13 @@ VIEW_WIDTH, HEIGHT);\
     
     // Play sound or buzz, depending on user settings.
     NSString *sendPath = [[NSBundle mainBundle] pathForResource:@"basicsound" ofType:@"wav"];
-    CFURLRef baseURL = (CFURLRef)[NSURL fileURLWithPath:sendPath];
+    CFURLRef baseURL = (__bridge CFURLRef)[NSURL fileURLWithPath:sendPath];
     AudioServicesCreateSystemSoundID(baseURL, &receiveMessageSound);
     AudioServicesPlaySystemSound(receiveMessageSound);
 //    AudioServicesPlayAlertSound(receiveMessageSound); // use for receiveMessage (sound & vibrate)
 //    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate); // explicit vibrate
 }
 
-
-// Returns number of objects added to cellMap (1 or 2).
-- (NSUInteger)addMessage:(Message *)message 
-{
-    // Show sentDates at most every 15 minutes.
-    NSDate *currentSentDate = message.sentDate;
-    NSUInteger numberOfObjectsAdded = 1;
-    NSUInteger prevIndex = [cellMap count] - 1;
-    
-    // Show sentDates at most every 15 minutes.
-
-    if([cellMap count])
-    {
-        BOOL prevIsMessage = [[cellMap objectAtIndex:prevIndex] isKindOfClass:[Message class]];
-        if(prevIsMessage)
-        {
-            Message * temp = [cellMap objectAtIndex:prevIndex];
-            NSDate * previousSentDate = temp.sentDate;
-            // if there has been more than a 15 min gap between this and the previous message!
-            if([currentSentDate timeIntervalSinceDate:previousSentDate] > SECONDS_BETWEEN_MESSAGES) 
-            { 
-                [cellMap addObject:currentSentDate];
-                numberOfObjectsAdded = 2;
-            }
-        }
-    }
-    else
-    {
-        // there are NO messages, definitely add a timestamp!
-        [cellMap addObject:currentSentDate];
-        numberOfObjectsAdded = 2;
-    }
-    
-    [cellMap addObject:message];
-    
-    message.isMine = [NSNumber numberWithBool: (([cellMap count] %3) == 0)];
-    
-//    [message.managedObjectContext save: nil];
-    
-    return numberOfObjectsAdded;
-
-}
-
-// Returns number of objects removed from cellMap (1 or 2).
-- (NSUInteger)removeMessageAtIndex:(NSUInteger)index {
-//    NSLog(@"Delete message from cellMap");
-    
-    // Remove message from cellMap.
-    [cellMap removeObjectAtIndex:index];
-    NSUInteger numberOfObjectsRemoved = 1;
-    NSUInteger prevIndex = index - 1;
-    NSUInteger cellMapCount = [cellMap count];
-    
-    BOOL isLastObject = index == cellMapCount;
-    BOOL prevIsDate = [[cellMap objectAtIndex:prevIndex] isKindOfClass:[NSDate class]];
-    
-    if (isLastObject && prevIsDate ||
-        prevIsDate && [[cellMap objectAtIndex:index] isKindOfClass:[NSDate class]]) {
-        [cellMap removeObjectAtIndex:prevIndex];
-        numberOfObjectsRemoved = 2;
-    }
-    return numberOfObjectsRemoved;
-}
-
-- (void)clearAll {
-    UIActionSheet *confirm = [[UIActionSheet alloc]
-                              initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel"
-                              destructiveButtonTitle:NSLocalizedString(@"Clear Conversation", nil)
-                              otherButtonTitles:nil];
-	
-	// use the same style as the nav bar
-	confirm.actionSheetStyle = self.navigationController.navigationBar.barStyle;
-    
-    [confirm showFromBarButtonItem:self.navigationItem.leftBarButtonItem animated:YES];
-//    [confirm showInView:self.view];
-	[confirm release];
-    
-}
-
-#pragma mark UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)modalView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	switch (buttonIndex) {
-		case ClearConversationButtonIndex: {
-            NSError *error;
-            fetchedResultsController.delegate = nil;               // turn off delegate callbacks
-            for (Message *message in [fetchedResultsController fetchedObjects]) {
-                [managedObjectContext deleteObject:message];
-            }
-            if (![managedObjectContext save:&error]) {
-                // TODO: Handle the error appropriately.
-                NSLog(@"Delete message error %@, %@", error, [error userInfo]);
-            }
-            fetchedResultsController.delegate = self;              // reconnect after mass delete
-            if (![fetchedResultsController performFetch:&error]) { // resync controller
-                // TODO: Handle the error appropriately.
-                NSLog(@"fetchResults error %@, %@", error, [error userInfo]);
-            }
-            
-            [cellMap removeAllObjects];
-            [chatContent reloadData];
-            
-            [self setEditing:NO animated:NO];
-            break;
-		}
-	}
-}
 
 #pragma mark UITableViewDataSource
 
@@ -447,13 +259,8 @@ static NSString *kMessageCell = @"MessageCell";
     TVCell_Message * cell_message;
     cell_message = [tableView dequeueReusableCellWithIdentifier:kMessageCell];
     if (cell_message == nil) {
-        
         cell_message = [[TVCell_Message alloc] initWithReuseIdentifier: kMessageCell];
-
-    } else {
- 
     }
-    
     //[cell_message setMessage: (Message *)object rightward: !([indexPath row] % 3)];
     
     cell_message.message = (Message *) object;
@@ -472,32 +279,6 @@ static NSString *kMessageCell = @"MessageCell";
     return cell_message;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [[cellMap objectAtIndex:[indexPath row]] isKindOfClass:[Message class]];
-//    return [[tableView cellForRowAtIndexPath:indexPath] reuseIdentifier] == kMessageCell;
-}
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView
-commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
-forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSObject *object = [cellMap objectAtIndex:[indexPath row]];
-        if ([object isKindOfClass:[NSDate class]]) {
-            return;
-        }
-        
-//        NSLog(@"Delete %@", object);
-        
-        // Remove message from managed object context by index path.
-        [managedObjectContext deleteObject:(Message *)object];
-        NSError *error;
-        if (![managedObjectContext save:&error]) {
-            // TODO: Handle the error appropriately.
-            NSLog(@"Delete message error %@, %@", error, [error userInfo]);
-        }
-    }
-}
 
 #pragma mark UITableViewDelegate
 
@@ -518,14 +299,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     return size.height + 17.0f;
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
-           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.editing) { // disable slide to delete
-        return UITableViewCellEditingStyleDelete;
-//        return 3; // used to work for check boxes
-    }
-    return UITableViewCellEditingStyleNone;
-}
 
 #pragma mark NSFetchedResultsController
 
@@ -542,16 +315,13 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     // Create the sort descriptors array.
     NSSortDescriptor *tsDesc = [[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:tsDesc, nil];
-    [tsDesc release];
     [fetchRequest setSortDescriptors:sortDescriptors];
-    [sortDescriptors release];
     
     // Create and initialize the fetchedResultsController.
     fetchedResultsController = [[NSFetchedResultsController alloc]
                                 initWithFetchRequest:fetchRequest
                                 managedObjectContext:managedObjectContext
                                 sectionNameKeyPath:nil /* one section */ cacheName:@"Message"];
-    [fetchRequest release];
     
     fetchedResultsController.delegate = self;
     
@@ -592,7 +362,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             
             [chatContent insertRowsAtIndexPaths:indexPaths
                                withRowAnimation:UITableViewRowAnimationNone];
-            [indexPaths release];
             [self scrollToBottomAnimated:YES];
             break;
         }
@@ -611,7 +380,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
             
             [chatContent deleteRowsAtIndexPaths:indexPaths
                                withRowAnimation:UITableViewRowAnimationNone];
-            [indexPaths release];
             break;
         }
     }

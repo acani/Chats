@@ -36,8 +36,10 @@ extern CGFloat const kChatBarHeight4;
     UITextView *chatInput;
     CGFloat previousContentHeight;
     UIButton *sendButton;
+    
+    UILabel * countLabel; 
 }
-@property (nonatomic, assign) id<ChatBarDelegate> delegate; 
+@property (nonatomic, unsafe_unretained) id<ChatBarDelegate> delegate; 
 /*
 @property (nonatomic, retain) UITextView *chatInput;
 @property (nonatomic, assign) CGFloat previousContentHeight;

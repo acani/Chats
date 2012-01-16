@@ -13,7 +13,7 @@
     UIImageView *msgBackground;
     UILabel *msgText;
 }
-@property (nonatomic, retain) Message * message;
+@property (nonatomic, strong) Message * message;
 @property (nonatomic, assign) BOOL rightward; 
 
 - (void) setMessage:(Message *)message rightward: (BOOL) rightward; 

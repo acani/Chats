@@ -14,11 +14,6 @@
 
 #pragma mark NSObject
 
-- (void)dealloc {
-    [fetchedResultsController release];
-    [managedObjectContext release];
-    [super dealloc];
-}
 
 #pragma mark UIViewController
 
@@ -37,7 +32,6 @@
                                       initWithBarButtonSystemItem:UIBarButtonSystemItemCompose
                                       target:self action:@selector(pushComposeViewController)];
     self.navigationItem.rightBarButtonItem = composeButton;
-    [composeButton release];
 
     [self fetchResults];
 }
@@ -78,8 +72,8 @@
 
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                       reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                       reuseIdentifier:CellIdentifier];
     }
 
     [self configureCell:cell atIndexPath:indexPath];
@@ -102,7 +96,6 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     ChatViewController *chatViewController = [[ChatViewController alloc] init];
     chatViewController.managedObjectContext = managedObjectContext;
     [self.navigationController pushViewController:chatViewController animated:YES];
-    [chatViewController release];
 }
 
 #pragma mark NSFetchedResultsController
@@ -123,16 +116,13 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastMessage.sentDate"
                                                                    ascending:NO];
     NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
-    [sortDescriptor release];
     [fetchRequest setSortDescriptors:sortDescriptors];
-    [sortDescriptors release];
 
     // Create and initialize the fetchedResultsController.
     fetchedResultsController = [[NSFetchedResultsController alloc]
                                 initWithFetchRequest:fetchRequest
                                 managedObjectContext:managedObjectContext
                                 sectionNameKeyPath:nil /* one section */ cacheName:@"Conversation"];
-    [fetchRequest release];
 
     fetchedResultsController.delegate = self;
     
@@ -147,6 +137,5 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     ChatViewController *chatViewController = [[ChatViewController alloc] init];
     chatViewController.managedObjectContext = managedObjectContext;
     [self.navigationController pushViewController:chatViewController animated:YES];
-    [chatViewController release];
 }
 @end

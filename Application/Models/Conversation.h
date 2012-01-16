@@ -4,7 +4,7 @@
 
 }
 
-@property (nonatomic, retain) id lastMessage;
-@property (nonatomic, retain) NSSet *messages;
+@property (nonatomic, strong) id lastMessage;
+@property (nonatomic, strong) NSSet *messages;
 
 @end

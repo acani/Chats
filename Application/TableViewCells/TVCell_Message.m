@@ -73,7 +73,6 @@
         msgBackground.tag = BACKGROUND_TAG;
         msgBackground.backgroundColor = CHAT_BACKGROUND_COLOR; // clearColor slows performance
         [self.contentView addSubview:msgBackground];
-        [msgBackground release];
         
         // Create message text label
         msgText = [[UILabel alloc] init];
@@ -84,7 +83,6 @@
         msgText.lineBreakMode = UILineBreakModeWordWrap;
         msgText.font = [UIFont systemFontOfSize:kMessageFontSize];
         [self.contentView addSubview:msgText];
-        [msgText release];
     }
     return self;
 }

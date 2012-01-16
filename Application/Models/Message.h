@@ -2,10 +2,10 @@
 
 }
 
-@property (nonatomic, retain) NSDate *sentDate;
-@property (nonatomic, retain) NSNumber *read;
-@property (nonatomic, retain) NSString *text;
+@property (nonatomic, strong) NSDate *sentDate;
+@property (nonatomic, strong) NSNumber *read;
+@property (nonatomic, strong) NSString *text;
 
-@property (nonatomic, retain) NSNumber * isMine; 
+@property (nonatomic, strong) NSNumber * isMine; 
 
 @end

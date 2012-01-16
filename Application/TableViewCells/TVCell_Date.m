@@ -34,7 +34,6 @@
         // TODO: Get locale from iPhone system prefs. Then, move this to viewDidAppear.
         NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
         [_dateFormatter setLocale:usLocale];
-        [usLocale release];
     }
     
     return _dateFormatter;
@@ -65,7 +64,6 @@
         msgSentDate.backgroundColor = CHAT_BACKGROUND_COLOR; // clearColor slows performance
         msgSentDate.textColor = [UIColor grayColor];
         [self addSubview:msgSentDate];
-        [msgSentDate release];
         
         
     }

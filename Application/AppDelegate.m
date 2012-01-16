@@ -13,15 +13,6 @@
 
 #pragma mark NSObject
 
-- (void)dealloc {
-    [window release];
-    [navigationController release];
-    
-    [managedObjectContext release];
-    [managedObjectModel release];
-    [persistentStoreCoordinator release];
-    [super dealloc];
-}
 
 #pragma mark UIApplicationDelegate
 
@@ -60,7 +51,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 	navigationController = [[UINavigationController alloc]
 							initWithRootViewController:viewController];
-    [viewController release];
 
     window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     window.rootViewController = navigationController;

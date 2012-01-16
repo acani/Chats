@@ -11,30 +11,26 @@ UITableViewDelegate, UITableViewDataSource,  UIActionSheetDelegate,
 ChatBarDelegate
 > {
 
+    NSMutableArray *cellMap;
+    UITableView *chatContent;
+    ChatBar *chatBar;
+    
+    NSManagedObjectContext *managedObjectContext;
+    
+    NSFetchedResultsController *fetchedResultsController;
 }
 
 @property (nonatomic, assign) SystemSoundID receiveMessageSound;
 
-@property (nonatomic, retain) UITableView *chatContent;
+@property (nonatomic, strong) UITableView *chatContent;
 
-@property (nonatomic, retain) ChatBar *chatBar;
+@property (nonatomic, strong) ChatBar *chatBar;
 
 @property (nonatomic, copy) NSMutableArray *cellMap;
 
-@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 
-
-- (void)keyboardWillShow:(NSNotification *)notification;
-- (void)keyboardWillHide:(NSNotification *)notification;
-- (void)resizeViewWithOptions:(NSDictionary *)options;
-- (void)scrollToBottomAnimated:(BOOL)animated;
-
-//- (void)sendMessage;
-//- (void)clearChatInput;
-- (NSUInteger)addMessage:(Message *)message;
-- (NSUInteger)removeMessageAtIndex:(NSUInteger)index;
-- (void)clearAll;
 
 - (void)fetchResults;
 
