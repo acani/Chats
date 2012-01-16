@@ -6,4 +6,6 @@
 @dynamic read;
 @dynamic text;
 
+@dynamic isMine; 
+
 @end

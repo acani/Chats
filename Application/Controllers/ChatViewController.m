@@ -4,11 +4,9 @@
 #import "NSString+Additions.h"
 
 
-// Exact same color as native iPhone Messages app.
-// Achieved by taking a screen shot of the iPhone by pressing Home & Sleep buttons together.
-// Then, emailed the image to myself and used Mac's native DigitalColor Meter app.
-// Same => [UIColor colorWithRed:219.0/255.0 green:226.0/255.0 blue:237.0/255.0 alpha:1.0];
-#define CHAT_BACKGROUND_COLOR [UIColor colorWithRed:0.859f green:0.886f blue:0.929f alpha:1.0f]
+#import "TVCell_Date.h"
+#import "TVCell_Message.h"
+
 #define ClearConversationButtonIndex 0
 
 
@@ -31,7 +29,6 @@ VIEW_WIDTH, HEIGHT);\
 
 // 15 mins between messages before we show the date
 #define SECONDS_BETWEEN_MESSAGES        (60*15)
-
 
 
 @implementation ChatViewController
@@ -336,6 +333,10 @@ VIEW_WIDTH, HEIGHT);\
     
     [cellMap addObject:message];
     
+    message.isMine = [NSNumber numberWithBool: (([cellMap count] %3) == 0)];
+    
+//    [message.managedObjectContext save: nil];
+    
     return numberOfObjectsAdded;
 
 }
@@ -412,16 +413,12 @@ VIEW_WIDTH, HEIGHT);\
     return [cellMap count];
 }
 
-#define SENT_DATE_TAG 101
-#define TEXT_TAG 102
-#define BACKGROUND_TAG 103
-
 static NSString *kMessageCell = @"MessageCell";
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UILabel *msgSentDate;
+    
     UIImageView *msgBackground;
     UILabel *msgText;
     
@@ -433,110 +430,34 @@ static NSString *kMessageCell = @"MessageCell";
     // Handle sentDate (NSDate).
     if ([object isKindOfClass:[NSDate class]]) {
         static NSString *kSentDateCellId = @"SentDateCell";
-        cell = [tableView dequeueReusableCellWithIdentifier:kSentDateCellId];
-        if (cell == nil) {
-            cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                           reuseIdentifier:kSentDateCellId] autorelease];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        TVCell_Date * cell_date = nil;
+        cell_date = [tableView dequeueReusableCellWithIdentifier:kSentDateCellId];
+        if (cell_date == nil) {
             
-            // Create message sentDate lable
-            msgSentDate = [[UILabel alloc] initWithFrame:
-                            CGRectMake(-2.0f, 0.0f,
-                                       tableView.frame.size.width, kSentDateFontSize+5.0f)];
-            msgSentDate.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-            msgSentDate.clearsContextBeforeDrawing = NO;
-            msgSentDate.tag = SENT_DATE_TAG;
-            msgSentDate.font = [UIFont boldSystemFontOfSize:kSentDateFontSize];
-            msgSentDate.lineBreakMode = UILineBreakModeTailTruncation;
-            msgSentDate.textAlignment = UITextAlignmentCenter;
-            msgSentDate.backgroundColor = CHAT_BACKGROUND_COLOR; // clearColor slows performance
-            msgSentDate.textColor = [UIColor grayColor];
-            [cell addSubview:msgSentDate];
-            [msgSentDate release];
-//            // Uncomment for view layout debugging.
-//            cell.contentView.backgroundColor = [UIColor orangeColor];
-//            msgSentDate.backgroundColor = [UIColor orangeColor];
-        } else {
-            msgSentDate = (UILabel *)[cell viewWithTag:SENT_DATE_TAG];
+            cell_date = [[TVCell_Date alloc] initWithReuseIdentifier: kSentDateCellId];
         }
         
-        static NSDateFormatter *dateFormatter = nil;
-        if (dateFormatter == nil) {
-            dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setDateStyle:NSDateFormatterMediumStyle]; // Jan 1, 2010
-            [dateFormatter setTimeStyle:NSDateFormatterShortStyle];  // 1:43 PM
-            
-            // TODO: Get locale from iPhone system prefs. Then, move this to viewDidAppear.
-            NSLocale *usLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
-            [dateFormatter setLocale:usLocale];
-            [usLocale release];
-        }
+        cell_date.date = (NSDate *)object;
         
-        msgSentDate.text = [dateFormatter stringFromDate:(NSDate *)object];
-        
-        return cell;
+        return cell_date;
     }
+    
     
     // Handle Message object.
-    cell = [tableView dequeueReusableCellWithIdentifier:kMessageCell];
-    if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                       reuseIdentifier:kMessageCell] autorelease];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    TVCell_Message * cell_message;
+    cell_message = [tableView dequeueReusableCellWithIdentifier:kMessageCell];
+    if (cell_message == nil) {
         
-        // Create message background image view
-        msgBackground = [[UIImageView alloc] init];
-        msgBackground.clearsContextBeforeDrawing = NO;
-        msgBackground.tag = BACKGROUND_TAG;
-        msgBackground.backgroundColor = CHAT_BACKGROUND_COLOR; // clearColor slows performance
-        [cell.contentView addSubview:msgBackground];
-        [msgBackground release];
-        
-        // Create message text label
-        msgText = [[UILabel alloc] init];
-        msgText.clearsContextBeforeDrawing = NO;
-        msgText.tag = TEXT_TAG;
-        msgText.backgroundColor = [UIColor clearColor];
-        msgText.numberOfLines = 0;
-        msgText.lineBreakMode = UILineBreakModeWordWrap;
-        msgText.font = [UIFont systemFontOfSize:kMessageFontSize];
-        [cell.contentView addSubview:msgText];
-        [msgText release];
+        cell_message = [[TVCell_Message alloc] initWithReuseIdentifier: kMessageCell];
+
     } else {
-        msgBackground = (UIImageView *)[cell.contentView viewWithTag:BACKGROUND_TAG];
-        msgText = (UILabel *)[cell.contentView viewWithTag:TEXT_TAG];
+ 
     }
     
-    // Configure the cell to show the message in a bubble. Layout message cell & its subviews.
-    CGSize size = [[(Message *)object text] sizeWithFont:[UIFont systemFontOfSize:kMessageFontSize]
-                                       constrainedToSize:CGSizeMake(kMessageTextWidth, CGFLOAT_MAX)
-                                           lineBreakMode:UILineBreakModeWordWrap];
-    UIImage *bubbleImage;
-    if (!([indexPath row] % 3)) { // right bubble
-        CGFloat editWidth = tableView.editing ? 32.0f : 0.0f;
-        msgBackground.frame = CGRectMake(tableView.frame.size.width-size.width-34.0f-editWidth,
-                                         kMessageFontSize-13.0f, size.width+34.0f,
-                                         size.height+12.0f);
-        bubbleImage = [[UIImage imageNamed:@"ChatBubbleGreen.png"]
-                       stretchableImageWithLeftCapWidth:15 topCapHeight:13];
-        msgText.frame = CGRectMake(tableView.frame.size.width-size.width-22.0f-editWidth,
-                                   kMessageFontSize-9.0f, size.width+5.0f, size.height);
-        msgBackground.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        msgText.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-//        // Uncomment for view layout debugging.
-//        cell.contentView.backgroundColor = [UIColor blueColor];
-    } else { // left bubble
-        msgBackground.frame = CGRectMake(0.0f, kMessageFontSize-13.0f,
-                                         size.width+34.0f, size.height+12.0f);
-        bubbleImage = [[UIImage imageNamed:@"ChatBubbleGray.png"]
-                       stretchableImageWithLeftCapWidth:23 topCapHeight:15];
-        msgText.frame = CGRectMake(22.0f, kMessageFontSize-9.0f, size.width+5.0f, size.height);
-        msgBackground.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-        msgText.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-    }
-    msgBackground.image = bubbleImage;
-    msgText.text = [(Message *)object text];
+    //[cell_message setMessage: (Message *)object rightward: !([indexPath row] % 3)];
     
+    cell_message.message = (Message *) object;
+       
     // Mark message as read.
     // Let's instead do this (asynchronously) from loadView and iterate over all messages
     if (![(Message *)object read]) { // not read, so save as read
@@ -548,7 +469,7 @@ static NSString *kMessageCell = @"MessageCell";
         }
     }
     
-    return cell;
+    return cell_message;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

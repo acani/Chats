@@ -9,9 +9,16 @@
 #import <UIKit/UIKit.h>
 
 @interface TVCell_Date : UITableViewCell
+{
+    UILabel *msgSentDate;
+}
 
 @property (nonatomic, retain) NSDate * date;
 
+
+
 @property (nonatomic, retain) NSDateFormatter * dateFormatter;
+
+- (id) initWithReuseIdentifier:(NSString *)reuseIdentifier;
 
 @end
