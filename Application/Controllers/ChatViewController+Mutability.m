@@ -8,20 +8,25 @@
 
 #import "ChatViewController+Mutability.h"
 
-#import "Message.h"
+//#import "Message.h"
 
 
 #define ClearConversationButtonIndex 0
 
 @implementation ChatViewController (Mutability)
 
++ (NSDate*) sendDateInMessage:(id)message {
+    return [message valueForKey: @"sentDate"];
+}
 
-
++ (void) setIsMine:(BOOL)isMine inMessage:(id)message {
+    [message setValue: [NSNumber numberWithBool: isMine] forKey:@"isMine"];
+}
 // Returns number of objects added to cellMap (1 or 2).
-- (NSUInteger)addMessage:(Message *)message 
+- (NSUInteger)addMessage:(id)message 
 {
     // Show sentDates at most every 15 minutes.
-    NSDate *currentSentDate = message.sentDate;
+    NSDate *currentSentDate = [[self class] sendDateInMessage: message]; //  message.sentDate;
     NSUInteger numberOfObjectsAdded = 1;
     NSUInteger prevIndex = [cellMap count] - 1;
     
@@ -29,11 +34,13 @@
     
     if([cellMap count])
     {
-        BOOL prevIsMessage = [[cellMap objectAtIndex:prevIndex] isKindOfClass:[Message class]];
+        // BOOL prevIsMessage = [[cellMap objectAtIndex:prevIndex] isKindOfClass:[Message class]];
+        BOOL prevIsMessage = ! [[cellMap objectAtIndex:prevIndex] isKindOfClass:[NSDate class]];
+        
         if(prevIsMessage)
         {
-            Message * temp = [cellMap objectAtIndex:prevIndex];
-            NSDate * previousSentDate = temp.sentDate;
+            id temp = [cellMap objectAtIndex:prevIndex];
+            NSDate * previousSentDate =[[self class] sendDateInMessage: temp]; //  temp.sentDate;
             // if there has been more than a 15 min gap between this and the previous message!
             if([currentSentDate timeIntervalSinceDate:previousSentDate] > SECONDS_BETWEEN_MESSAGES) 
             { 
@@ -51,7 +58,9 @@
     
     [cellMap addObject:message];
     
-    message.isMine = [NSNumber numberWithBool: (([cellMap count] %3) == 0)];
+    BOOL isMine_ = (([cellMap count] %3) == 0);
+    [[self class] setIsMine: isMine_ inMessage: message];
+    //message.isMine = [NSNumber numberWithBool: (([cellMap count] %3) == 0)];
     
     //    [message.managedObjectContext save: nil];
     
@@ -71,7 +80,7 @@
     BOOL isLastObject = index == cellMapCount;
     BOOL prevIsDate = [[cellMap objectAtIndex:prevIndex] isKindOfClass:[NSDate class]];
     
-    if (isLastObject && prevIsDate ||
+    if ((isLastObject && prevIsDate) ||
         prevIsDate && [[cellMap objectAtIndex:index] isKindOfClass:[NSDate class]]) {
         [cellMap removeObjectAtIndex:prevIndex];
         numberOfObjectsRemoved = 2;
@@ -93,26 +102,20 @@
     
 }
 
+- (void) removeMessage:(id)message {
+
+}
+
+- (void) clearAllMessage {
+    
+}
 #pragma mark UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)modalView clickedButtonAtIndex:(NSInteger)buttonIndex {
 	switch (buttonIndex) {
 		case ClearConversationButtonIndex: {
-            NSError *error;
-            fetchedResultsController.delegate = nil;               // turn off delegate callbacks
-            for (Message *message in [fetchedResultsController fetchedObjects]) {
-                [managedObjectContext deleteObject:message];
-            }
-            if (![managedObjectContext save:&error]) {
-                // TODO: Handle the error appropriately.
-                NSLog(@"Delete message error %@, %@", error, [error userInfo]);
-            }
-            fetchedResultsController.delegate = self;              // reconnect after mass delete
-            if (![fetchedResultsController performFetch:&error]) { // resync controller
-                // TODO: Handle the error appropriately.
-                NSLog(@"fetchResults error %@, %@", error, [error userInfo]);
-            }
-            
+            [self clearAllMessage];
+                        
             [cellMap removeAllObjects];
             [chatContent reloadData];
             
@@ -134,7 +137,9 @@
 
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [[cellMap objectAtIndex:[indexPath row]] isKindOfClass:[Message class]];
+    return  ! [[cellMap objectAtIndex:[indexPath row]] isKindOfClass:[NSDate class]];
+    
+    //return [[cellMap objectAtIndex:[indexPath row]] isKindOfClass:[Message class]];
     //    return [[tableView cellForRowAtIndexPath:indexPath] reuseIdentifier] == kMessageCell;
 }
 
@@ -150,13 +155,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         
         //        NSLog(@"Delete %@", object);
         
-        // Remove message from managed object context by index path.
-        [managedObjectContext deleteObject:(Message *)object];
-        NSError *error;
-        if (![managedObjectContext save:&error]) {
-            // TODO: Handle the error appropriately.
-            NSLog(@"Delete message error %@, %@", error, [error userInfo]);
-        }
+        [self removeMessage: object];
     }
 }
 

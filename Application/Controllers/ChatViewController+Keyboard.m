@@ -78,7 +78,7 @@
     NSInteger bottomRow = [cellMap count] - 1;
     if (bottomRow >= 0) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:bottomRow inSection:0];
-        [self.chatContent scrollToRowAtIndexPath:indexPath
+        [chatContent scrollToRowAtIndexPath:indexPath
                            atScrollPosition:UITableViewScrollPositionBottom animated:animated];
     }
 }

@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0215231114C541DB0006E055 /* ChatViewController__coreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0215231014C541DB0006E055 /* ChatViewController__coreData.m */; };
 		025167CF14C3BA1F00D2A951 /* ChatBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167CE14C3BA1F00D2A951 /* ChatBar.m */; };
 		025167D514C3CCE000D2A951 /* Defines.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167D414C3CCDF00D2A951 /* Defines.m */; };
 		025167D914C3F53800D2A951 /* TVCell_Date.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167D814C3F53800D2A951 /* TVCell_Date.m */; };
 		025167DC14C4025C00D2A951 /* TVCell_Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167DB14C4025C00D2A951 /* TVCell_Message.m */; };
-		025167DF14C40F4800D2A951 /* ChatViewController_mutable.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167DE14C40F4700D2A951 /* ChatViewController_mutable.m */; };
 		025167E214C4126700D2A951 /* ChatViewController+Mutability.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167E114C4126700D2A951 /* ChatViewController+Mutability.m */; };
 		025167E514C412EE00D2A951 /* ChatViewController+Keyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167E414C412ED00D2A951 /* ChatViewController+Keyboard.m */; };
 		363AE19613EC32A000F3C4B1 /* ChatBubbleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 363AE19413EC32A000F3C4B1 /* ChatBubbleGray@2x.png */; };
@@ -37,6 +37,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0215230F14C541DB0006E055 /* ChatViewController__coreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController__coreData.h; sourceTree = "<group>"; };
+		0215231014C541DB0006E055 /* ChatViewController__coreData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController__coreData.m; sourceTree = "<group>"; };
 		025167CD14C3BA1F00D2A951 /* ChatBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatBar.h; path = Application/Views/ChatBar.h; sourceTree = SOURCE_ROOT; };
 		025167CE14C3BA1F00D2A951 /* ChatBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatBar.m; path = Application/Views/ChatBar.m; sourceTree = SOURCE_ROOT; };
 		025167D314C3CCDF00D2A951 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
@@ -45,8 +47,6 @@
 		025167D814C3F53800D2A951 /* TVCell_Date.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TVCell_Date.m; path = TableViewCells/TVCell_Date.m; sourceTree = "<group>"; };
 		025167DA14C4025C00D2A951 /* TVCell_Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TVCell_Message.h; path = TableViewCells/TVCell_Message.h; sourceTree = "<group>"; };
 		025167DB14C4025C00D2A951 /* TVCell_Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TVCell_Message.m; path = TableViewCells/TVCell_Message.m; sourceTree = "<group>"; };
-		025167DD14C40F4700D2A951 /* ChatViewController_mutable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController_mutable.h; sourceTree = "<group>"; };
-		025167DE14C40F4700D2A951 /* ChatViewController_mutable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController_mutable.m; sourceTree = "<group>"; };
 		025167E014C4126700D2A951 /* ChatViewController+Mutability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ChatViewController+Mutability.h"; sourceTree = "<group>"; };
 		025167E114C4126700D2A951 /* ChatViewController+Mutability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ChatViewController+Mutability.m"; sourceTree = "<group>"; };
 		025167E314C412ED00D2A951 /* ChatViewController+Keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ChatViewController+Keyboard.h"; sourceTree = "<group>"; };
@@ -170,12 +170,12 @@
 				025167CE14C3BA1F00D2A951 /* ChatBar.m */,
 				025167D314C3CCDF00D2A951 /* Defines.h */,
 				025167D414C3CCDF00D2A951 /* Defines.m */,
-				025167DD14C40F4700D2A951 /* ChatViewController_mutable.h */,
-				025167DE14C40F4700D2A951 /* ChatViewController_mutable.m */,
 				025167E014C4126700D2A951 /* ChatViewController+Mutability.h */,
 				025167E114C4126700D2A951 /* ChatViewController+Mutability.m */,
 				025167E314C412ED00D2A951 /* ChatViewController+Keyboard.h */,
 				025167E414C412ED00D2A951 /* ChatViewController+Keyboard.m */,
+				0215230F14C541DB0006E055 /* ChatViewController__coreData.h */,
+				0215231014C541DB0006E055 /* ChatViewController__coreData.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -250,6 +250,9 @@
 /* Begin PBXProject section */
 		C92BF84213631710003B20F6 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = C92BF84513631710003B20F6 /* Build configuration list for PBXProject "AcaniChat" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -301,9 +304,9 @@
 				025167D514C3CCE000D2A951 /* Defines.m in Sources */,
 				025167D914C3F53800D2A951 /* TVCell_Date.m in Sources */,
 				025167DC14C4025C00D2A951 /* TVCell_Message.m in Sources */,
-				025167DF14C40F4800D2A951 /* ChatViewController_mutable.m in Sources */,
 				025167E214C4126700D2A951 /* ChatViewController+Mutability.m in Sources */,
 				025167E514C412EE00D2A951 /* ChatViewController+Keyboard.m in Sources */,
+				0215231114C541DB0006E055 /* ChatViewController__coreData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

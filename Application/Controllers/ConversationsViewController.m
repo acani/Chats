@@ -1,5 +1,5 @@
 #import "ConversationsViewController.h"
-#import "ChatViewController.h"
+#import "ChatViewController__coreData.h"
 #import "Conversation.h"
 
 @interface ConversationsViewController ()
@@ -93,7 +93,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    ChatViewController *chatViewController = [[ChatViewController alloc] init];
+    ChatViewController__coreData *chatViewController = [[ChatViewController__coreData alloc] init];
     chatViewController.managedObjectContext = managedObjectContext;
     [self.navigationController pushViewController:chatViewController animated:YES];
 }
@@ -135,7 +135,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void) pushComposeViewController {
     ChatViewController *chatViewController = [[ChatViewController alloc] init];
-    chatViewController.managedObjectContext = managedObjectContext;
+    //chatViewController.managedObjectContext = managedObjectContext;
     [self.navigationController pushViewController:chatViewController animated:YES];
 }
 @end

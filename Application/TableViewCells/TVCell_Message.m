@@ -20,13 +20,22 @@
 
 @synthesize rightward = _rightward;
 
-- (void) setMessage:(Message *)message {
-    [self setMessage: message rightward: [message.isMine boolValue]];
+- (void) setMessage:(id)message {
+    BOOL rightward ;
+    if ([message isKindOfClass: [NSDictionary class]]) {
+        rightward = [[message valueForKey: @"isMine"] boolValue];
+    }else {
+        rightward = [[message valueForKey: @"isMine"] boolValue];
+        //[message.isMine boolValue];
+    }
+    [self setMessage: message rightward: rightward];
 }
 
-- (void) setMessage:(Message *)message rightward: (BOOL) rightward{
+- (void) setMessage:(id)message rightward: (BOOL) rightward{
     // Configure the cell to show the message in a bubble. Layout message cell & its subviews.
-    CGSize size = [[message text] sizeWithFont:[UIFont systemFontOfSize:kMessageFontSize]
+    NSString * text = [message valueForKey: @"text"];
+    
+    CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:kMessageFontSize]
                                        constrainedToSize:CGSizeMake(kMessageTextWidth, CGFLOAT_MAX)
                                            lineBreakMode:UILineBreakModeWordWrap];
     UIImage *bubbleImage;
@@ -53,7 +62,7 @@
         msgText.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     }
     msgBackground.image = bubbleImage;
-    msgText.text = [message text];
+    msgText.text = [message objectForKey: @"text"]; // [message text];
     
 }
 

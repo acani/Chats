@@ -3,35 +3,31 @@
 
 #import "ChatBar.h"
 
-@class Message;
+//@class Message;
 
-@interface ChatViewController : UIViewController <NSFetchedResultsControllerDelegate,
+@interface ChatViewController : UIViewController <
 UITableViewDelegate, UITableViewDataSource,  UIActionSheetDelegate,
 
 ChatBarDelegate
 > {
 
+    SystemSoundID receiveMessageSound;
     NSMutableArray *cellMap;
     UITableView *chatContent;
     ChatBar *chatBar;
     
-    NSManagedObjectContext *managedObjectContext;
-    
-    NSFetchedResultsController *fetchedResultsController;
 }
-
+/*
 @property (nonatomic, assign) SystemSoundID receiveMessageSound;
 
 @property (nonatomic, strong) UITableView *chatContent;
 
 @property (nonatomic, strong) ChatBar *chatBar;
 
-@property (nonatomic, copy) NSMutableArray *cellMap;
+//@property (nonatomic, copy) NSMutableArray *cellMap;
+*/
+- (id) createNewMessageWithText: (NSString*) text;
 
-@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
-
-
-- (void)fetchResults;
+@property (nonatomic, strong) NSArray * array; 
 
 @end

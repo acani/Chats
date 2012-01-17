@@ -1,3 +1,5 @@
+
+#import <CoreData/CoreData.h>
 @class Message;
 
 @interface Conversation : NSManagedObject {

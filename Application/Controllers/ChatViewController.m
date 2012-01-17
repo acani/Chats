@@ -1,6 +1,6 @@
 // Old
 #import "ChatViewController.h"
-#import "Message.h"
+
 #import "NSString+Additions.h"
 
 
@@ -31,7 +31,7 @@ VIEW_WIDTH, HEIGHT);\
 
 
 @implementation ChatViewController
-
+/*
 @synthesize receiveMessageSound;
 
 @synthesize chatContent;
@@ -39,9 +39,19 @@ VIEW_WIDTH, HEIGHT);\
 @synthesize chatBar;
 
 @synthesize cellMap;
+*/
 
-@synthesize fetchedResultsController;
-@synthesize managedObjectContext;
+
+@synthesize  array = _array;
+
+- (void) setArray:(NSArray *)array {
+    _array = array;
+    
+    [_array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self addMessage: obj];
+    }];
+    [chatContent reloadData];
+}
 
 #pragma mark NSObject
 
@@ -52,12 +62,12 @@ VIEW_WIDTH, HEIGHT);\
 #pragma mark UIViewController
 
 - (void)viewDidUnload {
-    self.chatContent = nil;
+/*    self.chatContent = nil;
     self.chatBar = nil;
 
-    self.cellMap = nil;
+//    self.cellMap = nil;
     
-    self.fetchedResultsController = nil;
+  */  
 
     // Leave managedObjectContext since it's not recreated in viewDidLoad
     
@@ -100,34 +110,8 @@ VIEW_WIDTH, HEIGHT);\
     [self.view addSubview:chatBar];
     [self.view sendSubviewToBack:chatBar];
     
-//    // Test with lots of messages.
-//    NSDate *before = [NSDate date];
-//    for (NSUInteger i = 0; i < 500; i++) {
-//        Message *msg = (Message *)[NSEntityDescription
-//                                   insertNewObjectForEntityForName:@"Message"
-//                                   inManagedObjectContext:managedObjectContext];
-//    msg.text = [NSString stringWithFormat:@"This is message number %d", i];
-//    NSDate *now = [[NSDate alloc] init]; msg.sentDate = now; [now release];
-//    }
-////    sleep(2);
-//    NSLog(@"Creating messages in memory takes %f seconds", [before timeIntervalSinceNow]);
-//    NSError *error;
-//    if (![managedObjectContext save:&error]) {
-//        // TODO: Handle the error appropriately.
-//        NSLog(@"Mass message creation error %@, %@", error, [error userInfo]);
-//    }
-//    NSLog(@"Saving messages to disc takes %f seconds", [before timeIntervalSinceNow]);
-    
-    [self fetchResults];
-    
-    // Construct cellMap from fetchedObjects.
-    cellMap = [[NSMutableArray alloc]
-               initWithCapacity:[[fetchedResultsController fetchedObjects] count]*2];
-    
-   
-    for (Message *message in [fetchedResultsController fetchedObjects]) {
-        [self addMessage:message];
-    }
+
+    cellMap = [[NSMutableArray alloc] initWithCapacity:20];
     
     // TODO: Implement check-box edit mode like iPhone Messages does. (Icebox)
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
@@ -174,6 +158,15 @@ VIEW_WIDTH, HEIGHT);\
 //    }
 }
 
+- (id) createNewMessageWithText: (NSString*) text{
+    // must be mutable, if need to be edited later......
+    NSDictionary * dict = 
+    [NSMutableDictionary dictionaryWithObjectsAndKeys:
+     text, @"text", [NSDate date], @"sentDate"
+     , nil];
+    
+    return dict;
+}
 
 #pragma mark Message
 - (void) chatBar:(ChatBar *)chatBar didSendText:(NSString *)text {
@@ -187,24 +180,21 @@ VIEW_WIDTH, HEIGHT);\
     
     // Don't send blank messages.
     if (rightTrimmedMessage.length == 0) {
-        [self.chatBar clearChatInput];
+        [chatBar clearChatInput];
         return;
     }
     
-    // Create new message and save to Core Data.
-    Message *newMessage = (Message *)[NSEntityDescription
-                                      insertNewObjectForEntityForName:@"Message"
-                                      inManagedObjectContext:managedObjectContext];
-    newMessage.text = rightTrimmedMessage;
-    NSDate *now = [[NSDate alloc] init]; newMessage.sentDate = now; 
+    id object = [self createNewMessageWithText: text];
 
-    NSError *error;
-    if (![managedObjectContext save:&error]) {
-        // TODO: Handle the error appropriately.
-        NSLog(@"sendMessage error %@, %@", error, [error userInfo]);
+    if (YES) {
+        [self addMessage: object];
+        [chatContent reloadData];
+    }else {
+        // if CoreData.. no need, because FRC Delegate will do. 
     }
+   
     
-    [self.chatBar  clearChatInput];
+    [chatBar  clearChatInput]; // ????????
     
     [self scrollToBottomAnimated:YES]; // must come after RESET_CHAT_BAR_HEIGHT above
     
@@ -221,7 +211,7 @@ VIEW_WIDTH, HEIGHT);\
 #pragma mark UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//    NSLog(@"number of rows: %d", [cellMap count]);
+    NSLog(@"number of rows: %d", [cellMap count]);
     return [cellMap count];
 }
 
@@ -231,13 +221,9 @@ static NSString *kMessageCell = @"MessageCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    UIImageView *msgBackground;
-    UILabel *msgText;
-    
 //    NSLog(@"cell for row: %d", [indexPath row]);
     
     NSObject *object = [cellMap objectAtIndex:[indexPath row]];
-    UITableViewCell *cell;
     
     // Handle sentDate (NSDate).
     if ([object isKindOfClass:[NSDate class]]) {
@@ -263,18 +249,9 @@ static NSString *kMessageCell = @"MessageCell";
     }
     //[cell_message setMessage: (Message *)object rightward: !([indexPath row] % 3)];
     
-    cell_message.message = (Message *) object;
+    cell_message.message =  object;
        
-    // Mark message as read.
-    // Let's instead do this (asynchronously) from loadView and iterate over all messages
-    if (![(Message *)object read]) { // not read, so save as read
-        [(Message *)object setRead:[NSNumber numberWithBool:YES]];
-        NSError *error;
-        if (![managedObjectContext save:&error]) {
-            // TODO: Handle the error appropriately.
-            NSLog(@"Save message as read error %@, %@", error, [error userInfo]);
-        }
-    }
+    
     
     return cell_message;
 }
@@ -293,96 +270,11 @@ static NSString *kMessageCell = @"MessageCell";
     }
     
     // Set MessageCell height.
-    CGSize size = [[(Message *)object text] sizeWithFont:[UIFont systemFontOfSize:kMessageFontSize]
+    NSString * text = [object valueForKey: @"text"];
+    CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:kMessageFontSize]
                                        constrainedToSize:CGSizeMake(kMessageTextWidth, CGFLOAT_MAX)
                                            lineBreakMode:UILineBreakModeWordWrap];
     return size.height + 17.0f;
-}
-
-
-#pragma mark NSFetchedResultsController
-
-- (void)fetchResults {
-    if (fetchedResultsController) return;
-
-    // Create and configure a fetch request.
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Message"
-                                              inManagedObjectContext:managedObjectContext];
-    [fetchRequest setEntity:entity];
-    [fetchRequest setFetchBatchSize:20];
-    
-    // Create the sort descriptors array.
-    NSSortDescriptor *tsDesc = [[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES];
-    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:tsDesc, nil];
-    [fetchRequest setSortDescriptors:sortDescriptors];
-    
-    // Create and initialize the fetchedResultsController.
-    fetchedResultsController = [[NSFetchedResultsController alloc]
-                                initWithFetchRequest:fetchRequest
-                                managedObjectContext:managedObjectContext
-                                sectionNameKeyPath:nil /* one section */ cacheName:@"Message"];
-    
-    fetchedResultsController.delegate = self;
-    
-    NSError *error;
-    if (![fetchedResultsController performFetch:&error]) {
-        // TODO: Handle the error appropriately.
-        NSLog(@"fetchResults error %@, %@", error, [error userInfo]);
-    }
-}    
-
-#pragma mark NSFetchedResultsControllerDelegate
-
-// // beginUpdates & endUpdates cause the cells to get mixed up when scrolling aggressively.
-//- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-//    [chatContent beginUpdates];
-//}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath {
-    
-    NSArray *indexPaths;
-    
-    switch(type) {
-        case NSFetchedResultsChangeInsert: {
-            NSUInteger cellCount = [cellMap count];
-            
-            NSIndexPath *firstIndexPath = [NSIndexPath indexPathForRow:cellCount inSection:0];
-            
-            if ([self addMessage:anObject] == 1) {
-//                NSLog(@"insert 1 row at index: %d", cellCount);
-                indexPaths = [[NSArray alloc] initWithObjects:firstIndexPath, nil];
-            } else { // 2
-//                NSLog(@"insert 2 rows at index: %d", cellCount);
-                indexPaths = [[NSArray alloc] initWithObjects:firstIndexPath,
-                              [NSIndexPath indexPathForRow:cellCount+1 inSection:0], nil];
-            }
-            
-            [chatContent insertRowsAtIndexPaths:indexPaths
-                               withRowAnimation:UITableViewRowAnimationNone];
-            [self scrollToBottomAnimated:YES];
-            break;
-        }
-        case NSFetchedResultsChangeDelete: {
-            NSUInteger objectIndex = [cellMap indexOfObjectIdenticalTo:anObject];
-            NSIndexPath *objectIndexPath = [NSIndexPath indexPathForRow:objectIndex inSection:0];
-            
-            if ([self removeMessageAtIndex:objectIndex] == 1) {
-//                NSLog(@"delete 1 row");
-                indexPaths = [[NSArray alloc] initWithObjects:objectIndexPath, nil];
-            } else { // 2
-//                NSLog(@"delete 2 rows");
-                indexPaths = [[NSArray alloc] initWithObjects:objectIndexPath,
-                              [NSIndexPath indexPathForRow:objectIndex-1 inSection:0], nil];
-            }
-            
-            [chatContent deleteRowsAtIndexPaths:indexPaths
-                               withRowAnimation:UITableViewRowAnimationNone];
-            break;
-        }
-    }
 }
 
 // // beginUpdates & endUpdates cause the cells to get mixed up when scrolling aggressively.
