@@ -7,52 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0215231114C541DB0006E055 /* ChatViewController__coreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0215231014C541DB0006E055 /* ChatViewController__coreData.m */; };
-		025167CF14C3BA1F00D2A951 /* ChatBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167CE14C3BA1F00D2A951 /* ChatBar.m */; };
-		025167D514C3CCE000D2A951 /* Defines.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167D414C3CCDF00D2A951 /* Defines.m */; };
-		025167D914C3F53800D2A951 /* TVCell_Date.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167D814C3F53800D2A951 /* TVCell_Date.m */; };
-		025167DC14C4025C00D2A951 /* TVCell_Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167DB14C4025C00D2A951 /* TVCell_Message.m */; };
-		025167E214C4126700D2A951 /* ChatViewController+Mutability.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167E114C4126700D2A951 /* ChatViewController+Mutability.m */; };
-		025167E514C412EE00D2A951 /* ChatViewController+Keyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 025167E414C412ED00D2A951 /* ChatViewController+Keyboard.m */; };
-		363AE19613EC32A000F3C4B1 /* ChatBubbleGray@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 363AE19413EC32A000F3C4B1 /* ChatBubbleGray@2x.png */; };
-		363AE19713EC32A000F3C4B1 /* ChatBubbleGreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 363AE19513EC32A000F3C4B1 /* ChatBubbleGreen@2x.png */; };
 		C92BF85013631710003B20F6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF84F13631710003B20F6 /* UIKit.framework */; };
 		C92BF85213631710003B20F6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF85113631710003B20F6 /* Foundation.framework */; };
 		C92BF85413631710003B20F6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF85313631710003B20F6 /* CoreGraphics.framework */; };
 		C92BF85613631710003B20F6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92BF85513631710003B20F6 /* CoreData.framework */; };
 		C92BF8C31363285B003B20F6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF8B81363285A003B20F6 /* AppDelegate.m */; };
-		C92BF8C41363285B003B20F6 /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C92BF8BB1363285A003B20F6 /* ChatViewController.m */; };
-		C92BF8C51363285B003B20F6 /* AcaniChat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C92BF8BD1363285A003B20F6 /* AcaniChat.xcdatamodeld */; };
 		C92D07A01363417A00954810 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C92D079F1363417A00954810 /* AudioToolbox.framework */; };
-		C92D07A7136344BE00954810 /* basicsound.wav in Resources */ = {isa = PBXBuildFile; fileRef = C92D07A2136344BE00954810 /* basicsound.wav */; };
-		C92D07A8136344BE00954810 /* ChatBar.png in Resources */ = {isa = PBXBuildFile; fileRef = C92D07A3136344BE00954810 /* ChatBar.png */; };
-		C92D07A9136344BE00954810 /* ChatBubbleGray.png in Resources */ = {isa = PBXBuildFile; fileRef = C92D07A4136344BE00954810 /* ChatBubbleGray.png */; };
-		C92D07AA136344BE00954810 /* ChatBubbleGreen.png in Resources */ = {isa = PBXBuildFile; fileRef = C92D07A5136344BE00954810 /* ChatBubbleGreen.png */; };
-		C92D07AB136344BE00954810 /* SendButton.png in Resources */ = {isa = PBXBuildFile; fileRef = C92D07A6136344BE00954810 /* SendButton.png */; };
-		C92D07B713634A0400954810 /* NSString+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = C92D07B613634A0400954810 /* NSString+Additions.m */; };
-		C92D07BB13634B2800954810 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = C92D07BA13634B2800954810 /* Message.m */; };
 		C99F265E139AB68900192BE5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C99F265C139AB68900192BE5 /* main.m */; };
-		C9C78E6913CC069700EDBB79 /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C78E6813CC069700EDBB79 /* Conversation.m */; };
 		C9C90E031363743E009626F1 /* ConversationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C90E021363743E009626F1 /* ConversationsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0215230F14C541DB0006E055 /* ChatViewController__coreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController__coreData.h; sourceTree = "<group>"; };
-		0215231014C541DB0006E055 /* ChatViewController__coreData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController__coreData.m; sourceTree = "<group>"; };
-		025167CD14C3BA1F00D2A951 /* ChatBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatBar.h; path = Application/Views/ChatBar.h; sourceTree = SOURCE_ROOT; };
-		025167CE14C3BA1F00D2A951 /* ChatBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatBar.m; path = Application/Views/ChatBar.m; sourceTree = SOURCE_ROOT; };
-		025167D314C3CCDF00D2A951 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
-		025167D414C3CCDF00D2A951 /* Defines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Defines.m; sourceTree = "<group>"; };
-		025167D714C3F53800D2A951 /* TVCell_Date.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TVCell_Date.h; path = TableViewCells/TVCell_Date.h; sourceTree = "<group>"; };
-		025167D814C3F53800D2A951 /* TVCell_Date.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TVCell_Date.m; path = TableViewCells/TVCell_Date.m; sourceTree = "<group>"; };
-		025167DA14C4025C00D2A951 /* TVCell_Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TVCell_Message.h; path = TableViewCells/TVCell_Message.h; sourceTree = "<group>"; };
-		025167DB14C4025C00D2A951 /* TVCell_Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TVCell_Message.m; path = TableViewCells/TVCell_Message.m; sourceTree = "<group>"; };
-		025167E014C4126700D2A951 /* ChatViewController+Mutability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ChatViewController+Mutability.h"; sourceTree = "<group>"; };
-		025167E114C4126700D2A951 /* ChatViewController+Mutability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ChatViewController+Mutability.m"; sourceTree = "<group>"; };
-		025167E314C412ED00D2A951 /* ChatViewController+Keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ChatViewController+Keyboard.h"; sourceTree = "<group>"; };
-		025167E414C412ED00D2A951 /* ChatViewController+Keyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ChatViewController+Keyboard.m"; sourceTree = "<group>"; };
-		363AE19413EC32A000F3C4B1 /* ChatBubbleGray@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ChatBubbleGray@2x.png"; sourceTree = "<group>"; };
-		363AE19513EC32A000F3C4B1 /* ChatBubbleGreen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ChatBubbleGreen@2x.png"; sourceTree = "<group>"; };
 		C92BF84B13631710003B20F6 /* AcaniChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AcaniChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C92BF84F13631710003B20F6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C92BF85113631710003B20F6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -60,27 +25,13 @@
 		C92BF85513631710003B20F6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C92BF8B71363285A003B20F6 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C92BF8B81363285A003B20F6 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		C92BF8BA1363285A003B20F6 /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
-		C92BF8BB1363285A003B20F6 /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
-		C92BF8BE1363285A003B20F6 /* AcaniChat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AcaniChat.xcdatamodel; sourceTree = "<group>"; };
 		C92D079F1363417A00954810 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		C92D07A2136344BE00954810 /* basicsound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = basicsound.wav; sourceTree = "<group>"; };
-		C92D07A3136344BE00954810 /* ChatBar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ChatBar.png; sourceTree = "<group>"; };
-		C92D07A4136344BE00954810 /* ChatBubbleGray.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ChatBubbleGray.png; sourceTree = "<group>"; };
-		C92D07A5136344BE00954810 /* ChatBubbleGreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ChatBubbleGreen.png; sourceTree = "<group>"; };
-		C92D07A6136344BE00954810 /* SendButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SendButton.png; sourceTree = "<group>"; };
-		C92D07B513634A0400954810 /* NSString+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Additions.h"; sourceTree = "<group>"; };
-		C92D07B613634A0400954810 /* NSString+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Additions.m"; sourceTree = "<group>"; };
-		C92D07B913634B2800954810 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
-		C92D07BA13634B2800954810 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		C92D07C613634FC900954810 /* MIT-LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = "MIT-LICENSE"; sourceTree = "<group>"; };
 		C92D07C713634FC900954810 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		C92D07C813634FC900954810 /* TODO.taskpaper */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO.taskpaper; sourceTree = "<group>"; };
 		C99F265A139AB68900192BE5 /* AcaniChat-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "AcaniChat-Info.plist"; sourceTree = "<group>"; };
 		C99F265B139AB68900192BE5 /* AcaniChat-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AcaniChat-Prefix.pch"; sourceTree = "<group>"; };
 		C99F265C139AB68900192BE5 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C9C78E6713CC069700EDBB79 /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Conversation.h; path = ../../../AcaniChat/Application/Models/Conversation.h; sourceTree = "<group>"; };
-		C9C78E6813CC069700EDBB79 /* Conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Conversation.m; path = ../../../AcaniChat/Application/Models/Conversation.m; sourceTree = "<group>"; };
 		C9C90E011363743E009626F1 /* ConversationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationsViewController.h; sourceTree = "<group>"; };
 		C9C90E021363743E009626F1 /* ConversationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,25 +52,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		025167D614C3F4E400D2A951 /* TableViewCells */ = {
-			isa = PBXGroup;
-			children = (
-				025167D714C3F53800D2A951 /* TVCell_Date.h */,
-				025167D814C3F53800D2A951 /* TVCell_Date.m */,
-				025167DA14C4025C00D2A951 /* TVCell_Message.h */,
-				025167DB14C4025C00D2A951 /* TVCell_Message.m */,
-			);
-			name = TableViewCells;
-			sourceTree = "<group>";
-		};
 		C92BF84013631710003B20F6 = {
 			isa = PBXGroup;
 			children = (
 				C92BF8B61363285A003B20F6 /* Application */,
-				C92D07B413634A0400954810 /* Categories */,
 				C92BF84E13631710003B20F6 /* Frameworks */,
 				C92BF84C13631710003B20F6 /* Products */,
-				C92D07A1136344BE00954810 /* Resources */,
 				C99F2659139AB68900192BE5 /* Supporting Files */,
 				C92D07C613634FC900954810 /* MIT-LICENSE */,
 				C92D07C713634FC900954810 /* README.md */,
@@ -150,11 +88,9 @@
 		C92BF8B61363285A003B20F6 /* Application */ = {
 			isa = PBXGroup;
 			children = (
-				025167D614C3F4E400D2A951 /* TableViewCells */,
 				C92BF8B71363285A003B20F6 /* AppDelegate.h */,
 				C92BF8B81363285A003B20F6 /* AppDelegate.m */,
 				C92BF8B91363285A003B20F6 /* Controllers */,
-				C92BF8BC1363285A003B20F6 /* Models */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -162,57 +98,10 @@
 		C92BF8B91363285A003B20F6 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				C92BF8BA1363285A003B20F6 /* ChatViewController.h */,
-				C92BF8BB1363285A003B20F6 /* ChatViewController.m */,
 				C9C90E011363743E009626F1 /* ConversationsViewController.h */,
 				C9C90E021363743E009626F1 /* ConversationsViewController.m */,
-				025167CD14C3BA1F00D2A951 /* ChatBar.h */,
-				025167CE14C3BA1F00D2A951 /* ChatBar.m */,
-				025167D314C3CCDF00D2A951 /* Defines.h */,
-				025167D414C3CCDF00D2A951 /* Defines.m */,
-				025167E014C4126700D2A951 /* ChatViewController+Mutability.h */,
-				025167E114C4126700D2A951 /* ChatViewController+Mutability.m */,
-				025167E314C412ED00D2A951 /* ChatViewController+Keyboard.h */,
-				025167E414C412ED00D2A951 /* ChatViewController+Keyboard.m */,
-				0215230F14C541DB0006E055 /* ChatViewController__coreData.h */,
-				0215231014C541DB0006E055 /* ChatViewController__coreData.m */,
 			);
 			path = Controllers;
-			sourceTree = "<group>";
-		};
-		C92BF8BC1363285A003B20F6 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				C92BF8BD1363285A003B20F6 /* AcaniChat.xcdatamodeld */,
-				C9C78E6713CC069700EDBB79 /* Conversation.h */,
-				C9C78E6813CC069700EDBB79 /* Conversation.m */,
-				C92D07B913634B2800954810 /* Message.h */,
-				C92D07BA13634B2800954810 /* Message.m */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		C92D07A1136344BE00954810 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				C92D07A2136344BE00954810 /* basicsound.wav */,
-				C92D07A3136344BE00954810 /* ChatBar.png */,
-				C92D07A4136344BE00954810 /* ChatBubbleGray.png */,
-				363AE19413EC32A000F3C4B1 /* ChatBubbleGray@2x.png */,
-				C92D07A5136344BE00954810 /* ChatBubbleGreen.png */,
-				363AE19513EC32A000F3C4B1 /* ChatBubbleGreen@2x.png */,
-				C92D07A6136344BE00954810 /* SendButton.png */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		C92D07B413634A0400954810 /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				C92D07B513634A0400954810 /* NSString+Additions.h */,
-				C92D07B613634A0400954810 /* NSString+Additions.m */,
-			);
-			path = Categories;
 			sourceTree = "<group>";
 		};
 		C99F2659139AB68900192BE5 /* Supporting Files */ = {
@@ -275,13 +164,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C92D07A7136344BE00954810 /* basicsound.wav in Resources */,
-				C92D07A8136344BE00954810 /* ChatBar.png in Resources */,
-				C92D07A9136344BE00954810 /* ChatBubbleGray.png in Resources */,
-				363AE19613EC32A000F3C4B1 /* ChatBubbleGray@2x.png in Resources */,
-				C92D07AA136344BE00954810 /* ChatBubbleGreen.png in Resources */,
-				363AE19713EC32A000F3C4B1 /* ChatBubbleGreen@2x.png in Resources */,
-				C92D07AB136344BE00954810 /* SendButton.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,20 +175,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C92BF8C31363285B003B20F6 /* AppDelegate.m in Sources */,
-				C92BF8C41363285B003B20F6 /* ChatViewController.m in Sources */,
-				C92BF8C51363285B003B20F6 /* AcaniChat.xcdatamodeld in Sources */,
-				C92D07B713634A0400954810 /* NSString+Additions.m in Sources */,
-				C92D07BB13634B2800954810 /* Message.m in Sources */,
 				C99F265E139AB68900192BE5 /* main.m in Sources */,
 				C9C90E031363743E009626F1 /* ConversationsViewController.m in Sources */,
-				C9C78E6913CC069700EDBB79 /* Conversation.m in Sources */,
-				025167CF14C3BA1F00D2A951 /* ChatBar.m in Sources */,
-				025167D514C3CCE000D2A951 /* Defines.m in Sources */,
-				025167D914C3F53800D2A951 /* TVCell_Date.m in Sources */,
-				025167DC14C4025C00D2A951 /* TVCell_Message.m in Sources */,
-				025167E214C4126700D2A951 /* ChatViewController+Mutability.m in Sources */,
-				025167E514C412EE00D2A951 /* ChatViewController+Keyboard.m in Sources */,
-				0215231114C541DB0006E055 /* ChatViewController__coreData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,19 +269,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		C92BF8BD1363285A003B20F6 /* AcaniChat.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				C92BF8BE1363285A003B20F6 /* AcaniChat.xcdatamodel */,
-			);
-			currentVersion = C92BF8BE1363285A003B20F6 /* AcaniChat.xcdatamodel */;
-			path = AcaniChat.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = C92BF84213631710003B20F6 /* Project object */;
 }
