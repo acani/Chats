@@ -107,6 +107,9 @@ static CGFloat const kChatBarHeight4    = 94.0f;
                                                  name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification object:nil];
+    // Listen for backgrounding (to avoid keyboard bug)
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:)
+                                                 name:UIApplicationWillResignActiveNotification object:nil];
 
     self.view.backgroundColor = CHAT_BACKGROUND_COLOR; // shown during rotation    
     
@@ -245,14 +248,20 @@ static CGFloat const kChatBarHeight4    = 94.0f;
                                                      @selector(clearAll));
         self.navigationItem.leftBarButtonItem = clearAllButton;
         [clearAllButton release];
+        [chatInput resignFirstResponder];
+        [UIView transitionWithView:chatBar 
+                          duration:0.4f  
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^{ chatBar.hidden = YES; }  
+                        completion:NULL];  
     } else {
         self.navigationItem.leftBarButtonItem = nil;
+        [UIView transitionWithView:chatBar  
+                          duration:0.4f  
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^{ chatBar.hidden = NO; }  
+                        completion:NULL];  
     }
-    
-//    if ([chatInput isFirstResponder]) {
-//        NSLog(@"resign first responder");
-//        [chatInput resignFirstResponder];
-//    }
 }
 
 #pragma mark UITextViewDelegate
@@ -345,6 +354,10 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 
 
 # pragma mark Keyboard Notifications
+
+- (void)applicationWillResignActive:(NSNotification *)notification {
+    [chatInput resignFirstResponder];
+}
 
 - (void)keyboardWillShow:(NSNotification *)notification {
     [self resizeViewWithOptions:[notification userInfo]];

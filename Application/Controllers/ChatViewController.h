@@ -30,6 +30,7 @@ UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDel
 - (void)keyboardWillShow:(NSNotification *)notification;
 - (void)keyboardWillHide:(NSNotification *)notification;
 - (void)resizeViewWithOptions:(NSDictionary *)options;
+- (void)applicationWillResignActive:(NSNotification *)notification;
 - (void)scrollToBottomAnimated:(BOOL)animated;
 
 - (void)sendMessage;
