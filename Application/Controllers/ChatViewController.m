@@ -661,12 +661,12 @@ static NSString *kMessageCell = @"MessageCell";
     UIImage *bubbleImage;
     if (!([indexPath row] % 3)) { // right bubble
         CGFloat editWidth = tableView.editing ? 32.0f : 0.0f;
-        msgBackground.frame = CGRectMake(tableView.frame.size.width-size.width-34.0f-editWidth,
+        msgBackground.frame = CGRectMake(cell.frame.size.width-size.width-34.0f-editWidth,
                                          kMessageFontSize-13.0f, size.width+34.0f,
                                          size.height+12.0f);
         bubbleImage = [[UIImage imageNamed:@"ChatBubbleGreen.png"]
                        stretchableImageWithLeftCapWidth:15 topCapHeight:13];
-        msgText.frame = CGRectMake(tableView.frame.size.width-size.width-22.0f-editWidth,
+        msgText.frame = CGRectMake(cell.frame.size.width-size.width-22.0f-editWidth,
                                    kMessageFontSize-9.0f, size.width+5.0f, size.height);
         msgBackground.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
         msgText.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
