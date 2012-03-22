@@ -486,8 +486,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     BOOL isLastObject = index == cellMapCount;
     BOOL prevIsDate = [[cellMap objectAtIndex:prevIndex] isKindOfClass:[NSDate class]];
     
-    if (isLastObject && prevIsDate ||
-        prevIsDate && [[cellMap objectAtIndex:index] isKindOfClass:[NSDate class]]) {
+    if (prevIsDate && (isLastObject || [[cellMap objectAtIndex:index] isKindOfClass:[NSDate class]])) {
         [cellMap removeObjectAtIndex:prevIndex];
         numberOfObjectsRemoved = 2;
     }
