@@ -14,6 +14,7 @@ UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIActionSheetDel
 
 @property (nonatomic, retain) UIImageView *chatBar;
 @property (nonatomic, retain) UITextView *chatInput;
+@property (nonatomic, retain) UILabel *chatCharacterCount;
 @property (nonatomic, assign) CGFloat previousContentHeight;
 @property (nonatomic, retain) UIButton *sendButton;
 

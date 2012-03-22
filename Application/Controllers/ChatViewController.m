@@ -47,6 +47,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
 
 @synthesize chatBar;
 @synthesize chatInput;
+@synthesize chatCharacterCount;
 @synthesize previousContentHeight;
 @synthesize sendButton;
 
@@ -64,6 +65,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     
     [chatBar release];
     [chatInput release];
+    [chatCharacterCount release];
     [sendButton release];
     
     [cellMap release];
@@ -81,6 +83,7 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     
     self.chatBar = nil;
     self.chatInput = nil;
+    self.chatCharacterCount = nil;
     self.sendButton = nil;
     
     self.cellMap = nil;
@@ -145,6 +148,15 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     chatInput.backgroundColor = [UIColor clearColor];
     previousContentHeight = chatInput.contentSize.height;
     [chatBar addSubview:chatInput];
+    chatCharacterCount = [[UILabel alloc] initWithFrame:CGRectMake(chatBar.frame.size.width - 70.0f, 7.0f, 64.0f, 26.0f)];
+    chatCharacterCount.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;                       // landscape
+
+    chatCharacterCount.text = @"0";
+    chatCharacterCount.backgroundColor = [UIColor clearColor];
+    chatCharacterCount.textColor = [UIColor darkGrayColor];
+    chatCharacterCount.font = [UIFont systemFontOfSize:12.0f];
+    chatCharacterCount.textAlignment = UITextAlignmentCenter;
+    [chatBar addSubview:chatCharacterCount];
     
     // Create sendButton.
     sendButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
@@ -299,6 +311,9 @@ static CGFloat const kChatBarHeight4    = 94.0f;
     }
     
     previousContentHeight = contentHeight;
+    
+    //update character count using textView.text (instead of rightTrimmedText) to avoid "jumps"
+    chatCharacterCount.text = [NSString stringWithFormat:@"%d", textView.text.length];
 }
 
 // Fix a scrolling quirk.
