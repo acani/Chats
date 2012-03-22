@@ -2,6 +2,7 @@
 .localized
 
 build/
+DerivedData
 xcuserdata
 *.mode1v3
 *.pbxuser

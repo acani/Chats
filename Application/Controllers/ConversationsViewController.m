@@ -42,6 +42,13 @@
     [self fetchResults];
 }
 
+- (void) pushComposeViewController {
+    ChatViewController *chatViewController = [[ChatViewController alloc] init];
+    chatViewController.managedObjectContext = managedObjectContext;
+    [self.navigationController pushViewController:chatViewController animated:YES];
+    [chatViewController release];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
