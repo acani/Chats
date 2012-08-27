@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1807" systemVersion="12A256" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Conversation" representedClassName="Conversation" syncable="YES">
+        <relationship name="messages" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="Message" inverseName="conversation" inverseEntity="Message" syncable="YES"/>
+    </entity>
+    <entity name="Message" representedClassName="Message">
+        <attribute name="read" attributeType="Boolean" syncable="YES"/>
+        <attribute name="sentDate" attributeType="Date" syncable="YES"/>
+        <attribute name="text" attributeType="String" minValueString="1" syncable="YES"/>
+        <relationship name="conversation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="messages" inverseEntity="Conversation" indexed="YES" syncable="YES"/>
+        <userInfo/>
+    </entity>
+    <entity name="User" syncable="YES"/>
+    <elements>
+        <element name="Conversation" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="Message" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="User" positionX="0" positionY="0" width="128" height="45"/>
+    </elements>
+</model>
