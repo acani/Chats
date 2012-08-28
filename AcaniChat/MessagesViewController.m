@@ -102,6 +102,10 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 - (void)viewWillDisappear:(BOOL)animated {
     // Unobserve UIKeyboard as soon as possible.
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+
+    _webSocket.delegate = nil;
+    [_webSocket close];
+
     [super viewWillDisappear:animated];
 }
 
@@ -184,7 +188,7 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     NSString *text = _textView.text;
     [self saveMessageWithText:text];
     [self scrollToBottomAnimated:YES];
-    [_webSocket send:text];
+    [_webSocket send:[[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:@[text] options:0 error:NULL] encoding:NSUTF8StringEncoding]];
 }
 
 #pragma mark - UITableViewDataSource
