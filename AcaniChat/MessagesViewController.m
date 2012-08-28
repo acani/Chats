@@ -178,12 +178,12 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }
-    [self scrollToBottomAnimated:YES];
 }
 
 - (void)sendMessage {
     NSString *text = _textView.text;
     [self saveMessageWithText:text];
+    [self scrollToBottomAnimated:YES];
     [_webSocket send:text];
 }
 
@@ -385,7 +385,12 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
     NSLog(@"Received \"%@\"", message);
-    [self saveMessageWithText:message];
+    NSArray *messages = [NSJSONSerialization JSONObjectWithData:
+                         [message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
+    for (NSString *text in messages) {
+        [self saveMessageWithText:text];
+    }
+    [self scrollToBottomAnimated:YES];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {

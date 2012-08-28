@@ -1,7 +1,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
-#define HOST @"ws://acani-chat-server.jit.su/"
+#define HOST @"ws://acani-chat.jit.su/"
 //#define HOST @"ws://localhost:5000/"
 
 @class Conversation, PlaceholderTextView, SRWebSocket;

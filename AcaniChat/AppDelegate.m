@@ -14,17 +14,30 @@
     messagesViewController.managedObjectContext = self.managedObjectContext;
     _window.rootViewController = _navigationController;
 
-    // Fetch or insert the conversation.
+    // For now, start fresh. Delete all conversations, and create a new one.
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     [fetchRequest setEntity:[NSEntityDescription entityForName:@"Conversation"
                                         inManagedObjectContext:_managedObjectContext]];
-    NSArray *conversations = [_managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-    if ([conversations count]) {
-        messagesViewController.conversation = conversations[0];
-    } else {
-        messagesViewController.conversation = [NSEntityDescription
-                                               insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+    fetchRequest.includesPropertyValues = NO;
+    fetchRequest.includesPendingChanges = NO;
+    fetchRequest.relationshipKeyPathsForPrefetching = @[@"messages"];
+    NSArray *fetchedObjects = [_managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+    for (NSManagedObject *fetchedObject in fetchedObjects) {
+        [_managedObjectContext deleteObject:fetchedObject];
     }
+    messagesViewController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+
+//    // Fetch or insert the conversation.
+//    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+//    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Conversation"
+//                                        inManagedObjectContext:_managedObjectContext]];
+//    NSArray *fetchedObjects = [_managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+//    if ([fetchedObjects count]) {
+//        messagesViewController.conversation = fetchedObjects[0];
+//    } else {
+//        messagesViewController.conversation = [NSEntityDescription
+//                                               insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+//    }
 
     [_window makeKeyAndVisible];
     return YES;
