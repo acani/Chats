@@ -36,15 +36,25 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     _tableView.allowsMultipleSelectionDuringEditing = YES;
     [self.view addSubview:_tableView];
 
-    // Create chatBar to contain _textView & _sendButton.
-    UIImageView *chatBar = [[UIImageView alloc] initWithFrame:
-                            CGRectMake(0, self.view.frame.size.height-kChatBarHeight1,
-                                       self.view.frame.size.width, kChatBarHeight1)];
-    chatBar.userInteractionEnabled = YES; // makes subviews tappable
-    chatBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+    // Create messageInputBar to contain _textView & _sendButton.
+    UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:
+                                    CGRectMake(0, self.view.frame.size.height-kChatBarHeight1,
+                                               self.view.frame.size.width, kChatBarHeight1)];
+    messageInputBar.userInteractionEnabled = YES; // makes subviews tappable
+    messageInputBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     // TODO: Use resizableImageWithCapInsets: instead.
-    chatBar.image = [[UIImage imageNamed:@"ChatBar.png"]
-                     stretchableImageWithLeftCapWidth:18 topCapHeight:20];
+//    messageInputBar.image = [[UIImage imageNamed:@"ChatBar"]
+//                             stretchableImageWithLeftCapWidth:18 topCapHeight:20];
+    messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] // 8 x 40
+                             resizableImageWithCapInsets:UIEdgeInsetsMake(19, 0, 20, 0)];
+
+    // Create messageInputBarBackgroundImageView as subview of messageInputBar.
+    UIImageView *messageInputBarBackgroundImageView =
+    [[UIImageView alloc] initWithImage:
+     [[UIImage imageNamed:@"MessageInputFieldBackground"] // 32 x 40
+      resizableImageWithCapInsets:UIEdgeInsetsMake(20, 15, 19, 16)]];
+    messageInputBarBackgroundImageView.frame = CGRectMake(10, 0, 234, kChatBarHeight1);
+    [messageInputBar addSubview:messageInputBarBackgroundImageView];
 
     // Create _textView to compose messages.
     _textView = [[PlaceholderTextView alloc] initWithFrame:CGRectMake(10, 9, 234, 22)];
@@ -58,17 +68,22 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     _textView.dataDetectorTypes = UIDataDetectorTypeAll;
     _textView.backgroundColor = [UIColor clearColor];
     previousContentHeight = _textView.contentSize.height;
-    [chatBar addSubview:_textView];
+    [messageInputBar addSubview:_textView];
 
     // Create sendButton.
     self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _sendButton.clearsContextBeforeDrawing = NO;
-    _sendButton.frame = CGRectMake(chatBar.frame.size.width - 70, 8, 64, 26);
+    _sendButton.frame = CGRectMake(messageInputBar.frame.size.width - 70, 8, 64, 26);
     _sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | // multi-line input
     UIViewAutoresizingFlexibleLeftMargin;                       // landscape
-    UIImage *sendButtonBackground = [UIImage imageNamed:@"SendButton.png"];
-    [_sendButton setBackgroundImage:sendButtonBackground forState:UIControlStateNormal];
-    [_sendButton setBackgroundImage:sendButtonBackground forState:UIControlStateDisabled];
+    UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13);
+    UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] // 27 x 27
+                                          resizableImageWithCapInsets:sendButtonEdgeInsets];
+    [_sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateNormal];
+    [_sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateDisabled];
+    [_sendButton setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"]
+                                     resizableImageWithCapInsets:sendButtonEdgeInsets]
+                           forState:UIControlStateHighlighted];
     _sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
     _sendButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
     [_sendButton setTitle:NSLocalizedString(@"Send", nil) forState:UIControlStateNormal];
@@ -81,9 +96,9 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     //    _sendButton.layer.cornerRadius = 13;
     //    _sendButton.clipsToBounds = YES;
     [self resetSendButton]; // disable initially
-    [chatBar addSubview:_sendButton];
+    [messageInputBar addSubview:_sendButton];
 
-    [self.view addSubview:chatBar];
+    [self.view addSubview:messageInputBar];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -189,6 +204,7 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     [self saveMessageWithText:text];
     [self scrollToBottomAnimated:YES];
     [_webSocket send:[[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:@[text] options:0 error:NULL] encoding:NSUTF8StringEncoding]];
+    _textView.text = nil;
 }
 
 #pragma mark - UITableViewDataSource
