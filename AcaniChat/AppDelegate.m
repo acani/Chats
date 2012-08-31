@@ -25,12 +25,12 @@
         [_managedObjectContext deleteObject:fetchedObject];
     }
 
-    // Set up _window, _navigationController, and messagesViewController.
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    // Set up _window > UINavigationController > MessagesViewController.
     MessagesViewController *messagesViewController = [[MessagesViewController alloc] initWithNibName:nil bundle:nil];
     messagesViewController.managedObjectContext = _managedObjectContext;
     messagesViewController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
-    _window.rootViewController = _navigationController = [[UINavigationController alloc] initWithRootViewController:messagesViewController];
+    _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    _window.rootViewController = [[UINavigationController alloc] initWithRootViewController:messagesViewController];
 
 //    // Fetch or insert the conversation.
 //    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];

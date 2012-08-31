@@ -26,7 +26,6 @@
 		D27BAFFE15EAD3870084AECA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BAFFD15EAD3870084AECA /* Foundation.framework */; };
 		D27BB00015EAD3870084AECA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BAFFF15EAD3870084AECA /* CoreGraphics.framework */; };
 		D27BB00215EAD3870084AECA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BB00115EAD3870084AECA /* CoreData.framework */; };
-		D27BB00815EAD3870084AECA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D27BB00615EAD3870084AECA /* InfoPlist.strings */; };
 		D27BB00A15EAD3870084AECA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB00915EAD3870084AECA /* main.m */; };
 		D27BB00E15EAD3870084AECA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB00D15EAD3870084AECA /* AppDelegate.m */; };
 		D27BB01115EAD3870084AECA /* AcaniChat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D27BB00F15EAD3870084AECA /* AcaniChat.xcdatamodeld */; };
@@ -35,7 +34,6 @@
 		D27BB02615EAD3880084AECA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BAFFB15EAD3870084AECA /* UIKit.framework */; };
 		D27BB02715EAD3880084AECA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BAFFD15EAD3870084AECA /* Foundation.framework */; };
 		D27BB02815EAD3880084AECA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BB00115EAD3870084AECA /* CoreData.framework */; };
-		D27BB03015EAD3880084AECA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D27BB02E15EAD3880084AECA /* InfoPlist.strings */; };
 		D27BB03315EAD3880084AECA /* AcaniChatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB03215EAD3880084AECA /* AcaniChatTests.m */; };
 		D27BB06015EB093F0084AECA /* SendButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D27BB05A15EB093F0084AECA /* SendButton.png */; };
 		D27BB06415EB0C620084AECA /* PlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB06315EB0C620084AECA /* PlaceholderTextView.m */; };
@@ -115,7 +113,6 @@
 		D27BAFFF15EAD3870084AECA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D27BB00115EAD3870084AECA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		D27BB00515EAD3870084AECA /* AcaniChat-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AcaniChat-Info.plist"; sourceTree = "<group>"; };
-		D27BB00715EAD3870084AECA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D27BB00915EAD3870084AECA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D27BB00B15EAD3870084AECA /* AcaniChat-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AcaniChat-Prefix.pch"; sourceTree = "<group>"; };
 		D27BB00C15EAD3870084AECA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -126,8 +123,6 @@
 		D27BB02315EAD3880084AECA /* AcaniChatTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AcaniChatTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D27BB02415EAD3880084AECA /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		D27BB02D15EAD3880084AECA /* AcaniChatTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AcaniChatTests-Info.plist"; sourceTree = "<group>"; };
-		D27BB02F15EAD3880084AECA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		D27BB03115EAD3880084AECA /* AcaniChatTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AcaniChatTests.h; sourceTree = "<group>"; };
 		D27BB03215EAD3880084AECA /* AcaniChatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AcaniChatTests.m; sourceTree = "<group>"; };
 		D27BB05A15EB093F0084AECA /* SendButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SendButton.png; sourceTree = "<group>"; };
 		D27BB06215EB0C620084AECA /* PlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceholderTextView.h; sourceTree = "<group>"; };
@@ -230,7 +225,6 @@
 			isa = PBXGroup;
 			children = (
 				D27BB00515EAD3870084AECA /* AcaniChat-Info.plist */,
-				D27BB00615EAD3870084AECA /* InfoPlist.strings */,
 				D27BB00915EAD3870084AECA /* main.m */,
 				D27BB00B15EAD3870084AECA /* AcaniChat-Prefix.pch */,
 			);
@@ -240,7 +234,6 @@
 		D27BB02B15EAD3880084AECA /* AcaniChatTests */ = {
 			isa = PBXGroup;
 			children = (
-				D27BB03115EAD3880084AECA /* AcaniChatTests.h */,
 				D27BB03215EAD3880084AECA /* AcaniChatTests.m */,
 				D27BB02C15EAD3880084AECA /* Supporting Files */,
 			);
@@ -251,7 +244,6 @@
 			isa = PBXGroup;
 			children = (
 				D27BB02D15EAD3880084AECA /* AcaniChatTests-Info.plist */,
-				D27BB02E15EAD3880084AECA /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -448,7 +440,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D27BB00815EAD3870084AECA /* InfoPlist.strings in Resources */,
 				D27BB06015EB093F0084AECA /* SendButton.png in Resources */,
 				D209007315EE5646001FED65 /* MessageBubbleBlue.png in Resources */,
 				D209007415EE5646001FED65 /* MessageBubbleBlue@2x.png in Resources */,
@@ -472,7 +463,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D27BB03015EAD3880084AECA /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -532,25 +522,6 @@
 			targetProxy = D2F5A95215EB340100748238 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		D27BB00615EAD3870084AECA /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D27BB00715EAD3870084AECA /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		D27BB02E15EAD3880084AECA /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D27BB02F15EAD3880084AECA /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		D27BB03415EAD3880084AECA /* Debug */ = {
