@@ -6,10 +6,12 @@
 #import "UIView+CocoaPlant.h"
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
-#define kChatBarHeight1   40
-#define kChatBarHeight4   94
-#define MessageFontSize   16
+#define kChatBarHeight1        40
+#define kChatBarHeight4        94
+#define MessageFontSize        16
 #define MESSAGE_TEXT_WIDTH_MAX 180
+#define TEXT_VIEW_X            7   // 40  (with CameraButton)
+#define TEXT_VIEW_WIDTH        249 // 216 (with CameraButton)
 
 #define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG 101
 #define MESSAGE_TEXT_LABEL_TAG 102
@@ -51,34 +53,29 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 //    messageInputBar.image = [[UIImage imageNamed:@"ChatBar"]
 //                             stretchableImageWithLeftCapWidth:18 topCapHeight:20];
     messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] // 8 x 40
-                             resizableImageWithCapInsets:UIEdgeInsetsMake(19, 0, 20, 0)];
+                             resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)];
+
+    // Create _textView to compose messages.
+    // TODO: Shrink cursor height by 1 px on top & 1 px on bottom.
+    _textView = [[PlaceholderTextView alloc] initWithFrame:CGRectMake(TEXT_VIEW_X, 2, TEXT_VIEW_WIDTH, kChatBarHeight1-2)];
+    _textView.delegate = self;
+    _textView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
+    _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _textView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 4, -2);
+    _textView.font = [UIFont systemFontOfSize:MessageFontSize];
+    [messageInputBar addSubview:_textView];
 
     // Create messageInputBarBackgroundImageView as subview of messageInputBar.
     UIImageView *messageInputBarBackgroundImageView =
     [[UIImageView alloc] initWithImage:
      [[UIImage imageNamed:@"MessageInputFieldBackground"] // 32 x 40
-      resizableImageWithCapInsets:UIEdgeInsetsMake(20, 15, 19, 16)]];
-    messageInputBarBackgroundImageView.frame = CGRectMake(10, 0, 234, kChatBarHeight1);
+      resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]];
+    messageInputBarBackgroundImageView.frame = CGRectMake(TEXT_VIEW_X-2, 0, TEXT_VIEW_WIDTH+2, kChatBarHeight1);
     [messageInputBar addSubview:messageInputBarBackgroundImageView];
-
-    // Create _textView to compose messages.
-    _textView = [[PlaceholderTextView alloc] initWithFrame:CGRectMake(10, 9, 234, 22)];
-    _textView.delegate = self;
-    _textView.contentSize = CGSizeMake(234, 22);
-    _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _textView.scrollEnabled = NO; // not initially
-    _textView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 4, -2);
-    _textView.clearsContextBeforeDrawing = NO;
-    _textView.font = [UIFont systemFontOfSize:MessageFontSize];
-    _textView.dataDetectorTypes = UIDataDetectorTypeAll;
-    _textView.backgroundColor = [UIColor clearColor];
-    previousContentHeight = _textView.contentSize.height;
-    [messageInputBar addSubview:_textView];
 
     // Create sendButton.
     self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _sendButton.clearsContextBeforeDrawing = NO;
-    _sendButton.frame = CGRectMake(messageInputBar.frame.size.width - 70, 8, 64, 26);
+    _sendButton.frame = CGRectMake(messageInputBar.frame.size.width-65, 8, 59, 26);
     _sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | // multi-line input
     UIViewAutoresizingFlexibleLeftMargin;                       // landscape
     UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13);
@@ -209,14 +206,12 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 
         // Create messageBackgroundImageView.
         messageBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-        messageBackgroundImageView.clearsContextBeforeDrawing = NO;
         messageBackgroundImageView.tag = MESSAGE_BACKGROUND_IMAGE_VIEW_TAG;
         messageBackgroundImageView.backgroundColor = tableView.backgroundColor; // speeds scrolling
         [cell.contentView addSubview:messageBackgroundImageView];
 
         // Create messageTextLabel.
         messageTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        messageTextLabel.clearsContextBeforeDrawing = NO;
         messageTextLabel.tag = MESSAGE_TEXT_LABEL_TAG;
         messageTextLabel.backgroundColor = [UIColor clearColor];
         messageTextLabel.numberOfLines = 0;
