@@ -3,16 +3,18 @@
 #import "PlaceholderTextView.h"
 #import "Conversation.h"
 #import "Message.h"
-#import "NSString+CocoaPlant.h"
 #import "UIView+CocoaPlant.h"
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
-#define kChatBarHeight1  40
-#define kChatBarHeight4  94
-#define MessageFontSize 16
+#define kChatBarHeight1   40
+#define kChatBarHeight4   94
+#define MessageFontSize   16
+#define MESSAGE_TEXT_WIDTH_MAX 180
 
 @interface MessagesViewController () <UITableViewDelegate, UITableViewDataSource,
 UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
+    UIImage *_messageBubbleGray;
+    UIImage *_messageBubbleBlue;
     CGFloat previousContentHeight; // TODO: Rename to _previousTextViewContentHeight
 }
 @end
@@ -21,8 +23,10 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
+
+    _messageBubbleGray = [[UIImage imageNamed:@"MessageBubbleGray"] stretchableImageWithLeftCapWidth:23 topCapHeight:15];
+    _messageBubbleBlue = [[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:15 topCapHeight:13];
 
     // Create _tableView to display messages.
     _tableView = [[UITableView alloc] initWithFrame:
@@ -163,13 +167,6 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 
 #pragma mark - Enable, Disable, Reset sendButton
 
-- (void)enableSendButton {
-    if (!_sendButton.enabled) {
-        _sendButton.enabled = YES;
-        _sendButton.titleLabel.alpha = 1;
-    }
-}
-
 - (void)disableSendButton {
     if (_sendButton.enabled) {
         [self resetSendButton];
@@ -207,6 +204,32 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     _textView.text = nil;
 }
 
+#pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return [((Message *)[self.fetchedResultsController objectAtIndexPath:indexPath]).text sizeWithFont:[UIFont systemFontOfSize:MessageFontSize] constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height + 17;
+}
+
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
+    return tableView.editing;
+}
+
+//// iOS < 6
+//- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+//    if (tableView.editing) {
+//        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+//    } else {
+//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    }
+//    //    return nil;
+//    return indexPath;
+//}
+
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//
+//}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -214,21 +237,59 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+#define MESSAGE_BACKGROUND_TAG 101
+#define MESSAGE_TEXT_TAG 102
+
+    UIImageView *messageBackgroundImageView;
+    UILabel *messageTextLabel;
     static NSString *CellIdentifier = @"Cell";
-    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
+    if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+//        cell.selectionStyle = UITableViewCellSelectionStyleNone; // iOS < 6 (when not editing)
+
+        // Create messageBackgroundImageView.
+        messageBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        messageBackgroundImageView.clearsContextBeforeDrawing = NO;
+        messageBackgroundImageView.tag = MESSAGE_BACKGROUND_TAG;
+        messageBackgroundImageView.backgroundColor = tableView.backgroundColor; // speeds scrolling
+        [cell.contentView addSubview:messageBackgroundImageView];
+
+        // Create messageTextLabel.
+        messageTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        messageTextLabel.clearsContextBeforeDrawing = NO;
+        messageTextLabel.tag = MESSAGE_TEXT_TAG;
+        messageTextLabel.backgroundColor = [UIColor clearColor];
+        messageTextLabel.numberOfLines = 0;
+        messageTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+        messageTextLabel.font = [UIFont systemFontOfSize:MessageFontSize];
+        [cell.contentView addSubview:messageTextLabel];
+    } else {
+        messageBackgroundImageView = (UIImageView *)[cell.contentView viewWithTag:MESSAGE_BACKGROUND_TAG];
+        messageTextLabel = (UILabel *)[cell.contentView viewWithTag:MESSAGE_TEXT_TAG];
     }
 
-    [self configureCell:cell atIndexPath:indexPath];
-    return cell;
-}
-
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    // Configure cell with message.
     Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = message.text;
-    cell.detailTextLabel.text = [message.sentDate description];
+    messageTextLabel.text = message.text;
+    CGSize messageTextSize = [message.text sizeWithFont:messageTextLabel.font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+    if (indexPath.row % 3) { // right message
+        messageBackgroundImageView.frame = CGRectMake(_tableView.frame.size.width-messageTextSize.width-34, MessageFontSize-13, messageTextSize.width+34, messageTextSize.height+12);
+        messageBackgroundImageView.image = _messageBubbleBlue;
+        messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+
+        messageTextLabel.frame = CGRectMake(_tableView.frame.size.width-messageTextSize.width-22, MessageFontSize-9, messageTextSize.width+5, messageTextSize.height);
+        messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+    } else {
+        messageBackgroundImageView.frame = CGRectMake(0, MessageFontSize-13, messageTextSize.width+34, messageTextSize.height+12);
+        messageBackgroundImageView.image = _messageBubbleGray;
+        messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+
+        messageTextLabel.frame = CGRectMake(22, MessageFontSize-9, messageTextSize.width+5, messageTextSize.height);
+        messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+    }
+
+    return cell;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -250,28 +311,20 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     }   
 }
 
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NO;
-}
-
 #pragma mark UITextViewDelegate
 
 - (void)textViewDidChange:(UITextView *)textView {
     CGFloat contentHeight = textView.contentSize.height - MessageFontSize + 2;
-    NSString *rightTrimmedText = @"";
+    NSString *messageText = textView.text;
 
     //    NSLog(@"contentOffset: (%f, %f)", textView.contentOffset.x, textView.contentOffset.y);
     //    NSLog(@"contentInset: %f, %f, %f, %f", textView.contentInset.top, textView.contentInset.right,
     //          textView.contentInset.bottom, textView.contentInset.left);
     //    NSLog(@"contentSize.height: %f", contentHeight);
 
-    if ([textView hasText]) {
-        rightTrimmedText = [textView.text stringByTrimmingTrailingWhitespaceAndNewlineCharacters];
-
-        //        if (textView.text.length > 1024) { // truncate text to 1024 chars
-        //            textView.text = [textView.text substringToIndex:1024];
-        //        }
-
+//    if ([textView hasText]) {
+//        rightTrimmedText = [textView.text stringByTrimmingTrailingWhitespaceAndNewlineCharacters];
+//
 //        // Resize textView to contentHeight
 //        if (contentHeight != previousContentHeight) {
 //            if (contentHeight <= ContentHeightMax) { // limit chatInputHeight <= 4 lines
@@ -295,13 +348,15 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 //        }
 //    } else { // textView is empty
 //        [self resetText];
-    }
+//    }
 
-    // Enable sendButton if chatInput has non-blank text, disable otherwise.
-    if (rightTrimmedText.length > 0) {
-        [self enableSendButton];
+    // Enable/disable sendButton if messageText has/lacks length.
+    if ([messageText length]) {
+        _sendButton.enabled = YES;
+        _sendButton.titleLabel.alpha = 1;
     } else {
-        [self disableSendButton];
+        _sendButton.enabled = NO;
+        _sendButton.titleLabel.alpha = 0.5f; // Sam S. says 0.4f
     }
 
     previousContentHeight = contentHeight;
@@ -361,15 +416,6 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
             
         case NSFetchedResultsChangeDelete:
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }

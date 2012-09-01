@@ -37,7 +37,6 @@
 		D27BB03315EAD3880084AECA /* AcaniChatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB03215EAD3880084AECA /* AcaniChatTests.m */; };
 		D27BB06015EB093F0084AECA /* SendButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D27BB05A15EB093F0084AECA /* SendButton.png */; };
 		D27BB06415EB0C620084AECA /* PlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB06315EB0C620084AECA /* PlaceholderTextView.m */; };
-		D2F5A93415EB221400748238 /* NSString+CocoaPlant.m in Sources */ = {isa = PBXBuildFile; fileRef = D2F5A93315EB221400748238 /* NSString+CocoaPlant.m */; };
 		D2F5A93B15EB27A100748238 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = D2F5A93A15EB27A100748238 /* Message.m */; };
 		D2F5A93E15EB27C000748238 /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = D2F5A93D15EB27C000748238 /* Conversation.m */; };
 		D2F5A95415EB341900748238 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F5A94B15EB33E100748238 /* libSocketRocket.a */; };
@@ -129,8 +128,6 @@
 		D27BB06315EB0C620084AECA /* PlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceholderTextView.m; sourceTree = "<group>"; };
 		D27BB0D115EB1FD50084AECA /* UIView+CocoaPlant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIView+CocoaPlant.h"; path = "CocoaPlant/UIView+CocoaPlant.h"; sourceTree = "<group>"; };
 		D2EE64AB15EB45D20062AA0F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		D2F5A93215EB221400748238 /* NSString+CocoaPlant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+CocoaPlant.h"; path = "CocoaPlant/NSString+CocoaPlant.h"; sourceTree = "<group>"; };
-		D2F5A93315EB221400748238 /* NSString+CocoaPlant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+CocoaPlant.m"; path = "CocoaPlant/NSString+CocoaPlant.m"; sourceTree = "<group>"; };
 		D2F5A93915EB27A100748238 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		D2F5A93A15EB27A100748238 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
 		D2F5A93C15EB27C000748238 /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conversation.h; sourceTree = "<group>"; };
@@ -313,8 +310,6 @@
 		D27BB0B515EB1FD50084AECA /* CocoaPlant */ = {
 			isa = PBXGroup;
 			children = (
-				D2F5A93215EB221400748238 /* NSString+CocoaPlant.h */,
-				D2F5A93315EB221400748238 /* NSString+CocoaPlant.m */,
 				D27BB0D115EB1FD50084AECA /* UIView+CocoaPlant.h */,
 			);
 			path = CocoaPlant;
@@ -494,7 +489,6 @@
 				D27BB01115EAD3870084AECA /* AcaniChat.xcdatamodeld in Sources */,
 				D27BB01415EAD3870084AECA /* MessagesViewController.m in Sources */,
 				D27BB06415EB0C620084AECA /* PlaceholderTextView.m in Sources */,
-				D2F5A93415EB221400748238 /* NSString+CocoaPlant.m in Sources */,
 				D2F5A93B15EB27A100748238 /* Message.m in Sources */,
 				D2F5A93E15EB27C000748238 /* Conversation.m in Sources */,
 			);
