@@ -19,11 +19,20 @@
 #define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG 101
 #define MESSAGE_TEXT_LABEL_TAG 102
 
+#define ObserveKeyboardWillShowOrHide() \
+NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \
+[notificationCenter addObserver:self selector:@selector(keyboardWillShowOrHide:) name:UIKeyboardWillShowNotification object:nil]
+//[notificationCenter addObserver:self selector:@selector(keyboardWillShowOrHide:) name:UIKeyboardWillHideNotification object:nil]
+
+#define UnobserveKeyboardWillShowOrHide() \
+[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 @interface MessagesViewController () <UITableViewDelegate, UITableViewDataSource,
 UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     UIImage *_messageBubbleGray;
     UIImage *_messageBubbleBlue;
     CGFloat _previousTextViewContentHeight;
+//    BOOL _rotating;
 }
 @end
 
@@ -48,12 +57,10 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidthAndHeight;
     [self.view addSubview:_tableView];
 
-    // Create messageInputBar to contain _textView & _sendButton.
-    UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:
-                                    CGRectMake(0, self.view.frame.size.height-kChatBarHeight1,
-                                               self.view.frame.size.width, kChatBarHeight1)];
+    // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
+    UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, kChatBarHeight1)];
     messageInputBar.userInteractionEnabled = YES; // makes subviews tappable
-    messageInputBar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+    messageInputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] // 8 x 40
                              resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)];
 
@@ -105,22 +112,19 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     [self.view addSubview:messageInputBar];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    UIView *messageInputBar = _textView.superview;
+    messageInputBar.frame = CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, messageInputBar.frame.size.width, messageInputBar.frame.size.height);
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
-    // Observe UIKeyboard with keyboardWillShowOrHide:.
-    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-    [notificationCenter addObserver:self selector:@selector(keyboardWillShowOrHide:)
-                               name:UIKeyboardWillShowNotification object:nil];
-    [notificationCenter addObserver:self selector:@selector(keyboardWillShowOrHide:)
-                               name:UIKeyboardWillHideNotification object:nil];
-
+    ObserveKeyboardWillShowOrHide();
     [self _reconnect];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    // Unobserve UIKeyboard as soon as possible.
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    UnobserveKeyboardWillShowOrHide(); // as soon as possible
 
     _webSocket.delegate = nil;
     [_webSocket close];
@@ -128,9 +132,23 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     [super viewWillDisappear:animated];
 }
 
+//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+////    _rotating = YES;
+//}
+//
+//- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+////    _textView.superview.frame =
+//}
+//
+//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+////    _rotating = NO;
+//}
+
 #pragma mark - Keyboard Notifications
 
 - (void)keyboardWillShowOrHide:(NSNotification *)notification {
+//    if (_rotating) return;
+
     NSTimeInterval animationDuration;
     UIViewAnimationCurve animationCurve;
     CGRect frameEnd;
@@ -255,7 +273,7 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     // Change height of _tableView & messageInputBar to match textView's content height.
     CGFloat textViewContentHeight = textView.contentSize.height;
     CGFloat changeInHeight = textViewContentHeight - _previousTextViewContentHeight;
-    NSLog(@"textViewContentHeight: %f", textViewContentHeight);
+    //    NSLog(@"textViewContentHeight: %f", textViewContentHeight);
 
     if (textViewContentHeight+changeInHeight > kChatBarHeight4+2) {
         changeInHeight = kChatBarHeight4+2-_previousTextViewContentHeight;
