@@ -11,6 +11,9 @@
 #define MessageFontSize   16
 #define MESSAGE_TEXT_WIDTH_MAX 180
 
+#define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG 101
+#define MESSAGE_TEXT_LABEL_TAG 102
+
 @interface MessagesViewController () <UITableViewDelegate, UITableViewDataSource,
 UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     UIImage *_messageBubbleGray;
@@ -23,7 +26,6 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
     _messageBubbleGray = [[UIImage imageNamed:@"MessageBubbleGray"] stretchableImageWithLeftCapWidth:23 topCapHeight:15];
     _messageBubbleBlue = [[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:15 topCapHeight:13];
@@ -37,7 +39,6 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     _tableView.backgroundColor = [UIColor colorWithRed:0.859 green:0.886 blue:0.929 alpha:1];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _tableView.allowsMultipleSelectionDuringEditing = YES;
     [self.view addSubview:_tableView];
 
     // Create messageInputBar to contain _textView & _sendButton.
@@ -95,11 +96,8 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
                             forState:UIControlStateNormal];
     [_sendButton addTarget:self action:@selector(sendMessage)
          forControlEvents:UIControlEventTouchUpInside];
-    //    // The following three lines aren't necessary now that we'are using background image.
-    //    _sendButton.backgroundColor = [UIColor clearColor];
-    //    _sendButton.layer.cornerRadius = 13;
-    //    _sendButton.clipsToBounds = YES;
-    [self resetSendButton]; // disable initially
+    _sendButton.enabled = NO;
+    _sendButton.titleLabel.alpha = 0.5f; // Sam S. says 0.4f
     [messageInputBar addSubview:_sendButton];
 
     [self.view addSubview:messageInputBar];
@@ -126,11 +124,6 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     [_webSocket close];
 
     [super viewWillDisappear:animated];
-}
-
-- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
-    [super setEditing:editing animated:animated];
-    [_tableView setEditing:editing animated:YES];
 }
 
 #pragma mark - Keyboard Notifications
@@ -165,18 +158,7 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     }
 }
 
-#pragma mark - Enable, Disable, Reset sendButton
-
-- (void)disableSendButton {
-    if (_sendButton.enabled) {
-        [self resetSendButton];
-    }
-}
-
-- (void)resetSendButton {
-    _sendButton.enabled = NO;
-    _sendButton.titleLabel.alpha = 0.5f; // Sam S. says 0.4f
-}
+#pragma mark - Save & Send Message
 
 - (void)saveMessageWithText:(NSString *)text {
     Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message"
@@ -210,26 +192,6 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     return [((Message *)[self.fetchedResultsController objectAtIndexPath:indexPath]).text sizeWithFont:[UIFont systemFontOfSize:MessageFontSize] constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height + 17;
 }
 
-- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
-    return tableView.editing;
-}
-
-//// iOS < 6
-//- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-//    if (tableView.editing) {
-//        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-//    } else {
-//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//    }
-//    //    return nil;
-//    return indexPath;
-//}
-
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//
-//}
-
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -237,36 +199,33 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-#define MESSAGE_BACKGROUND_TAG 101
-#define MESSAGE_TEXT_TAG 102
-
     UIImageView *messageBackgroundImageView;
     UILabel *messageTextLabel;
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-//        cell.selectionStyle = UITableViewCellSelectionStyleNone; // iOS < 6 (when not editing)
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
         // Create messageBackgroundImageView.
         messageBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         messageBackgroundImageView.clearsContextBeforeDrawing = NO;
-        messageBackgroundImageView.tag = MESSAGE_BACKGROUND_TAG;
+        messageBackgroundImageView.tag = MESSAGE_BACKGROUND_IMAGE_VIEW_TAG;
         messageBackgroundImageView.backgroundColor = tableView.backgroundColor; // speeds scrolling
         [cell.contentView addSubview:messageBackgroundImageView];
 
         // Create messageTextLabel.
         messageTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         messageTextLabel.clearsContextBeforeDrawing = NO;
-        messageTextLabel.tag = MESSAGE_TEXT_TAG;
+        messageTextLabel.tag = MESSAGE_TEXT_LABEL_TAG;
         messageTextLabel.backgroundColor = [UIColor clearColor];
         messageTextLabel.numberOfLines = 0;
         messageTextLabel.lineBreakMode = UILineBreakModeWordWrap;
         messageTextLabel.font = [UIFont systemFontOfSize:MessageFontSize];
         [cell.contentView addSubview:messageTextLabel];
     } else {
-        messageBackgroundImageView = (UIImageView *)[cell.contentView viewWithTag:MESSAGE_BACKGROUND_TAG];
-        messageTextLabel = (UILabel *)[cell.contentView viewWithTag:MESSAGE_TEXT_TAG];
+        messageBackgroundImageView = (UIImageView *)[cell.contentView viewWithTag:MESSAGE_BACKGROUND_IMAGE_VIEW_TAG];
+        messageTextLabel = (UILabel *)[cell.contentView viewWithTag:MESSAGE_TEXT_LABEL_TAG];
     }
 
     // Configure cell with message.
@@ -290,25 +249,6 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     }
 
     return cell;
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-        [context deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
-        
-        NSError *error = nil;
-        if (![context save:&error]) {
-             // Replace this implementation with code to handle the error appropriately.
-             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-    }   
 }
 
 #pragma mark UITextViewDelegate
@@ -391,19 +331,6 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     [self.tableView beginUpdates];
 }
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-    switch(type) {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-    }
-}
-
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath {
@@ -412,10 +339,6 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
