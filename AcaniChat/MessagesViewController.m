@@ -1,4 +1,5 @@
 #import <SocketRocket/SRWebSocket.h>
+#import "AcaniChatDefines.h"
 #import "MessagesViewController.h"
 #import "PlaceholderTextView.h"
 #import "Conversation.h"
@@ -27,8 +28,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 #define UnobserveKeyboardWillShowOrHide() \
 [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-@interface MessagesViewController () <UITableViewDelegate, UITableViewDataSource,
-UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
+@interface MessagesViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     UIImage *_messageBubbleGray;
     UIImage *_messageBubbleBlue;
     CGFloat _previousTextViewContentHeight;
@@ -41,20 +41,16 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    UIViewAutoresizing UIViewAutoresizingFlexibleWidthAndHeight = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
     _messageBubbleGray = [[UIImage imageNamed:@"MessageBubbleGray"] stretchableImageWithLeftCapWidth:23 topCapHeight:15];
     _messageBubbleBlue = [[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:15 topCapHeight:13];
 
     // Create _tableView to display messages.
-    _tableView = [[UITableView alloc] initWithFrame:
-                   CGRectMake(0, 0, self.view.frame.size.width,
-                              self.view.frame.size.height-kChatBarHeight1)];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-kChatBarHeight1)];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.backgroundColor = [UIColor colorWithRed:0.859 green:0.886 blue:0.929 alpha:1];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidthAndHeight;
+    _tableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     [self.view addSubview:_tableView];
 
     // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
@@ -82,27 +78,22 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
      [[UIImage imageNamed:@"MessageInputFieldBackground"] // 32 x 40
       resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]];
     messageInputBarBackgroundImageView.frame = CGRectMake(TEXT_VIEW_X-2, 0, TEXT_VIEW_WIDTH+2, kChatBarHeight1);
-    messageInputBarBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleWidthAndHeight;
+    messageInputBarBackgroundImageView.autoresizingMask = _tableView.autoresizingMask;
     [messageInputBar addSubview:messageInputBarBackgroundImageView];
 
     // Create sendButton.
     self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _sendButton.frame = CGRectMake(messageInputBar.frame.size.width-65, 8, 59, 26);
-    _sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | // multi-line input
-    UIViewAutoresizingFlexibleLeftMargin;                       // landscape
-    UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13);
-    UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] // 27 x 27
-                                          resizableImageWithCapInsets:sendButtonEdgeInsets];
+    _sendButton.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin /* multiline input */ | UIViewAutoresizingFlexibleLeftMargin /* landscape */);
+    UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
+    UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] resizableImageWithCapInsets:sendButtonEdgeInsets];
     [_sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateNormal];
     [_sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateDisabled];
-    [_sendButton setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"]
-                                     resizableImageWithCapInsets:sendButtonEdgeInsets]
-                           forState:UIControlStateHighlighted];
+    [_sendButton setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"] resizableImageWithCapInsets:sendButtonEdgeInsets] forState:UIControlStateHighlighted];
     _sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
     _sendButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
     [_sendButton setTitle:NSLocalizedString(@"Send", nil) forState:UIControlStateNormal];
-    [_sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1]
-                            forState:UIControlStateNormal];
+    [_sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
     [_sendButton addTarget:self action:@selector(sendMessage)
          forControlEvents:UIControlEventTouchUpInside];
     _sendButton.enabled = NO;
@@ -182,8 +173,7 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 #pragma mark - Save & Send Message
 
 - (void)saveMessageWithText:(NSString *)text {
-    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message"
-                                                     inManagedObjectContext:_managedObjectContext];
+    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:_managedObjectContext];
     message.read = [NSNumber numberWithBool:YES];
     message.sentDate = [NSDate date];
     message.text = text;
@@ -308,24 +298,13 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController) return _fetchedResultsController;
-
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Message"
-                                        inManagedObjectContext:_managedObjectContext]];
+    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Message" inManagedObjectContext:_managedObjectContext]];
     [fetchRequest setFetchBatchSize:20];
     [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES]]];
-
-    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
+    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"Message"];
     _fetchedResultsController.delegate = self;
-
-	NSError *error = nil;
-	if (![_fetchedResultsController performFetch:&error]) {
-	     // Replace this implementation with code to handle the error appropriately.
-	     // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-	    abort();
-	}
-    
+    FRCPerformFetch(_fetchedResultsController);
     return _fetchedResultsController;
 }    
 
@@ -337,7 +316,6 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath {
     UITableView *tableView = self.tableView;
-    
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];

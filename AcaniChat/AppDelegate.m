@@ -1,5 +1,7 @@
 #import "AppDelegate.h"
-#import "MessagesViewController.h"
+#import "ConversationsTableViewController.h"
+#import "Conversation.h"
+#import "User.h"
 
 @implementation AppDelegate {
     NSManagedObjectContext *_managedObjectContext;
@@ -15,8 +17,7 @@
 
     // For now, start fresh; delete all conversations.
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Conversation"
-                                        inManagedObjectContext:_managedObjectContext]];
+    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Conversation" inManagedObjectContext:_managedObjectContext]];
     fetchRequest.includesPropertyValues = NO;
     fetchRequest.includesPendingChanges = NO;
     fetchRequest.relationshipKeyPathsForPrefetching = @[@"messages"];
@@ -25,12 +26,18 @@
         [_managedObjectContext deleteObject:fetchedObject];
     }
 
+    // Insert a mock conversation with a mock user.
+    Conversation *conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+    conversation.updatedDate = [NSDate date];
+    User *user = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+    user.name = @"Acani";
+    [conversation addUsersObject:user];
+
     // Set up _window > UINavigationController > MessagesViewController.
-    MessagesViewController *messagesViewController = [[MessagesViewController alloc] initWithNibName:nil bundle:nil];
-    messagesViewController.managedObjectContext = _managedObjectContext;
-    messagesViewController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+    ConversationsTableViewController *conversationsTableViewController = [[ConversationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
+    conversationsTableViewController.managedObjectContext = _managedObjectContext;
     _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    _window.rootViewController = [[UINavigationController alloc] initWithRootViewController:messagesViewController];
+    _window.rootViewController = [[UINavigationController alloc] initWithRootViewController:conversationsTableViewController];
 
 //    // Fetch or insert the conversation.
 //    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
