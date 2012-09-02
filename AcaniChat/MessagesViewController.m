@@ -32,7 +32,7 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     UIImage *_messageBubbleGray;
     UIImage *_messageBubbleBlue;
     CGFloat _previousTextViewContentHeight;
-//    BOOL _rotating;
+    BOOL _rotating;
 }
 @end
 
@@ -114,7 +114,7 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
 
 - (void)viewWillAppear:(BOOL)animated {
     UIView *messageInputBar = _textView.superview;
-    messageInputBar.frame = CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, messageInputBar.frame.size.width, messageInputBar.frame.size.height);
+    messageInputBar.frame = CGRectMake(0, self.view.frame.size.height-messageInputBar.frame.size.height, messageInputBar.frame.size.width, messageInputBar.frame.size.height);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -132,22 +132,27 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     [super viewWillDisappear:animated];
 }
 
-//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-////    _rotating = YES;
-//}
-//
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    NSLog(@"willRotateToInterfaceOrientation");
+    _rotating = YES;
+}
+
 //- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-////    _textView.superview.frame =
+//    UIView *messageInputBar = _textView.superview;
+//    messageInputBar.frame = CGRectMake(0, 112-messageInputBar.frame.size.height, messageInputBar.frame.size.width, messageInputBar.frame.size.height);
 //}
-//
-//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-////    _rotating = NO;
-//}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    NSLog(@"didRotateFromInterfaceOrientation");
+    _rotating = NO;
+}
 
 #pragma mark - Keyboard Notifications
 
 - (void)keyboardWillShowOrHide:(NSNotification *)notification {
-//    if (_rotating) return;
+    NSLog(@"rotating: %d notification: %@", _rotating, notification);
+
+    if (_rotating) return;
 
     NSTimeInterval animationDuration;
     UIViewAnimationCurve animationCurve;
@@ -157,9 +162,7 @@ UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
     [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
     [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&frameEnd];
 
-    [UIView
-     animateWithDuration:animationDuration delay:0.0
-     options:UIViewAnimationOptionsFromCurve(animationCurve) animations:^{
+    [UIView animateWithDuration:animationDuration delay:0.0 options:(UIViewAnimationOptionsFromCurve(animationCurve) | UIViewAnimationOptionBeginFromCurrentState) animations:^{
          CGFloat viewHeight = [self.view convertRect:frameEnd fromView:nil].origin.y;
          UIView *messageInputBar = _textView.superview;
          UIViewSetFrameY(messageInputBar, viewHeight-messageInputBar.frame.size.height);
