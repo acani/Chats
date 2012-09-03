@@ -13,8 +13,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     MessagesViewController *messagesViewController = [[MessagesViewController alloc] initWithNibName:nil bundle:nil];
+    Conversation *conversation = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    messagesViewController.title = ((User *)[conversation.users anyObject]).name;
+    messagesViewController.conversation = conversation;
     messagesViewController.managedObjectContext = _managedObjectContext;
-    messagesViewController.conversation = [self.fetchedResultsController objectAtIndexPath:indexPath];
     [self.navigationController pushViewController:messagesViewController animated:YES];
 }
 

@@ -126,7 +126,7 @@
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-    NSLog(@"Received \"%@\"", message);
+//    NSLog(@"Received \"%@\"", message);
     NSArray *texts = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
     for (NSString *text in texts) {
         [self saveMessageWithText:text];
