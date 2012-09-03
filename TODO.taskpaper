@@ -1,0 +1,45 @@
+AcaniChat:
+	Native iPhone Messages.app with Websockets & Bonjour over Bluetooth
+	ConversationsTableViewController:
+		- Add search bar to search all conversations.
+			http://www.iphonesdkarticles.com/2009/01/uitableview-searching-table-view.html
+		- Add last message.text as the detailTextLabel.text.
+		- Pretty format sentDate.
+		- Style date and move to upper right of cell.
+
+	MessagesViewController:
+		- Add the date at the top of all cells.
+		- Only add the date to the top of cells if it's been at least 13 minutes since last date.
+		- Improve _tableView scrolling performance. @issue
+			(subclass UITableViewCell & implement drawRect)
+		- Add "Load Earlier Messages" button.
+			Native Messages app limits to last 50 messages.
+		- Use auto layout to expand/shrink _textView & sendButton to fit sendButton.title. @localization
+		Message Bubbles:
+			- Tap & hold or double-tap to copy text.
+			- Detect all data types, except dates.
+			- Add arrow accessory icon for all data types, except dates.
+			- Animate during message send (going from _textView to _tableView)
+				- Show Sending... progress indicator as self.navigationItem.titleView
+		- Fix UI auto rotation issues.
+			- Check out real MessagesVC. Try adding toolbar.
+
+	Core Data:
+		- Persist drafts in textView of each chat
+			Conversation has one Draft (one-to-one).
+			Draft can be  a concrete parent of Message.
+			It should have text & media but not timestamp & unread, etc.
+		- Send photo & video messages.
+			- Add media relationship to Message model.
+
+	Networking:
+		- Check: "You must disable airplane mode to send or receive messages." Cancel [Disable]
+		- Add red ( ! ) bubble button if message doesn't send.
+			- Touching it shows UIActionView: Your mesage was not sent. Tap "Try Again" to send this message. [Try Again] Cancel
+		- Play a sound or vibrate when receiving a message.
+		- Receive messages while offline.
+			- Handle Push Notifications.
+			- Request server to send all messages after the last-saved messageID.
+
+	iPad Version:
+		- Study Messages app on the iPad
