@@ -1,9 +1,6 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
-#define HOST @"ws://acani-chat.jit.su/"
-//#define HOST @"ws://localhost:5000/"
-
 @class Conversation, PlaceholderTextView, SRWebSocket;
 
 @interface MessagesViewController : UIViewController
@@ -16,6 +13,6 @@
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
-@property (strong, nonatomic) SRWebSocket *webSocket;
+- (void)scrollToBottomAnimated:(BOOL)animated;
 
 @end

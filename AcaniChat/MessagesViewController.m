@@ -1,5 +1,5 @@
-#import <SocketRocket/SRWebSocket.h>
 #import "AcaniChatDefines.h"
+#import "AppDelegate.h"
 #import "MessagesViewController.h"
 #import "PlaceholderTextView.h"
 #import "Conversation.h"
@@ -28,7 +28,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 #define UnobserveKeyboardWillShowOrHide() \
 [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-@interface MessagesViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, NSFetchedResultsControllerDelegate, SRWebSocketDelegate> {
+@interface MessagesViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, NSFetchedResultsControllerDelegate> {
     UIImage *_messageBubbleGray;
     UIImage *_messageBubbleBlue;
     CGFloat _previousTextViewContentHeight;
@@ -94,8 +94,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     _sendButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
     [_sendButton setTitle:NSLocalizedString(@"Send", nil) forState:UIControlStateNormal];
     [_sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
-    [_sendButton addTarget:self action:@selector(sendMessage)
-         forControlEvents:UIControlEventTouchUpInside];
+    [_sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     _sendButton.enabled = NO;
     _sendButton.titleLabel.alpha = 0.5f; // Sam S. says 0.4f
     [messageInputBar addSubview:_sendButton];
@@ -111,15 +110,10 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     ObserveKeyboardWillShowOrHide();
-    [self _reconnect];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     UnobserveKeyboardWillShowOrHide(); // as soon as possible
-
-    _webSocket.delegate = nil;
-    [_webSocket close];
-
     [super viewWillDisappear:animated];
 }
 
@@ -170,31 +164,16 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     }
 }
 
-#pragma mark - Save & Send Message
-
-- (void)saveMessageWithText:(NSString *)text {
-    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:_managedObjectContext];
-    message.read = [NSNumber numberWithBool:YES];
-    message.sentDate = [NSDate date];
-    message.text = text;
-    [_conversation addMessagesObject:message];
-
-    // Save the context.
-    NSError *error = nil;
-    if (![_managedObjectContext save:&error]) {
-        // Replace this implementation with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-}
+#pragma mark - Save/Send/Receive Messages
 
 - (void)sendMessage {
     NSString *text = _textView.text;
-    [self saveMessageWithText:text];
+    AppDelegate *appDelegate = APP_DELEGATE();
+    [appDelegate saveMessageWithText:text];
     [self scrollToBottomAnimated:YES];
-    [_webSocket send:[[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:@[text] options:0 error:NULL] encoding:NSUTF8StringEncoding]];
+    [appDelegate sendText:text];
     _textView.text = nil;
+    [self textViewDidChange:_textView];
 }
 
 #pragma mark - UITableViewDelegate
@@ -325,47 +304,6 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     [self.tableView endUpdates];
-}
-
-#pragma mark - SRWebSocketDelegate
-
-- (void)_reconnect {
-    _webSocket.delegate = nil;
-    [_webSocket close];
-
-    _webSocket = [[SRWebSocket alloc] initWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:HOST]]];
-    _webSocket.delegate = self;
-
-    self.title = @"Opening Connection...";
-    [_webSocket open];
-}
-
-- (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-    NSLog(@"Websocket Connected");
-    self.title = @"Connected!";
-}
-
-- (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    NSLog(@":( Websocket Failed With Error %@", error);
-
-    self.title = @"Connection Failed! (see logs)";
-    self.webSocket = nil;
-}
-
-- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-    NSLog(@"Received \"%@\"", message);
-    NSArray *messages = [NSJSONSerialization JSONObjectWithData:
-                         [message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
-    for (NSString *text in messages) {
-        [self saveMessageWithText:text];
-    }
-    [self scrollToBottomAnimated:YES];
-}
-
-- (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    NSLog(@"WebSocket closed");
-    self.title = @"Connection Closed! (see logs)";
-    self.webSocket = nil;
 }
 
 @end

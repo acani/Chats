@@ -2,22 +2,22 @@
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1807" systemVersion="12A256" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Conversation" representedClassName="Conversation" syncable="YES">
         <attribute name="updatedDate" attributeType="Date" indexed="YES" syncable="YES"/>
-        <relationship name="messages" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="Message" inverseName="conversation" inverseEntity="Message" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Message" inverseName="conversation" inverseEntity="Message" syncable="YES"/>
         <relationship name="users" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="conversations" inverseEntity="User" syncable="YES"/>
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="read" attributeType="Boolean" syncable="YES"/>
         <attribute name="sentDate" attributeType="Date" syncable="YES"/>
         <attribute name="text" attributeType="String" minValueString="1" syncable="YES"/>
-        <relationship name="conversation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="messages" inverseEntity="Conversation" indexed="YES" syncable="YES"/>
+        <relationship name="conversation" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="messages" inverseEntity="Conversation" indexed="YES" syncable="YES"/>
     </entity>
     <entity name="User" representedClassName="User" syncable="YES">
         <attribute name="name" attributeType="String" minValueString="1" syncable="YES"/>
         <relationship name="conversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Conversation" inverseName="users" inverseEntity="Conversation" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Conversation" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="Message" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="User" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Conversation" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="Message" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="User" positionX="0" positionY="0" width="128" height="75"/>
     </elements>
 </model>
