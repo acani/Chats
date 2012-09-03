@@ -7,18 +7,21 @@
 #import "UIView+CocoaPlant.h"
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
-#define kChatBarHeight1        40
-#define kChatBarHeight4        94
-#define MessageFontSize        16
-#define MESSAGE_TEXT_WIDTH_MAX 180
-#define TEXT_VIEW_X            7   // 40  (with CameraButton)
-#define TEXT_VIEW_Y            2
-#define TEXT_VIEW_WIDTH        249 // 216 (with CameraButton)
-#define TEXT_VIEW_HEIGHT_MIN   90
-#define ContentHeightMax       80
+#define kChatBarHeight1              40
+#define kChatBarHeight4              94
+#define SentDateFontSize             13
+#define MESSAGE_SENT_DATE_LABEL_HEIGHT  (SentDateFontSize+7)
+#define MessageFontSize              16
+#define MESSAGE_TEXT_WIDTH_MAX       180
+#define TEXT_VIEW_X                  7   // 40  (with CameraButton)
+#define TEXT_VIEW_Y                  2
+#define TEXT_VIEW_WIDTH              249 // 216 (with CameraButton)
+#define TEXT_VIEW_HEIGHT_MIN         90
+#define ContentHeightMax             80
 
+#define MESSAGE_SENT_DATE_LABEL_TAG          100
 #define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG 101
-#define MESSAGE_TEXT_LABEL_TAG 102
+#define MESSAGE_TEXT_LABEL_TAG            102
 
 #define ObserveKeyboardWillShowOrHide() \
 NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \
@@ -55,10 +58,10 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
     // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
     UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, kChatBarHeight1)];
+    messageInputBar.opaque = YES;
     messageInputBar.userInteractionEnabled = YES; // makes subviews tappable
     messageInputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] // 8 x 40
-                             resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)];
+    messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)]; // 8 x 40
 
     // Create _textView to compose messages.
     // TODO: Shrink cursor height by 1 px on top & 1 px on bottom.
@@ -73,10 +76,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     _previousTextViewContentHeight = MessageFontSize+20;
 
     // Create messageInputBarBackgroundImageView as subview of messageInputBar.
-    UIImageView *messageInputBarBackgroundImageView =
-    [[UIImageView alloc] initWithImage:
-     [[UIImage imageNamed:@"MessageInputFieldBackground"] // 32 x 40
-      resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]];
+    UIImageView *messageInputBarBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageInputFieldBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]]; // 32 x 40
     messageInputBarBackgroundImageView.frame = CGRectMake(TEXT_VIEW_X-2, 0, TEXT_VIEW_WIDTH+2, kChatBarHeight1);
     messageInputBarBackgroundImageView.autoresizingMask = _tableView.autoresizingMask;
     [messageInputBar addSubview:messageInputBarBackgroundImageView];
@@ -179,7 +179,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [((Message *)[self.fetchedResultsController objectAtIndexPath:indexPath]).text sizeWithFont:[UIFont systemFontOfSize:MessageFontSize] constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height + 17;
+    return [((Message *)[self.fetchedResultsController objectAtIndexPath:indexPath]).text sizeWithFont:[UIFont systemFontOfSize:MessageFontSize] constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height + 17 + MESSAGE_SENT_DATE_LABEL_HEIGHT;
 }
 
 #pragma mark - UITableViewDataSource
@@ -189,6 +189,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UILabel *messageSentDateLabel;
     UIImageView *messageBackgroundImageView;
     UILabel *messageTextLabel;
     static NSString *CellIdentifier = @"Cell";
@@ -196,6 +197,16 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+        // Create messageSentDateLabel.
+        messageSentDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(-2, 0, tableView.frame.size.width, SentDateFontSize+5)];
+        messageSentDateLabel.tag = MESSAGE_SENT_DATE_LABEL_TAG;
+        messageSentDateLabel.backgroundColor = tableView.backgroundColor;          // speeds scrolling
+        messageSentDateLabel.textColor = [UIColor grayColor];
+        messageSentDateLabel.textAlignment = UITextAlignmentCenter;
+        messageSentDateLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        messageSentDateLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
+        [cell.contentView addSubview:messageSentDateLabel];
 
         // Create messageBackgroundImageView.
         messageBackgroundImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -212,27 +223,51 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         messageTextLabel.font = [UIFont systemFontOfSize:MessageFontSize];
         [cell.contentView addSubview:messageTextLabel];
     } else {
+        messageSentDateLabel = (UILabel *)[cell.contentView viewWithTag:MESSAGE_SENT_DATE_LABEL_TAG];
         messageBackgroundImageView = (UIImageView *)[cell.contentView viewWithTag:MESSAGE_BACKGROUND_IMAGE_VIEW_TAG];
         messageTextLabel = (UILabel *)[cell.contentView viewWithTag:MESSAGE_TEXT_LABEL_TAG];
     }
 
     // Configure cell with message.
     Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+
+    // Configure messageSentDateLabel.
+//    // TODO: Support other language date formats. (Native iPhone Messages.app doesn't.)
+//    static NSDateFormatter *dateFormatter = nil;
+//    if (dateFormatter == nil) {
+//        dateFormatter = [[NSDateFormatter alloc] init];
+//        [dateFormatter setDateStyle:NSDateFormatterMediumStyle]; // Jan 1, 2010
+//        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];  // 1:43 PM
+//    }
+//    messageSentDateLabel.text = [dateFormatter stringFromDate:message.sentDate];
+    char buffer[22]; // Sep 22, 2012 12:15 PM -- 21 chars + 1 for NUL terminator \0
+    time_t time = [message.sentDate timeIntervalSince1970] - [[NSTimeZone localTimeZone] secondsFromGMT];
+    strftime(buffer, 22, "%b %e, %Y %l:%M %p", localtime(&time));
+    messageSentDateLabel.text = [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+    // Don't proceed %e with blank for single-digit days. @hack
+    // http://stackoverflow.com/questions/12254862/strftime-no-blank-before-e-single-digit-days
+    NSMutableString *sentDateLabelText = [NSMutableString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+    if ([sentDateLabelText characterAtIndex:4] == ' ') {
+        [sentDateLabelText deleteCharactersInRange:NSMakeRange(4, 1)];
+    }
+    messageSentDateLabel.text = sentDateLabelText;
+
+    // Configure messageBackgroundImageView & messageTextLabel.
     messageTextLabel.text = message.text;
     CGSize messageTextSize = [message.text sizeWithFont:messageTextLabel.font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
     if (indexPath.row % 3) { // right message
-        messageBackgroundImageView.frame = CGRectMake(_tableView.frame.size.width-messageTextSize.width-34, MessageFontSize-13, messageTextSize.width+34, messageTextSize.height+12);
+        messageBackgroundImageView.frame = CGRectMake(_tableView.frame.size.width-messageTextSize.width-34, MESSAGE_SENT_DATE_LABEL_HEIGHT+MessageFontSize-13, messageTextSize.width+34, messageTextSize.height+12);
         messageBackgroundImageView.image = _messageBubbleBlue;
         messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 
-        messageTextLabel.frame = CGRectMake(_tableView.frame.size.width-messageTextSize.width-22, MessageFontSize-9, messageTextSize.width+5, messageTextSize.height);
+        messageTextLabel.frame = CGRectMake(_tableView.frame.size.width-messageTextSize.width-22, MESSAGE_SENT_DATE_LABEL_HEIGHT+MessageFontSize-9, messageTextSize.width+5, messageTextSize.height);
         messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     } else {
-        messageBackgroundImageView.frame = CGRectMake(0, MessageFontSize-13, messageTextSize.width+34, messageTextSize.height+12);
+        messageBackgroundImageView.frame = CGRectMake(0, MESSAGE_SENT_DATE_LABEL_HEIGHT+MessageFontSize-13, messageTextSize.width+34, messageTextSize.height+12);
         messageBackgroundImageView.image = _messageBubbleGray;
         messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
 
-        messageTextLabel.frame = CGRectMake(22, MessageFontSize-9, messageTextSize.width+5, messageTextSize.height);
+        messageTextLabel.frame = CGRectMake(22, MESSAGE_SENT_DATE_LABEL_HEIGHT+MessageFontSize-9, messageTextSize.width+5, messageTextSize.height);
         messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     }
 

@@ -8,7 +8,6 @@ AcaniChat:
 		- Style date and move to upper right of cell.
 
 	MessagesViewController:
-		- Add the date at the top of all cells.
 		- Only add the date to the top of cells if it's been at least 13 minutes since last date.
 		- Improve _tableView scrolling performance. @issue
 			(subclass UITableViewCell & implement drawRect)
