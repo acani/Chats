@@ -240,17 +240,11 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 //        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];  // 1:43 PM
 //    }
 //    messageSentDateLabel.text = [dateFormatter stringFromDate:message.sentDate];
+
     char buffer[22]; // Sep 22, 2012 12:15 PM -- 21 chars + 1 for NUL terminator \0
     time_t time = [message.sentDate timeIntervalSince1970] - [[NSTimeZone localTimeZone] secondsFromGMT];
-    strftime(buffer, 22, "%b %e, %Y %l:%M %p", localtime(&time));
-    messageSentDateLabel.text = [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
-    // Don't proceed %e with blank for single-digit days. @hack
-    // http://stackoverflow.com/questions/12254862/strftime-no-blank-before-e-single-digit-days
-    NSMutableString *sentDateLabelText = [NSMutableString stringWithCString:buffer encoding:NSUTF8StringEncoding];
-    if ([sentDateLabelText characterAtIndex:4] == ' ') {
-        [sentDateLabelText deleteCharactersInRange:NSMakeRange(4, 1)];
-    }
-    messageSentDateLabel.text = sentDateLabelText;
+    strftime(buffer, 22, "%b %-e, %Y %-l:%M %p", localtime(&time));
+    messageSentDateLabel.text = [NSMutableString stringWithCString:buffer encoding:NSUTF8StringEncoding];
 
     // Configure messageBackgroundImageView & messageTextLabel.
     messageTextLabel.text = message.text;
