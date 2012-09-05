@@ -7,21 +7,27 @@
 #import "UIView+CocoaPlant.h"
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
-#define kChatBarHeight1              40
-#define kChatBarHeight4              94
-#define SentDateFontSize             13
-#define MESSAGE_SENT_DATE_LABEL_HEIGHT  (SentDateFontSize+7)
-#define MessageFontSize              16
-#define MESSAGE_TEXT_WIDTH_MAX       180
-#define TEXT_VIEW_X                  7   // 40  (with CameraButton)
-#define TEXT_VIEW_Y                  2
-#define TEXT_VIEW_WIDTH              249 // 216 (with CameraButton)
-#define TEXT_VIEW_HEIGHT_MIN         90
-#define ContentHeightMax             80
-
+#define kChatBarHeight1                      40
+#define kChatBarHeight4                      94
+#define SentDateFontSize                     13
+#define MESSAGE_SENT_DATE_LABEL_HEIGHT       (SentDateFontSize+7)
+#define MessageFontSize                      16
+#define MESSAGE_TEXT_WIDTH_MAX               180
+#define MESSAGE_MARGIN_TOP                   7
+#define MESSAGE_MARGIN_BOTTOM                10
+#define TEXT_VIEW_X                          7   // 40  (with CameraButton)
+#define TEXT_VIEW_Y                          2
+#define TEXT_VIEW_WIDTH                      249 // 216 (with CameraButton)
+#define TEXT_VIEW_HEIGHT_MIN                 90
+#define ContentHeightMax                     80
+#define MESSAGE_COUNT_LIMIT                  50
+#define MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL 13*60 // 13 minutes
 #define MESSAGE_SENT_DATE_LABEL_TAG          100
-#define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG 101
-#define MESSAGE_TEXT_LABEL_TAG            102
+#define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101
+#define MESSAGE_TEXT_LABEL_TAG               102
+
+#define MESSAGE_TEXT_SIZE_WITH_FONT(message, font) \
+[message.text sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
 
 #define ObserveKeyboardWillShowOrHide() \
 NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \
@@ -32,9 +38,11 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 [[NSNotificationCenter defaultCenter] removeObserver:self];
 
 @interface MessagesViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, NSFetchedResultsControllerDelegate> {
+    NSMutableArray *_heightForRow;
     UIImage *_messageBubbleGray;
     UIImage *_messageBubbleBlue;
     CGFloat _previousTextViewContentHeight;
+    NSDate *_previousShownSentDate;
     BOOL _rotating;
 }
 @end
@@ -43,6 +51,8 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    _heightForRow = [NSMutableArray arrayWithCapacity:MESSAGE_COUNT_LIMIT+3]; // +3 in case I send/receive more messages
 
     _messageBubbleGray = [[UIImage imageNamed:@"MessageBubbleGray"] stretchableImageWithLeftCapWidth:23 topCapHeight:15];
     _messageBubbleBlue = [[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:15 topCapHeight:13];
@@ -118,7 +128,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    NSLog(@"willRotateToInterfaceOrientation");
+//    NSLog(@"willRotateToInterfaceOrientation");
     _rotating = YES;
 }
 
@@ -128,14 +138,14 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 //}
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-    NSLog(@"didRotateFromInterfaceOrientation");
+//    NSLog(@"didRotateFromInterfaceOrientation");
     _rotating = NO;
 }
 
 #pragma mark - Keyboard Notifications
 
 - (void)keyboardWillShowOrHide:(NSNotification *)notification {
-    NSLog(@"rotating: %d notification: %@", _rotating, notification);
+//    NSLog(@"rotating: %d notification: %@", _rotating, notification);
 
     if (_rotating) return;
 
@@ -178,8 +188,37 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
 #pragma mark - UITableViewDelegate
 
+// UITableView calls this method in sequence for all the cells.
+// Store details in _heightForRow to use with cellForRow.
+// TODO: Also try only storing showSentDate NSUInteger enum (0:?, 1:YES, 2:NO) @property on each
+// Message object. Clean. Still fast?
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return [((Message *)[self.fetchedResultsController objectAtIndexPath:indexPath]).text sizeWithFont:[UIFont systemFontOfSize:MessageFontSize] constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height + 17 + MESSAGE_SENT_DATE_LABEL_HEIGHT;
+    NSLog(@"heightForRowAtIndexPath: %@", indexPath);
+
+    Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+
+    NSArray *messageDetails = nil;
+    if ([_heightForRow count] > indexPath.row) {
+        messageDetails = _heightForRow[indexPath.row];
+    }
+
+    CGFloat messageSentDateLabelHeight = 0;
+    CGFloat messageTextLabelHeight;
+    if (messageDetails) {
+        messageSentDateLabelHeight = [messageDetails[0] floatValue];
+        messageTextLabelHeight = [messageDetails[1] CGSizeValue].height;
+    } else {
+        if ((!_previousShownSentDate || [message.sentDate timeIntervalSinceDate:_previousShownSentDate] > MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL)) {
+            _previousShownSentDate = message.sentDate;
+            messageSentDateLabelHeight = MESSAGE_SENT_DATE_LABEL_HEIGHT;
+        }
+        CGSize messageTextLabelSize = MESSAGE_TEXT_SIZE_WITH_FONT(message, [UIFont systemFontOfSize:MessageFontSize]);
+        messageTextLabelHeight = messageTextLabelSize.height;
+
+        _heightForRow[indexPath.row] = @[@(messageSentDateLabelHeight), [NSValue valueWithCGSize:messageTextLabelSize]];
+    }
+
+    return messageSentDateLabelHeight+messageTextLabelHeight+MESSAGE_MARGIN_TOP+MESSAGE_MARGIN_BOTTOM;
 }
 
 #pragma mark - UITableViewDataSource
@@ -189,9 +228,16 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"cellForRowAtIndexPath: %@", indexPath);
+
+    NSArray *messageDetails = _heightForRow[indexPath.row];
+    CGFloat messageSentDateLabelHeight = [messageDetails[0] floatValue];
+    CGSize messageTextLabelSize = [messageDetails[1] CGSizeValue];
+
     UILabel *messageSentDateLabel;
     UIImageView *messageBackgroundImageView;
     UILabel *messageTextLabel;
+
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (!cell) {
@@ -232,36 +278,39 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
 
     // Configure messageSentDateLabel.
-//    // TODO: Support other language date formats. (Native iPhone Messages.app doesn't.)
-//    static NSDateFormatter *dateFormatter = nil;
-//    if (dateFormatter == nil) {
-//        dateFormatter = [[NSDateFormatter alloc] init];
-//        [dateFormatter setDateStyle:NSDateFormatterMediumStyle]; // Jan 1, 2010
-//        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];  // 1:43 PM
-//    }
-//    messageSentDateLabel.text = [dateFormatter stringFromDate:message.sentDate];
+    if (messageSentDateLabelHeight) {
+        //    // TODO: Support other language date formats. (Native iPhone Messages.app doesn't.)
+        //    static NSDateFormatter *dateFormatter = nil;
+        //    if (dateFormatter == nil) {
+        //        dateFormatter = [[NSDateFormatter alloc] init];
+        //        [dateFormatter setDateStyle:NSDateFormatterMediumStyle]; // Jan 1, 2010
+        //        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];  // 1:43 PM
+        //    }
+        //    messageSentDateLabel.text = [dateFormatter stringFromDate:message.sentDate];
 
-    char buffer[22]; // Sep 22, 2012 12:15 PM -- 21 chars + 1 for NUL terminator \0
-    time_t time = [message.sentDate timeIntervalSince1970];
-    strftime(buffer, 22, "%b %-e, %Y %-l:%M %p", localtime(&time));
-    messageSentDateLabel.text = [NSMutableString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+        char buffer[22]; // Sep 22, 2012 12:15 PM -- 21 chars + 1 for NUL terminator \0
+        time_t time = [message.sentDate timeIntervalSince1970];
+        strftime(buffer, 22, "%b %-e, %Y %-l:%M %p", localtime(&time));
+        messageSentDateLabel.text = [NSMutableString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+    } else {
+        messageSentDateLabel.text = nil;
+    }
 
     // Configure messageBackgroundImageView & messageTextLabel.
     messageTextLabel.text = message.text;
-    CGSize messageTextSize = [message.text sizeWithFont:messageTextLabel.font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
     if (indexPath.row % 3) { // right message
-        messageBackgroundImageView.frame = CGRectMake(_tableView.frame.size.width-messageTextSize.width-34, MESSAGE_SENT_DATE_LABEL_HEIGHT+MessageFontSize-13, messageTextSize.width+34, messageTextSize.height+12);
+        messageBackgroundImageView.frame = CGRectMake(_tableView.frame.size.width-messageTextLabelSize.width-34, messageSentDateLabelHeight+MessageFontSize-13, messageTextLabelSize.width+34, messageTextLabelSize.height+12);
         messageBackgroundImageView.image = _messageBubbleBlue;
         messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
 
-        messageTextLabel.frame = CGRectMake(_tableView.frame.size.width-messageTextSize.width-22, MESSAGE_SENT_DATE_LABEL_HEIGHT+MessageFontSize-9, messageTextSize.width+5, messageTextSize.height);
+        messageTextLabel.frame = CGRectMake(_tableView.frame.size.width-messageTextLabelSize.width-22, messageSentDateLabelHeight+MessageFontSize-9, messageTextLabelSize.width+5, messageTextLabelSize.height);
         messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     } else {
-        messageBackgroundImageView.frame = CGRectMake(0, MESSAGE_SENT_DATE_LABEL_HEIGHT+MessageFontSize-13, messageTextSize.width+34, messageTextSize.height+12);
+        messageBackgroundImageView.frame = CGRectMake(0, messageSentDateLabelHeight+MessageFontSize-13, messageTextLabelSize.width+34, messageTextLabelSize.height+12);
         messageBackgroundImageView.image = _messageBubbleGray;
         messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
 
-        messageTextLabel.frame = CGRectMake(22, MESSAGE_SENT_DATE_LABEL_HEIGHT+MessageFontSize-9, messageTextSize.width+5, messageTextSize.height);
+        messageTextLabel.frame = CGRectMake(22, messageSentDateLabelHeight+MessageFontSize-9, messageTextLabelSize.width+5, messageTextLabelSize.height);
         messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
     }
 
@@ -274,7 +323,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     // Change height of _tableView & messageInputBar to match textView's content height.
     CGFloat textViewContentHeight = textView.contentSize.height;
     CGFloat changeInHeight = textViewContentHeight - _previousTextViewContentHeight;
-    //    NSLog(@"textViewContentHeight: %f", textViewContentHeight);
+//    NSLog(@"textViewContentHeight: %f", textViewContentHeight);
 
     if (textViewContentHeight+changeInHeight > kChatBarHeight4+2) {
         changeInHeight = kChatBarHeight4+2-_previousTextViewContentHeight;
@@ -306,9 +355,9 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController) return _fetchedResultsController;
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Message" inManagedObjectContext:_managedObjectContext]];
-    [fetchRequest setFetchBatchSize:20];
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Message"];
+    [fetchRequest setFetchBatchSize:10];
+    [fetchRequest setFetchLimit:MESSAGE_COUNT_LIMIT];
     [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES]]];
     _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"Message"];
     _fetchedResultsController.delegate = self;
