@@ -242,7 +242,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 //    messageSentDateLabel.text = [dateFormatter stringFromDate:message.sentDate];
 
     char buffer[22]; // Sep 22, 2012 12:15 PM -- 21 chars + 1 for NUL terminator \0
-    time_t time = [message.sentDate timeIntervalSince1970] - [[NSTimeZone localTimeZone] secondsFromGMT];
+    time_t time = [message.sentDate timeIntervalSince1970];
     strftime(buffer, 22, "%b %-e, %Y %-l:%M %p", localtime(&time));
     messageSentDateLabel.text = [NSMutableString stringWithCString:buffer encoding:NSUTF8StringEncoding];
 
