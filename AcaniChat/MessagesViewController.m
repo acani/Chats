@@ -193,7 +193,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 // TODO: Also try only storing showSentDate NSUInteger enum (0:?, 1:YES, 2:NO) @property on each
 // Message object. Clean. Still fast?
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"heightForRowAtIndexPath: %@", indexPath);
+//    NSLog(@"heightForRowAtIndexPath: %@", indexPath);
 
     Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
 
@@ -228,7 +228,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cellForRowAtIndexPath: %@", indexPath);
+//    NSLog(@"cellForRowAtIndexPath: %@", indexPath);
 
     NSArray *messageDetails = _heightForRow[indexPath.row];
     CGFloat messageSentDateLabelHeight = [messageDetails[0] floatValue];
