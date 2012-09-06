@@ -1,67 +1,57 @@
-# AcaniChat - HTML5 WebSockets & Node.js chat on the iPhone
+# AcaniChat
 
-An open-source version of iPhone's native Messages app
+## Native iPhone Messages.app with WebSocket & Bonjour over Bluetooth
 
-![AcaniChat screenshot][1]
+![AcaniChat Conversations Screenshot][1] ![AcaniChat Messages Screenshot][11]
 
-## Features
 
-Currently, AcaniChat features message persistence with Core Data and a chat view
-that allows you to send chat bubbles to yourself. Next, we'll implement sending
-messages over the network through the Acani chat server.
+### Technology
 
-* ConversationsViewController: List of conversations (`UITableViewController`)
-  * Coming soon...
+#### Client (iOS)
 
-* ChatViewController: One-on-one Chat (`UIViewController`)
-  * chatContent (`UITableView`)
-      * Identical UI (colors, layout, and font size) to iPhone's Messages app
-      * Conditional timestamps (only shown every so often)
-      * Delete edit-mode: Delete one message at a time or clear all at once
-      * Trims whitespace on ends of messages; prevents sending blank messages
-  * chatInput (`UITextView`)
-      * `sendButton.enabled = [chatInput isEmpty] ? NO : YES`
-      * Collapses & expands (between one & four lines) with content
-      * becomes scrollable after content exceeds four lines
+* UIKit framework, mainly `UINavigationController` & `UITableViewController`, to display conversations & messages
+* Copied images from Apple's ChatKit.framework to beautify the UI
+* Core Data framework to persist conversations & messages by storing them to disk in an SQLite file
+* [SocketRocket]][14] to communicate with the server via [WebSocket][15].
+* Coming soon: Bonjour over Bluetoothh for peer-to-peer (p2p) communication.
+* *Note*: Ability to delete messages was removed after commit b269281 to keep things simple.
 
-## iOS Technologies
+#### Server (Node.js)
 
-* UIKit
-  * `UINavigationController`
-  * Custom `UITableViewCell`s
-  * Core Data
+* [Nodejitsu][13]-hosted instance of [acani-chat-server][12]
+* Node [`ws`][17] module to communicate with clients via [WebSocket][15]
+* [Redis][16] to store messages in a list
 
-* Coming Soon
-  * ZTWebSocket & AsyncSocket
 
-## Design Practices
+### Getting Started
 
-AcaniChat is simple yet modular, implementation-agnostic, and extensible.
+AcaniChat uses [Objective-C literals][8], so I recommend downloading Xcode 4.5 or later from the [iOS Dev Center : Beta Downloads][9]. If you know how to translate Objective-C literals and fix other compiler errors, however, you probably can get it running with the App-Store version of Xcode (currently 4.4.1).
 
-* Create views programmatically
+    git clone https://github.com/acani/AcaniChat.git
+    cd AcaniChat
+    git checkout edge
+    git submodule update --init
+    open AcaniChat.xcproj
 
-### Authentication: Facebook Connect & NSURLConnection
 
-AcaniChat will implement authentication through various third-party accounts,
-such as Facebook, Twitter, GitHub, etc.
+### License
 
-### Connection: HTML5 WebSockets - ZTWebSocket & AsyncSocket
+Some of the images used for AcaniChat were copied from Apple's ChatKit.framework:
 
-AcaniChat will soon be able to connect to web servers that support HTML5
-WebSockets. It will use ZTWebSocket, built on top of AsyncSocket, to support a
-WebSockets connection.
+    open /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/System/Library/PrivateFrameworks/ChatKit.framework
 
-### Server: HTML5 WebSockets - Node.js & Redis
+You can these images like so:
 
-Using [Node.js][] & [node-websocket-server][], we built a chat server called
-[acani-chat-server][] (coming soon) that supports HTML5 WebSockets connections.
+    find /Applications/Xcode.app/ -name *.png
 
-### Chat: Redis PUB/SUB
+The above command lists images in the ChatKit.framework directory. E.g.:
 
-The Acani chat server uses [Redis][] & the [Redis PUB/SUB functions][] to
-implement chat. Each user subscribes to the channel named after her username.
+    find /Applications/Xcode.app/ -name SendButton.png
 
-## Contributors
+AcaniChat, except for those images copied from Apple's ChatKit.framework, is released under the [MIT License][10].
+
+
+### Contributors
 
 * [Matt Di Pasquale][7]
 * Peng Wan
@@ -69,7 +59,8 @@ implement chat. Each user subscribes to the channel named after her username.
 * Nick LeMay
 * Eugene Bae
 
-## Related Projects & Links
+
+### Related Projects & Links
 
 * [SSMessagesViewController][6]
 * [Twitterfon][2]
@@ -78,10 +69,20 @@ implement chat. Each user subscribes to the channel named after her username.
 * [StackOverflow: Creating a “chat bubble” on the iPhone, like Tweetie.][5]
 
 
-  [1]: https://github.com/acani/AcaniChat/raw/master/Resources/chatview-screenshot.png
+  [1]: https://github.com/acani/AcaniChat/raw/master/Resources/ScreenshotConversations.png
   [2]: https://github.com/jpick/twitterfon
   [3]: http://vimeo.com/8718829
   [4]: http://stackoverflow.com/questions/663435/implement-view-like-standard-iphone-sms-chat-bubbles-view
   [5]: http://stackoverflow.com/questions/351602/creating-a-chat-bubble-on-the-iphone-like-tweetie
   [6]: https://github.com/samsoffes/ssmessagesviewcontroller
   [7]: http://www.mattdipasquale.com/
+  [8]: http://clang.llvm.org/docs/ObjectiveCLiterals.html
+  [9]: https://developer.apple.com/devcenter/ios/index.action#betadownloads
+  [10]: http://www.opensource.org/licenses/MIT
+  [11]: https://github.com/acani/AcaniChat/raw/master/Resources/ScreenshotMessages.png
+  [12]: https://github.com/acani/acani-chat-server
+  [13]: http://nodejitsu.com/
+  [14]: https://github.com/square/SocketRocket
+  [15]: http://en.wikipedia.org/wiki/WebSocket
+  [16]: http://redis.io
+  [17]: http://einaros.github.com/ws/

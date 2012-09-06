@@ -1,7 +1,2 @@
 .DS_Store
-.localized
-
-build/
 xcuserdata
-*.mode1v3
-*.pbxuser

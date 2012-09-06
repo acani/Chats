@@ -1,0 +1,6 @@
+[submodule "Libraries/CocoaPlant"]
+	path = Libraries/CocoaPlant
+	url = https://github.com/acani/CocoaPlant.git
+[submodule "Libraries/SocketRocket"]
+	path = Libraries/SocketRocket
+	url = https://github.com/square/SocketRocket.git
