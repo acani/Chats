@@ -9,6 +9,13 @@
 
 @implementation ConversationsTableViewController
 
+#pragma mark - UIViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+}
+
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -37,6 +44,13 @@
     cell.textLabel.text = ((User *)[conversation.users anyObject]).name;
     cell.detailTextLabel.text = [NSDateFormatter localizedStringFromDate:conversation.updatedDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle];
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [_managedObjectContext deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
+        MOCSave(_managedObjectContext);
+    }
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate
@@ -69,10 +83,12 @@
         case NSFetchedResultsChangeDelete:
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
-//        // TODO: Set cell.detailTextLabel.text to last sent message.text. Then, update here.
-//        case NSFetchedResultsChangeUpdate:
-//            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
-//            break;
+            //        case NSFetchedResultsChangeMove:
+            //            break;
+            //        case NSFetchedResultsChangeUpdate:
+            //            // TODO: Set cell.detailTextLabel.text to last sent message.text. Then, update here.
+            //            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            //            break;
     }
 }
 

@@ -36,6 +36,20 @@
     user.name = @"Acani";
     [_conversation addUsersObject:user];
 
+    //    // Insert another mock conversation with a mock user.
+    //    Conversation *conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+    //    conversation.updatedDate = [NSDate date];
+    //    user = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+    //    user.name = @"Acani 1";
+    //    [conversation addUsersObject:user];
+    //
+    //    // Insert another mock conversation with a mock user.
+    //    conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+    //    conversation.updatedDate = [NSDate date];
+    //    user = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+    //    user.name = @"Acani 2";
+    //    [conversation addUsersObject:user];
+
     //    // Fetch or insert the conversation.
     //    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     //    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Conversation"
@@ -61,22 +75,9 @@
     return YES;
 }
 
-//- (void)applicationWillTerminate:(UIApplication *)application {
-//    [self saveContext];
-//}
-//
-//- (void)saveContext {
-//    NSError *error = nil;
-//    NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
-//    if (managedObjectContext != nil) {
-//        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-//             // Replace this implementation with code to handle the error appropriately.
-//             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-//            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-//            abort();
-//        } 
-//    }
-//}
+- (void)applicationWillTerminate:(UIApplication *)application {
+    MOCSave(_managedObjectContext);
+}
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     [self _reconnect];
