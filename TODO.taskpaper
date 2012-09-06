@@ -1,5 +1,5 @@
 AcaniChat:
-	Native iPhone Messages.app with Websockets & Bonjour over Bluetooth
+	Native iPhone Messages.app with Websocket & Bonjour over Bluetooth
 	ConversationsTableViewController:
 		- Add search bar to search all conversations.
 			http://www.iphonesdkarticles.com/2009/01/uitableview-searching-table-view.html
