@@ -32,6 +32,7 @@ AcaniChat:
 			- Add media relationship to Message model.
 
 	Networking:
+		- Get Websocket working over 3G.
 		- Check: "You must disable airplane mode to send or receive messages." Cancel [Disable]
 		- Add red ( ! ) bubble button if message doesn't send.
 			- Touching it shows UIActionView: Your mesage was not sent. Tap "Try Again" to send this message. [Try Again] Cancel
