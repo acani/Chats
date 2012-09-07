@@ -40,6 +40,7 @@
 		D2B4B02E15F4052D00FAF88C /* ConversationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B02D15F4052D00FAF88C /* ConversationsTableViewController.m */; };
 		D2B4B0A015F422B900FAF88C /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B09F15F422B900FAF88C /* User.m */; };
 		D2B4B0A315F422F200FAF88C /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B0A215F422F200FAF88C /* Conversation.m */; };
+		D2CEF1E915FAB828009D4D92 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2CEF1E815FAB828009D4D92 /* MessageUI.framework */; };
 		D2F5A93B15EB27A100748238 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = D2F5A93A15EB27A100748238 /* Message.m */; };
 		D2F5A95415EB341900748238 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F5A94B15EB33E100748238 /* libSocketRocket.a */; };
 		D2F5A95615EB3D1A00748238 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F5A95515EB3D1A00748238 /* libicucore.dylib */; };
@@ -137,6 +138,7 @@
 		D2B4B09F15F422B900FAF88C /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		D2B4B0A115F422F200FAF88C /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conversation.h; sourceTree = "<group>"; };
 		D2B4B0A215F422F200FAF88C /* Conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Conversation.m; sourceTree = "<group>"; };
+		D2CEF1E815FAB828009D4D92 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		D2EE64AB15EB45D20062AA0F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D2F5A93915EB27A100748238 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
 		D2F5A93A15EB27A100748238 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
@@ -152,11 +154,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2F5A95A15EB3DB400748238 /* CFNetwork.framework in Frameworks */,
+				D27BB00215EAD3870084AECA /* CoreData.framework in Frameworks */,
+				D27BB00015EAD3870084AECA /* CoreGraphics.framework in Frameworks */,
+				D27BAFFE15EAD3870084AECA /* Foundation.framework in Frameworks */,
+				D2CEF1E915FAB828009D4D92 /* MessageUI.framework in Frameworks */,
 				D2F5A95815EB3D9100748238 /* Security.framework in Frameworks */,
 				D27BAFFC15EAD3870084AECA /* UIKit.framework in Frameworks */,
-				D27BAFFE15EAD3870084AECA /* Foundation.framework in Frameworks */,
-				D27BB00015EAD3870084AECA /* CoreGraphics.framework in Frameworks */,
-				D27BB00215EAD3870084AECA /* CoreData.framework in Frameworks */,
 				D2F5A95615EB3D1A00748238 /* libicucore.dylib in Frameworks */,
 				D2F5A95415EB341900748238 /* libSocketRocket.a in Frameworks */,
 			);
@@ -206,6 +209,7 @@
 				D27BB00115EAD3870084AECA /* CoreData.framework */,
 				D27BAFFF15EAD3870084AECA /* CoreGraphics.framework */,
 				D27BAFFD15EAD3870084AECA /* Foundation.framework */,
+				D2CEF1E815FAB828009D4D92 /* MessageUI.framework */,
 				D2F5A95715EB3D9100748238 /* Security.framework */,
 				D27BB02415EAD3880084AECA /* SenTestingKit.framework */,
 				D27BAFFB15EAD3870084AECA /* UIKit.framework */,

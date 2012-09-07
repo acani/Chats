@@ -1,3 +1,4 @@
+#import <MessageUI/MessageUI.h>
 #import "AcaniChatDefines.h"
 #import "AppDelegate.h"
 #import "MessagesViewController.h"
@@ -43,7 +44,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     UIImage *_messageBubbleBlue;
     CGFloat _previousTextViewContentHeight;
     NSDate *_previousShownSentDate;
-    BOOL _rotating;
+//    BOOL _rotating;
 }
 @end
 
@@ -51,6 +52,8 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
 
     _heightForRow = [NSMutableArray arrayWithCapacity:MESSAGE_COUNT_LIMIT+3]; // +3 in case I send/receive more messages
 
@@ -127,19 +130,36 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [super viewWillDisappear:animated];
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-//    NSLog(@"willRotateToInterfaceOrientation");
-    _rotating = YES;
-}
-
+//- (void)viewWillLayoutSubviews {
+//
+//}
+//
+//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+////    NSLog(@"willRotateToInterfaceOrientation");
+//    _rotating = YES;
+//}
+//
 //- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 //    UIView *messageInputBar = _textView.superview;
 //    messageInputBar.frame = CGRectMake(0, 112-messageInputBar.frame.size.height, messageInputBar.frame.size.width, messageInputBar.frame.size.height);
 //}
+//
+//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+////    NSLog(@"didRotateFromInterfaceOrientation");
+//    _rotating = NO;
+//}
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-//    NSLog(@"didRotateFromInterfaceOrientation");
-    _rotating = NO;
+#pragma mark - composeAction
+
+- (void)composeAction {
+    if ([MFMessageComposeViewController canSendText]) {
+        MFMessageComposeViewController *viewController = [[MFMessageComposeViewController alloc] init];
+        viewController.body = NSLocalizedString(@"Send this text for fun.", nil);
+        viewController.recipients = @[@"16178940859"];
+        [self presentViewController:viewController animated:YES completion:NULL];
+    } else {
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot Send Text", nil) message:NSLocalizedString(@"Please use a device that can send text messages.", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+    }
 }
 
 #pragma mark - Keyboard Notifications
@@ -147,7 +167,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 - (void)keyboardWillShowOrHide:(NSNotification *)notification {
 //    NSLog(@"rotating: %d notification: %@", _rotating, notification);
 
-    if (_rotating) return;
+//    if (_rotating) return;
 
     NSTimeInterval animationDuration;
     UIViewAnimationCurve animationCurve;
