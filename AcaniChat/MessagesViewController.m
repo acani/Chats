@@ -30,12 +30,14 @@
 #define MESSAGE_TEXT_SIZE_WITH_FONT(message, font) \
 [message.text sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
 
-#define ObserveKeyboardWillShowOrHide() \
+#define UIKeyboardNotificationsObserve() \
 NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \
-[notificationCenter addObserver:self selector:@selector(keyboardWillShowOrHide:) name:UIKeyboardWillShowNotification object:nil]
-//[notificationCenter addObserver:self selector:@selector(keyboardWillShowOrHide:) name:UIKeyboardWillHideNotification object:nil]
+[notificationCenter addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil]
+//[notificationCenter addObserver:self selector:@selector(keyboardDidShow:)  name:UIKeyboardDidShowNotification  object:nil]; \
+//[notificationCenter addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil]; \
+//[notificationCenter addObserver:self selector:@selector(keyboardDidHide:)  name:UIKeyboardDidHideNotification  object:nil]
 
-#define UnobserveKeyboardWillShowOrHide() \
+#define UIKeyboardNotificationsUnobserve() \
 [[NSNotificationCenter defaultCenter] removeObserver:self];
 
 @interface MessagesViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, NSFetchedResultsControllerDelegate> {
@@ -44,7 +46,6 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     UIImage *_messageBubbleBlue;
     CGFloat _previousTextViewContentHeight;
     NSDate *_previousShownSentDate;
-//    BOOL _rotating;
 }
 @end
 
@@ -53,8 +54,6 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
-
     _heightForRow = [NSMutableArray arrayWithCapacity:MESSAGE_COUNT_LIMIT+3]; // +3 in case I send/receive more messages
 
     _messageBubbleGray = [[UIImage imageNamed:@"MessageBubbleGray"] stretchableImageWithLeftCapWidth:23 topCapHeight:15];
@@ -62,26 +61,26 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
     // Create _tableView to display messages.
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-kChatBarHeight1)];
+    _tableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.backgroundColor = [UIColor colorWithRed:0.859 green:0.886 blue:0.929 alpha:1];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     [self.view addSubview:_tableView];
 
     // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
-    UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, kChatBarHeight1)];
+    UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1)];
+    messageInputBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
     messageInputBar.opaque = YES;
     messageInputBar.userInteractionEnabled = YES; // makes subviews tappable
-    messageInputBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)]; // 8 x 40
 
     // Create _textView to compose messages.
     // TODO: Shrink cursor height by 1 px on top & 1 px on bottom.
     _textView = [[PlaceholderTextView alloc] initWithFrame:CGRectMake(TEXT_VIEW_X, TEXT_VIEW_Y, TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT_MIN)];
+    _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _textView.delegate = self;
     _textView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
-    _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
     _textView.font = [UIFont systemFontOfSize:MessageFontSize];
     _textView.placeholder = NSLocalizedString(@" Message", nil);
@@ -115,60 +114,25 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [self.view addSubview:messageInputBar];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    UIView *messageInputBar = _textView.superview;
-    messageInputBar.frame = CGRectMake(0, self.view.frame.size.height-messageInputBar.frame.size.height, messageInputBar.frame.size.width, messageInputBar.frame.size.height);
-}
-
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    ObserveKeyboardWillShowOrHide();
+    UIKeyboardNotificationsObserve();
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    UnobserveKeyboardWillShowOrHide(); // as soon as possible
+    UIKeyboardNotificationsUnobserve(); // as soon as possible
     [super viewWillDisappear:animated];
 }
 
-//- (void)viewWillLayoutSubviews {
-//
-//}
-//
-//- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-////    NSLog(@"willRotateToInterfaceOrientation");
-//    _rotating = YES;
-//}
-//
-//- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-//    UIView *messageInputBar = _textView.superview;
-//    messageInputBar.frame = CGRectMake(0, 112-messageInputBar.frame.size.height, messageInputBar.frame.size.width, messageInputBar.frame.size.height);
-//}
-//
-//- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
-////    NSLog(@"didRotateFromInterfaceOrientation");
-//    _rotating = NO;
-//}
-
-#pragma mark - composeAction
-
-- (void)composeAction {
-    if ([MFMessageComposeViewController canSendText]) {
-        MFMessageComposeViewController *viewController = [[MFMessageComposeViewController alloc] init];
-        viewController.body = NSLocalizedString(@"Send this text for fun.", nil);
-        viewController.recipients = @[@"16178940859"];
-        [self presentViewController:viewController animated:YES completion:NULL];
-    } else {
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot Send Text", nil) message:NSLocalizedString(@"Please use a device that can send text messages.", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
-    }
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return (toInterfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
+#endif
 
 #pragma mark - Keyboard Notifications
 
-- (void)keyboardWillShowOrHide:(NSNotification *)notification {
-//    NSLog(@"rotating: %d notification: %@", _rotating, notification);
-
-//    if (_rotating) return;
-
+- (void)keyboardWillShow:(NSNotification *)notification {
     NSTimeInterval animationDuration;
     UIViewAnimationCurve animationCurve;
     CGRect frameEnd;
@@ -189,8 +153,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 - (void)scrollToBottomAnimated:(BOOL)animated {
     NSInteger numberOfRows = [_tableView numberOfRowsInSection:0];
     if (numberOfRows) {
-        [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:0]
-                          atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+        [_tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
     }
 }
 
@@ -266,11 +229,11 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
         // Create messageSentDateLabel.
         messageSentDateLabel = [[UILabel alloc] initWithFrame:CGRectMake(-2, 0, tableView.frame.size.width, SentDateFontSize+5)];
+        messageSentDateLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         messageSentDateLabel.tag = MESSAGE_SENT_DATE_LABEL_TAG;
         messageSentDateLabel.backgroundColor = tableView.backgroundColor;          // speeds scrolling
         messageSentDateLabel.textColor = [UIColor grayColor];
         messageSentDateLabel.textAlignment = UITextAlignmentCenter;
-        messageSentDateLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         messageSentDateLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
         [cell.contentView addSubview:messageSentDateLabel];
 
@@ -320,15 +283,15 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     messageTextLabel.text = message.text;
     if (indexPath.row % 3) { // right message
         messageBackgroundImageView.frame = CGRectMake(_tableView.frame.size.width-messageTextLabelSize.width-34, messageSentDateLabelHeight+MessageFontSize-13, messageTextLabelSize.width+34, messageTextLabelSize.height+12);
-        messageBackgroundImageView.image = _messageBubbleBlue;
         messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        messageBackgroundImageView.image = _messageBubbleBlue;
 
         messageTextLabel.frame = CGRectMake(_tableView.frame.size.width-messageTextLabelSize.width-22, messageSentDateLabelHeight+MessageFontSize-9, messageTextLabelSize.width+5, messageTextLabelSize.height);
         messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     } else {
         messageBackgroundImageView.frame = CGRectMake(0, messageSentDateLabelHeight+MessageFontSize-13, messageTextLabelSize.width+34, messageTextLabelSize.height+12);
-        messageBackgroundImageView.image = _messageBubbleGray;
         messageBackgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+        messageBackgroundImageView.image = _messageBubbleGray;
 
         messageTextLabel.frame = CGRectMake(22, messageSentDateLabelHeight+MessageFontSize-9, messageTextLabelSize.width+5, messageTextLabelSize.height);
         messageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
