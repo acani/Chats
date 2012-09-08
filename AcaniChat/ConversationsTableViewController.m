@@ -1,10 +1,11 @@
+#import <MessageUI/MessageUI.h>
 #import "AcaniChatDefines.h"
 #import "ConversationsTableViewController.h"
 #import "MessagesViewController.h"
 #import "Conversation.h"
 #import "User.h"
 
-@interface ConversationsTableViewController () <NSFetchedResultsControllerDelegate>
+@interface ConversationsTableViewController () <NSFetchedResultsControllerDelegate> // , MFMessageComposeViewControllerDelegate>
 @end
 
 @implementation ConversationsTableViewController
@@ -14,7 +15,51 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
 }
+
+//#pragma mark - Actions
+//
+//- (void)composeAction {
+//    if ([MFMessageComposeViewController canSendText]) {
+//        MFMessageComposeViewController *messageComposeViewController = [[MFMessageComposeViewController alloc] init];
+//        messageComposeViewController.messageComposeDelegate = self;
+//        messageComposeViewController.body = NSLocalizedString(@"Send this text for fun.", nil);
+//        messageComposeViewController.recipients = @[@"16178940859"];
+//        [self presentViewController:messageComposeViewController animated:YES completion:nil];
+//    } else {
+//        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot Send Text", nil) message:NSLocalizedString(@"Please use a device that can send text messages.", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+//    }
+//}
+//
+//#pragma mark - MFMessageComposeViewControllerDelegate
+//
+//- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
+////    switch (result) {
+////        case MessageComposeResultCancelled:
+////            break;
+////        case MessageComposeResultSent:
+////            break;
+////        case MessageComposeResultFailed:
+////            break;
+////    }
+//    dumpViews([[UIApplication sharedApplication].windows objectAtIndex:1], @"", @"");
+////    [self dismissViewControllerAnimated:YES completion:nil];
+//}
+//
+//void dumpViews(UIView *view, NSString *text, NSString *indent) {
+//    if (![text length])
+//        NSLog(@"%@", view);
+//    else
+//        NSLog(@"%@ %@", text, view);
+//
+//    for (NSUInteger i = 0; i < [view.subviews count]; i++) {
+//        UIView *subView = [view.subviews objectAtIndex:i];
+//        NSString *newIndent = [[NSString alloc] initWithFormat:@"  %@", indent];
+//        NSString *msg = [[NSString alloc] initWithFormat:@"%@%d:", newIndent, i];
+//        dumpViews(subView, msg, newIndent);
+//    }
+//}
 
 #pragma mark - UITableViewDelegate
 
