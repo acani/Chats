@@ -1,14 +1,14 @@
 #import <MessageUI/MessageUI.h>
 #import "AcaniChatDefines.h"
-#import "ConversationsTableViewController.h"
-#import "MessagesViewController.h"
-#import "Conversation.h"
-#import "User.h"
+#import "ACConversationsTableViewController.h"
+#import "ACMessagesViewController.h"
+#import "ACConversation.h"
+#import "ACUser.h"
 
-@interface ConversationsTableViewController () <NSFetchedResultsControllerDelegate> // , MFMessageComposeViewControllerDelegate>
+@interface ACConversationsTableViewController () <NSFetchedResultsControllerDelegate> // , MFMessageComposeViewControllerDelegate>
 @end
 
-@implementation ConversationsTableViewController
+@implementation ACConversationsTableViewController
 
 #pragma mark - UIViewController
 
@@ -64,9 +64,9 @@
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    MessagesViewController *messagesViewController = [[MessagesViewController alloc] initWithNibName:nil bundle:nil];
-    Conversation *conversation = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    messagesViewController.title = ((User *)[conversation.users anyObject]).name;
+    ACMessagesViewController *messagesViewController = [[ACMessagesViewController alloc] initWithNibName:nil bundle:nil];
+    ACConversation *conversation = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    messagesViewController.title = ((ACUser *)[conversation.users anyObject]).name;
     messagesViewController.conversation = conversation;
     messagesViewController.managedObjectContext = _managedObjectContext;
     [self.navigationController pushViewController:messagesViewController animated:YES];
@@ -85,8 +85,8 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
-    Conversation *conversation = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = ((User *)[conversation.users anyObject]).name;
+    ACConversation *conversation = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = ((ACUser *)[conversation.users anyObject]).name;
     cell.detailTextLabel.text = [NSDateFormatter localizedStringFromDate:conversation.updatedDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle];
     return cell;
 }
@@ -103,11 +103,11 @@
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController) return _fetchedResultsController;
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Conversation" inManagedObjectContext:_managedObjectContext]];
+    [fetchRequest setEntity:[NSEntityDescription entityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext]];
     [fetchRequest setFetchBatchSize:20];
     [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"updatedDate" ascending:YES]]];
     [fetchRequest setRelationshipKeyPathsForPrefetching:@[@"recipients"]];
-    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"Conversation"];
+    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"ACConversation"];
     _fetchedResultsController.delegate = self;
     FRCPerformFetch(_fetchedResultsController);
     return _fetchedResultsController;

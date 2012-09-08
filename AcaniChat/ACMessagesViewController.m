@@ -1,10 +1,10 @@
 #import <MessageUI/MessageUI.h>
 #import "AcaniChatDefines.h"
-#import "AppDelegate.h"
-#import "MessagesViewController.h"
-#import "PlaceholderTextView.h"
-#import "Conversation.h"
-#import "Message.h"
+#import "ACAppDelegate.h"
+#import "ACMessagesViewController.h"
+#import "ACPlaceholderTextView.h"
+#import "ACConversation.h"
+#import "ACMessage.h"
 #import "UIView+CocoaPlant.h"
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
@@ -40,7 +40,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 #define UIKeyboardNotificationsUnobserve() \
 [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-@interface MessagesViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, NSFetchedResultsControllerDelegate> {
+@interface ACMessagesViewController () <UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, NSFetchedResultsControllerDelegate> {
     NSMutableArray *_heightForRow;
     UIImage *_messageBubbleGray;
     UIImage *_messageBubbleBlue;
@@ -49,7 +49,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 }
 @end
 
-@implementation MessagesViewController
+@implementation ACMessagesViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -77,7 +77,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
     // Create _textView to compose messages.
     // TODO: Shrink cursor height by 1 px on top & 1 px on bottom.
-    _textView = [[PlaceholderTextView alloc] initWithFrame:CGRectMake(TEXT_VIEW_X, TEXT_VIEW_Y, TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT_MIN)];
+    _textView = [[ACPlaceholderTextView alloc] initWithFrame:CGRectMake(TEXT_VIEW_X, TEXT_VIEW_Y, TEXT_VIEW_WIDTH, TEXT_VIEW_HEIGHT_MIN)];
     _textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     _textView.delegate = self;
     _textView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
@@ -161,7 +161,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
 - (void)sendMessage {
     NSString *text = _textView.text;
-    AppDelegate *appDelegate = APP_DELEGATE();
+    ACAppDelegate *appDelegate = AC_APP_DELEGATE();
     [appDelegate saveMessageWithText:text];
     [self scrollToBottomAnimated:YES];
     [appDelegate sendText:text];
@@ -178,7 +178,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 //    NSLog(@"heightForRowAtIndexPath: %@", indexPath);
 
-    Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    ACMessage *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
 
     NSArray *messageDetails = nil;
     if ([_heightForRow count] > indexPath.row) {
@@ -258,7 +258,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     }
 
     // Configure cell with message.
-    Message *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    ACMessage *message = [self.fetchedResultsController objectAtIndexPath:indexPath];
 
     // Configure messageSentDateLabel.
     if (messageSentDateLabelHeight) {
@@ -338,11 +338,11 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController) return _fetchedResultsController;
-    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Message"];
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"ACMessage"];
     [fetchRequest setFetchBatchSize:10];
     [fetchRequest setFetchLimit:MESSAGE_COUNT_LIMIT];
     [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES]]];
-    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"Message"];
+    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"ACMessage"];
     _fetchedResultsController.delegate = self;
     FRCPerformFetch(_fetchedResultsController);
     return _fetchedResultsController;

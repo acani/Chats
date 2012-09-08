@@ -1,13 +1,13 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Conversation;
+@class ACConversation;
 
-@interface Message : NSManagedObject
+@interface ACMessage : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * read;
 @property (nonatomic, retain) NSDate * sentDate;
 @property (nonatomic, retain) NSString * text;
-@property (nonatomic, retain) Conversation *conversation;
+@property (nonatomic, retain) ACConversation *conversation;
 
 @end

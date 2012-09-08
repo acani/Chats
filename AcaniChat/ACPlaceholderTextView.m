@@ -1,7 +1,7 @@
 #import <QuartzCore/QuartzCore.h>
-#import "PlaceholderTextView.h"
+#import "ACPlaceholderTextView.h"
 
-@implementation PlaceholderTextView {
+@implementation ACPlaceholderTextView {
     BOOL shouldDrawPlaceholder;
 }
 

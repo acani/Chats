@@ -1,21 +1,21 @@
 #import <SocketRocket/SRWebSocket.h>
 #import "AcaniChatDefines.h"
-#import "AppDelegate.h"
-#import "ConversationsTableViewController.h"
-#import "MessagesViewController.h"
-#import "Conversation.h"
-#import "Message.h"
-#import "User.h"
+#import "ACAppDelegate.h"
+#import "ACConversationsTableViewController.h"
+#import "ACMessagesViewController.h"
+#import "ACConversation.h"
+#import "ACMessage.h"
+#import "ACUser.h"
 
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
-@interface AppDelegate () <SRWebSocketDelegate> {
+@interface ACAppDelegate () <SRWebSocketDelegate> {
     NSManagedObjectContext *_managedObjectContext;
-    Conversation *_conversation; // temporary mock
+    ACConversation *_conversation; // temporary mock
 }
 @end
 
-@implementation AppDelegate
+@implementation ACAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Set up Core Data stack.
@@ -26,44 +26,41 @@
     [_managedObjectContext setPersistentStoreCoordinator:persistentStoreCoordinator];
 
     // For now, start fresh; delete all conversations, messages, and users.
-    MOCDeleteAll(_managedObjectContext, @"Conversation", @[@"messages"]);
-    MOCDeleteAll(_managedObjectContext, @"User", nil);
+    MOCDeleteAll(_managedObjectContext, @"ACConversation", @[@"messages"]);
+    MOCDeleteAll(_managedObjectContext, @"ACUser", nil);
 
     // Insert a mock conversation with a mock user.
-    _conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+    _conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
     _conversation.updatedDate = [NSDate date];
-    User *user = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+    ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
     user.name = @"Acani";
     [_conversation addUsersObject:user];
 
     //    // Insert another mock conversation with a mock user.
-    //    Conversation *conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+    //    Conversation *conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
     //    conversation.updatedDate = [NSDate date];
-    //    user = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+    //    user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
     //    user.name = @"Acani 1";
     //    [conversation addUsersObject:user];
     //
     //    // Insert another mock conversation with a mock user.
-    //    conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+    //    conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
     //    conversation.updatedDate = [NSDate date];
-    //    user = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+    //    user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
     //    user.name = @"Acani 2";
     //    [conversation addUsersObject:user];
 
     //    // Fetch or insert the conversation.
-    //    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    //    [fetchRequest setEntity:[NSEntityDescription entityForName:@"Conversation"
-    //                                        inManagedObjectContext:_managedObjectContext]];
+    //    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"ACConversation"];
     //    NSArray *fetchedObjects = [_managedObjectContext executeFetchRequest:fetchRequest error:NULL];
     //    if ([fetchedObjects count]) {
     //        messagesViewController.conversation = fetchedObjects[0];
     //    } else {
-    //        messagesViewController.conversation = [NSEntityDescription
-    //                                               insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+    //        messagesViewController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
     //    }
 
     // Set up _window > UINavigationController > MessagesViewController.
-    ConversationsTableViewController *conversationsTableViewController = [[ConversationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
+    ACConversationsTableViewController *conversationsTableViewController = [[ACConversationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
     conversationsTableViewController.title = NSLocalizedString(@"Messages", nil);
     conversationsTableViewController.managedObjectContext = _managedObjectContext;
     _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -102,7 +99,7 @@
 }
 
 - (void)saveMessageWithText:(NSString *)text {
-    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:_managedObjectContext];
+    ACMessage *message = [NSEntityDescription insertNewObjectForEntityForName:@"ACMessage" inManagedObjectContext:_managedObjectContext];
     message.read = [NSNumber numberWithBool:YES];
     message.sentDate = [NSDate date];
     message.text = text;
@@ -133,7 +130,7 @@
         [self saveMessageWithText:text];
     }
 
-    MessagesViewController *messagesViewController = (MessagesViewController *)NAVIGATION_CONTROLLER().topViewController;
+    ACMessagesViewController *messagesViewController = (ACMessagesViewController *)NAVIGATION_CONTROLLER().topViewController;
     if ([messagesViewController respondsToSelector:@selector(scrollToBottomAnimated:)]) {
         [messagesViewController scrollToBottomAnimated:YES];
     }

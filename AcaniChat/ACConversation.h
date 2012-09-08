@@ -1,9 +1,9 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Message, User;
+@class ACMessage, ACUser;
 
-@interface Conversation : NSManagedObject
+@interface ACConversation : NSManagedObject
 
 @property (nonatomic, retain) NSDate * updatedDate;
 @property (nonatomic, retain) NSSet *messages;
@@ -11,15 +11,15 @@
 
 @end
 
-@interface Conversation (CoreDataGeneratedAccessors)
+@interface ACConversation (CoreDataGeneratedAccessors)
 
-- (void)addMessagesObject:(Message *)value;
-- (void)removeMessagesObject:(Message *)value;
+- (void)addMessagesObject:(ACMessage *)value;
+- (void)removeMessagesObject:(ACMessage *)value;
 - (void)addMessages:(NSSet *)values;
 - (void)removeMessages:(NSSet *)values;
 
-- (void)addUsersObject:(User *)value;
-- (void)removeUsersObject:(User *)value;
+- (void)addUsersObject:(ACUser *)value;
+- (void)removeUsersObject:(ACUser *)value;
 - (void)addUsers:(NSSet *)values;
 - (void)removeUsers:(NSSet *)values;
 

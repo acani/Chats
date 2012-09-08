@@ -1,15 +1,15 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
-@class Conversation, PlaceholderTextView, SRWebSocket;
+@class ACConversation, ACPlaceholderTextView, SRWebSocket;
 
-@interface MessagesViewController : UIViewController
+@interface ACMessagesViewController : UIViewController
 
 @property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) PlaceholderTextView *textView;
+@property (strong, nonatomic) ACPlaceholderTextView *textView;
 @property (strong, nonatomic) UIButton *sendButton;
 
-@property (strong, nonatomic) Conversation *conversation;
+@property (strong, nonatomic) ACConversation *conversation;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 

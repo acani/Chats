@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 
-@interface PlaceholderTextView : UITextView
+@interface ACPlaceholderTextView : UITextView
 
 @property (strong, nonatomic) NSString *placeholder;
 

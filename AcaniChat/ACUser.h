@@ -1,19 +1,19 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Conversation;
+@class ACConversation;
 
-@interface User : NSManagedObject
+@interface ACUser : NSManagedObject
 
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSSet *conversations;
 
 @end
 
-@interface User (CoreDataGeneratedAccessors)
+@interface ACUser (CoreDataGeneratedAccessors)
 
-- (void)addConversationsObject:(Conversation *)value;
-- (void)removeConversationsObject:(Conversation *)value;
+- (void)addConversationsObject:(ACConversation *)value;
+- (void)removeConversationsObject:(ACConversation *)value;
 - (void)addConversations:(NSSet *)values;
 - (void)removeConversations:(NSSet *)values;
 

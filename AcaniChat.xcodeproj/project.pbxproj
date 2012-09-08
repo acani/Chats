@@ -27,20 +27,20 @@
 		D27BB00015EAD3870084AECA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BAFFF15EAD3870084AECA /* CoreGraphics.framework */; };
 		D27BB00215EAD3870084AECA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BB00115EAD3870084AECA /* CoreData.framework */; };
 		D27BB00A15EAD3870084AECA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB00915EAD3870084AECA /* main.m */; };
-		D27BB00E15EAD3870084AECA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB00D15EAD3870084AECA /* AppDelegate.m */; };
+		D27BB00E15EAD3870084AECA /* ACAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB00D15EAD3870084AECA /* ACAppDelegate.m */; };
 		D27BB01115EAD3870084AECA /* AcaniChat.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D27BB00F15EAD3870084AECA /* AcaniChat.xcdatamodeld */; };
-		D27BB01415EAD3870084AECA /* MessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB01315EAD3870084AECA /* MessagesViewController.m */; };
+		D27BB01415EAD3870084AECA /* ACMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB01315EAD3870084AECA /* ACMessagesViewController.m */; };
 		D27BB02515EAD3880084AECA /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BB02415EAD3880084AECA /* SenTestingKit.framework */; };
 		D27BB02615EAD3880084AECA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BAFFB15EAD3870084AECA /* UIKit.framework */; };
 		D27BB02715EAD3880084AECA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BAFFD15EAD3870084AECA /* Foundation.framework */; };
 		D27BB02815EAD3880084AECA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BB00115EAD3870084AECA /* CoreData.framework */; };
 		D27BB03315EAD3880084AECA /* AcaniChatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB03215EAD3880084AECA /* AcaniChatTests.m */; };
 		D27BB06015EB093F0084AECA /* SendButton.png in Resources */ = {isa = PBXBuildFile; fileRef = D27BB05A15EB093F0084AECA /* SendButton.png */; };
-		D27BB06415EB0C620084AECA /* PlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB06315EB0C620084AECA /* PlaceholderTextView.m */; };
-		D2B4B02E15F4052D00FAF88C /* ConversationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B02D15F4052D00FAF88C /* ConversationsTableViewController.m */; };
-		D2B4B0A015F422B900FAF88C /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B09F15F422B900FAF88C /* User.m */; };
-		D2B4B0A315F422F200FAF88C /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B0A215F422F200FAF88C /* Conversation.m */; };
-		D2F5A93B15EB27A100748238 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = D2F5A93A15EB27A100748238 /* Message.m */; };
+		D27BB06415EB0C620084AECA /* ACPlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = D27BB06315EB0C620084AECA /* ACPlaceholderTextView.m */; };
+		D2B4B02E15F4052D00FAF88C /* ACConversationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B02D15F4052D00FAF88C /* ACConversationsTableViewController.m */; };
+		D2B4B0A015F422B900FAF88C /* ACUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B09F15F422B900FAF88C /* ACUser.m */; };
+		D2B4B0A315F422F200FAF88C /* ACConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B0A215F422F200FAF88C /* ACConversation.m */; };
+		D2F5A93B15EB27A100748238 /* ACMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D2F5A93A15EB27A100748238 /* ACMessage.m */; };
 		D2F5A95415EB341900748238 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F5A94B15EB33E100748238 /* libSocketRocket.a */; };
 		D2F5A95615EB3D1A00748238 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F5A95515EB3D1A00748238 /* libicucore.dylib */; };
 		D2F5A95815EB3D9100748238 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F5A95715EB3D9100748238 /* Security.framework */; };
@@ -117,29 +117,29 @@
 		D27BB00515EAD3870084AECA /* AcaniChat-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AcaniChat-Info.plist"; sourceTree = "<group>"; };
 		D27BB00915EAD3870084AECA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D27BB00B15EAD3870084AECA /* AcaniChat-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AcaniChat-Prefix.pch"; sourceTree = "<group>"; };
-		D27BB00C15EAD3870084AECA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		D27BB00D15EAD3870084AECA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		D27BB00C15EAD3870084AECA /* ACAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACAppDelegate.h; sourceTree = "<group>"; };
+		D27BB00D15EAD3870084AECA /* ACAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ACAppDelegate.m; sourceTree = "<group>"; };
 		D27BB01015EAD3870084AECA /* AcaniChat.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AcaniChat.xcdatamodel; sourceTree = "<group>"; };
-		D27BB01215EAD3870084AECA /* MessagesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessagesViewController.h; sourceTree = "<group>"; };
-		D27BB01315EAD3870084AECA /* MessagesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessagesViewController.m; sourceTree = "<group>"; };
+		D27BB01215EAD3870084AECA /* ACMessagesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ACMessagesViewController.h; sourceTree = "<group>"; };
+		D27BB01315EAD3870084AECA /* ACMessagesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ACMessagesViewController.m; sourceTree = "<group>"; };
 		D27BB02315EAD3880084AECA /* AcaniChatTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AcaniChatTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D27BB02415EAD3880084AECA /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		D27BB02D15EAD3880084AECA /* AcaniChatTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AcaniChatTests-Info.plist"; sourceTree = "<group>"; };
 		D27BB03215EAD3880084AECA /* AcaniChatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AcaniChatTests.m; sourceTree = "<group>"; };
 		D27BB05A15EB093F0084AECA /* SendButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SendButton.png; sourceTree = "<group>"; };
-		D27BB06215EB0C620084AECA /* PlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceholderTextView.h; sourceTree = "<group>"; };
-		D27BB06315EB0C620084AECA /* PlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceholderTextView.m; sourceTree = "<group>"; };
+		D27BB06215EB0C620084AECA /* ACPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACPlaceholderTextView.h; sourceTree = "<group>"; };
+		D27BB06315EB0C620084AECA /* ACPlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACPlaceholderTextView.m; sourceTree = "<group>"; };
 		D27BB0D115EB1FD50084AECA /* UIView+CocoaPlant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UIView+CocoaPlant.h"; path = "CocoaPlant/UIView+CocoaPlant.h"; sourceTree = "<group>"; };
-		D2B4B02C15F4052D00FAF88C /* ConversationsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConversationsTableViewController.h; sourceTree = "<group>"; };
-		D2B4B02D15F4052D00FAF88C /* ConversationsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConversationsTableViewController.m; sourceTree = "<group>"; };
+		D2B4B02C15F4052D00FAF88C /* ACConversationsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACConversationsTableViewController.h; sourceTree = "<group>"; };
+		D2B4B02D15F4052D00FAF88C /* ACConversationsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACConversationsTableViewController.m; sourceTree = "<group>"; };
 		D2B4B04715F415E200FAF88C /* AcaniChatDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AcaniChatDefines.h; sourceTree = "<group>"; };
-		D2B4B09E15F422B900FAF88C /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
-		D2B4B09F15F422B900FAF88C /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
-		D2B4B0A115F422F200FAF88C /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Conversation.h; sourceTree = "<group>"; };
-		D2B4B0A215F422F200FAF88C /* Conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Conversation.m; sourceTree = "<group>"; };
+		D2B4B09E15F422B900FAF88C /* ACUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACUser.h; sourceTree = "<group>"; };
+		D2B4B09F15F422B900FAF88C /* ACUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACUser.m; sourceTree = "<group>"; };
+		D2B4B0A115F422F200FAF88C /* ACConversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACConversation.h; sourceTree = "<group>"; };
+		D2B4B0A215F422F200FAF88C /* ACConversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACConversation.m; sourceTree = "<group>"; };
 		D2EE64AB15EB45D20062AA0F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		D2F5A93915EB27A100748238 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Message.h; sourceTree = "<group>"; };
-		D2F5A93A15EB27A100748238 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Message.m; sourceTree = "<group>"; };
+		D2F5A93915EB27A100748238 /* ACMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACMessage.h; sourceTree = "<group>"; };
+		D2F5A93A15EB27A100748238 /* ACMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACMessage.m; sourceTree = "<group>"; };
 		D2F5A93F15EB33E000748238 /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		D2F5A95515EB3D1A00748238 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		D2F5A95715EB3D9100748238 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -217,8 +217,8 @@
 		D27BB00315EAD3870084AECA /* AcaniChat */ = {
 			isa = PBXGroup;
 			children = (
-				D27BB00C15EAD3870084AECA /* AppDelegate.h */,
-				D27BB00D15EAD3870084AECA /* AppDelegate.m */,
+				D27BB00C15EAD3870084AECA /* ACAppDelegate.h */,
+				D27BB00D15EAD3870084AECA /* ACAppDelegate.m */,
 				D27BB05315EB01F00084AECA /* Controllers */,
 				D27BB06115EB0C4B0084AECA /* Views */,
 				D27BB04015EB01D00084AECA /* Models */,
@@ -259,12 +259,12 @@
 			isa = PBXGroup;
 			children = (
 				D27BB00F15EAD3870084AECA /* AcaniChat.xcdatamodeld */,
-				D2B4B0A115F422F200FAF88C /* Conversation.h */,
-				D2B4B0A215F422F200FAF88C /* Conversation.m */,
-				D2F5A93915EB27A100748238 /* Message.h */,
-				D2F5A93A15EB27A100748238 /* Message.m */,
-				D2B4B09E15F422B900FAF88C /* User.h */,
-				D2B4B09F15F422B900FAF88C /* User.m */,
+				D2B4B0A115F422F200FAF88C /* ACConversation.h */,
+				D2B4B0A215F422F200FAF88C /* ACConversation.m */,
+				D2F5A93915EB27A100748238 /* ACMessage.h */,
+				D2F5A93A15EB27A100748238 /* ACMessage.m */,
+				D2B4B09E15F422B900FAF88C /* ACUser.h */,
+				D2B4B09F15F422B900FAF88C /* ACUser.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -272,10 +272,10 @@
 		D27BB05315EB01F00084AECA /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D2B4B02C15F4052D00FAF88C /* ConversationsTableViewController.h */,
-				D2B4B02D15F4052D00FAF88C /* ConversationsTableViewController.m */,
-				D27BB01215EAD3870084AECA /* MessagesViewController.h */,
-				D27BB01315EAD3870084AECA /* MessagesViewController.m */,
+				D2B4B02C15F4052D00FAF88C /* ACConversationsTableViewController.h */,
+				D2B4B02D15F4052D00FAF88C /* ACConversationsTableViewController.m */,
+				D27BB01215EAD3870084AECA /* ACMessagesViewController.h */,
+				D27BB01315EAD3870084AECA /* ACMessagesViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -306,8 +306,8 @@
 		D27BB06115EB0C4B0084AECA /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				D27BB06215EB0C620084AECA /* PlaceholderTextView.h */,
-				D27BB06315EB0C620084AECA /* PlaceholderTextView.m */,
+				D27BB06215EB0C620084AECA /* ACPlaceholderTextView.h */,
+				D27BB06315EB0C620084AECA /* ACPlaceholderTextView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -499,14 +499,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				D27BB00A15EAD3870084AECA /* main.m in Sources */,
-				D27BB00E15EAD3870084AECA /* AppDelegate.m in Sources */,
+				D27BB00E15EAD3870084AECA /* ACAppDelegate.m in Sources */,
 				D27BB01115EAD3870084AECA /* AcaniChat.xcdatamodeld in Sources */,
-				D27BB01415EAD3870084AECA /* MessagesViewController.m in Sources */,
-				D27BB06415EB0C620084AECA /* PlaceholderTextView.m in Sources */,
-				D2F5A93B15EB27A100748238 /* Message.m in Sources */,
-				D2B4B02E15F4052D00FAF88C /* ConversationsTableViewController.m in Sources */,
-				D2B4B0A015F422B900FAF88C /* User.m in Sources */,
-				D2B4B0A315F422F200FAF88C /* Conversation.m in Sources */,
+				D27BB01415EAD3870084AECA /* ACMessagesViewController.m in Sources */,
+				D27BB06415EB0C620084AECA /* ACPlaceholderTextView.m in Sources */,
+				D2F5A93B15EB27A100748238 /* ACMessage.m in Sources */,
+				D2B4B02E15F4052D00FAF88C /* ACConversationsTableViewController.m in Sources */,
+				D2B4B0A015F422B900FAF88C /* ACUser.m in Sources */,
+				D2B4B0A315F422F200FAF88C /* ACConversation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

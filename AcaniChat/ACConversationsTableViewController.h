@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 
-@interface ConversationsTableViewController : UITableViewController
+@interface ACConversationsTableViewController : UITableViewController
 
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;

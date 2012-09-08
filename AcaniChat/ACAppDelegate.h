@@ -1,10 +1,10 @@
 #import <UIKit/UIKit.h>
 
-#define APP_DELEGATE() ((AppDelegate *)[[UIApplication sharedApplication] delegate])
+#define AC_APP_DELEGATE() ((ACAppDelegate *)[[UIApplication sharedApplication] delegate])
 
 @class SRWebSocket;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface ACAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

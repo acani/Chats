@@ -1,7 +1,7 @@
-#import "Message.h"
-#import "Conversation.h"
+#import "ACMessage.h"
+#import "ACConversation.h"
 
-@implementation Message
+@implementation ACMessage
 
 @dynamic read;
 @dynamic sentDate;
