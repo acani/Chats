@@ -114,9 +114,15 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [self.view addSubview:messageInputBar];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self scrollToBottomAnimated:NO];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     UIKeyboardNotificationsObserve();
+    [_tableView flashScrollIndicators];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
