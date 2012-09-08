@@ -6,28 +6,35 @@ AcaniChat:
 		- Add last message.text as the detailTextLabel.text.
 		- Pretty format sentDate.
 		- Style date and move to upper right of cell.
+		- Show blue bullet for convsations with unread messages.
 
 	MessagesViewController:
+		- Autocomplete before sending message. @issue
+		- Scroll _tableView to bottom after collapsing input. @issue
+		- _textView autocorrect is hidden. @issue
+			- Try 40 height and -10 top contentOffset. @issue
+		- Limit messageInputBar.height to half the available space.
 		- Only add the date to the top of cells if it's been at least 13 minutes since last date.
 		- Improve _tableView scrolling performance. @issue
-			(subclass UITableViewCell & implement drawRect)
+			- Add gray background color to message bubble background images.
+			- subclass UITableViewCell & implement drawRect.
 		- Add "Load Earlier Messages" button.
 			Native Messages app limits to last 50 messages.
 		- Use auto layout to expand/shrink _textView & sendButton to fit sendButton.title. @localization
 		Message Bubbles:
+			- Bubbles just off the top of the screen sometimes don't rotate correctly. @issue
 			- Tap & hold or double-tap to copy text.
 			- Detect all data types, except dates.
 			- Add arrow accessory icon for all data types, except dates.
 			- Animate during message send (going from _textView to _tableView)
 				- Show Sending... progress indicator as self.navigationItem.titleView
-		- Fix UI auto rotation issues.
 			- Check out real MessagesVC. Try adding toolbar.
 
 	Core Data:
-		- Persist drafts in textView of each chat
+		- Persist drafts in _textView of each conversation.
 			Conversation has one Draft (one-to-one).
 			Draft can be  a concrete parent of Message.
-			It should have text & media but not timestamp & unread, etc.
+			Draft should have text & media but not timestamp & unread, etc.
 		- Send photo & video messages.
 			- Add media relationship to Message model.
 
