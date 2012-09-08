@@ -166,6 +166,11 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 #pragma mark - Save/Send/Receive Messages
 
 - (void)sendMessage {
+    // Autocomplete text before sending. @hack
+    [_textView resignFirstResponder];
+    [_textView becomeFirstResponder];
+
+    // Send message.
     NSString *text = _textView.text;
     ACAppDelegate *appDelegate = AC_APP_DELEGATE();
     [appDelegate saveMessageWithText:text];

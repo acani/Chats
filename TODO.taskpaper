@@ -9,7 +9,6 @@ AcaniChat:
 		- Show blue bullet for convsations with unread messages.
 
 	MessagesViewController:
-		- Autocomplete before sending message. @issue
 		- Scroll _tableView to bottom after collapsing input. @issue
 		- _textView autocorrect is hidden. @issue
 			- Try 40 height and -10 top contentOffset. @issue
