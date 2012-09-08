@@ -11,8 +11,14 @@ NSAssert([managedObjectContext save:&error], @"-[NSManagedObjectContext save] er
 #define MOCFetch(managedObjectContext, fetchRequest) \
 NSManagedObjectContextFetch(self, _cmd, managedObjectContext, fetchRequest)
 
+#define MOCFetchAll(managedObjectContext, entityName) \
+MOCFetch(_managedObjectContext, [NSFetchRequest fetchRequestWithEntityName:entityName])
+
+#define MOCDelete(managedObjectContext, fetchRequest, cascadeRelationships) \
+NSManagedObjectContextDelete(self, _cmd, managedObjectContext, fetchRequest, cascadeRelationships)
+
 #define MOCDeleteAll(managedObjectContext, entityName, cascadeRelationships) \
-NSManagedObjectContextDeleteAll(self, _cmd, managedObjectContext, entityName, cascadeRelationships)
+MOCDelete(managedObjectContext, [NSFetchRequest fetchRequestWithEntityName:entityName], cascadeRelationships)
 
 #define FRCPerformFetch(fetchedResultsController) { \
 NSError __autoreleasing *error = nil; \
@@ -25,8 +31,7 @@ NS_INLINE NSArray *NSManagedObjectContextFetch(id self, SEL _cmd, NSManagedObjec
     return fetchedObjects;
 }
 
-NS_INLINE void NSManagedObjectContextDeleteAll(id self, SEL _cmd, NSManagedObjectContext *managedObjectContext, NSString *entityName, NSArray *cascadeRelationships) {
-    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:entityName];
+NS_INLINE void NSManagedObjectContextDelete(id self, SEL _cmd, NSManagedObjectContext *managedObjectContext, NSFetchRequest *fetchRequest, NSArray *cascadeRelationships) {
     fetchRequest.includesPropertyValues = NO;
     fetchRequest.includesPendingChanges = NO;
     fetchRequest.relationshipKeyPathsForPrefetching = cascadeRelationships;

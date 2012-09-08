@@ -25,39 +25,45 @@
     _managedObjectContext = [[NSManagedObjectContext alloc] init];
     [_managedObjectContext setPersistentStoreCoordinator:persistentStoreCoordinator];
 
-    // For now, start fresh; delete all conversations, messages, and users.
-    MOCDeleteAll(_managedObjectContext, @"ACConversation", @[@"messages"]);
-    MOCDeleteAll(_managedObjectContext, @"ACUser", nil);
+//    // For now, start fresh; delete all conversations, messages, and users.
+//    MOCDeleteAll(_managedObjectContext, @"ACConversation", @[@"messages"]);
+//    MOCDeleteAll(_managedObjectContext, @"ACUser", nil);
 
-    // Insert a mock conversation with a mock user.
-    _conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
-    _conversation.updatedDate = [NSDate date];
-    ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
-    user.name = @"Acani";
-    [_conversation addUsersObject:user];
+//    // Delete mock conversations with mock users.
+//    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"ACUser"];
+//    fetchRequest.includesPropertyValues = NO;
+//    fetchRequest.includesPendingChanges = NO;
+//    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"name != 'Acani'"];
+//    fetchRequest.relationshipKeyPathsForPrefetching = @[@"conversations"];
+//    NSArray *fetchedUsers = MOCFetch(_managedObjectContext, fetchRequest);
+//    for (ACUser *user in fetchedUsers) {
+//        [_managedObjectContext deleteObject:user];
+//        [_managedObjectContext deleteObject:[user.conversations anyObject]];
+//    }
+//    MOCSave(_managedObjectContext);
 
-    //    // Insert another mock conversation with a mock user.
-    //    Conversation *conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
-    //    conversation.updatedDate = [NSDate date];
-    //    user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
-    //    user.name = @"Acani 1";
-    //    [conversation addUsersObject:user];
-    //
-    //    // Insert another mock conversation with a mock user.
-    //    conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
-    //    conversation.updatedDate = [NSDate date];
-    //    user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
-    //    user.name = @"Acani 2";
-    //    [conversation addUsersObject:user];
+    // Fetch or insert the conversation.
+    NSArray *fetchedConversations = MOCFetchAll(_managedObjectContext, @"ACConversation");
+    if ([fetchedConversations count]) {
+        _conversation = fetchedConversations[0];
+    } else {
+        _conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
+        _conversation.updatedDate = [NSDate date];
+        ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
+        user.name = @"Acani";
+        [_conversation addUsersObject:user];
+        MOCSave(_managedObjectContext);
+    }
 
-    //    // Fetch or insert the conversation.
-    //    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"ACConversation"];
-    //    NSArray *fetchedObjects = [_managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-    //    if ([fetchedObjects count]) {
-    //        messagesViewController.conversation = fetchedObjects[0];
-    //    } else {
-    //        messagesViewController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
-    //    }
+//    // Insert mock conversations with mock users.
+//    for (NSUInteger idx = 1; idx < 20; ++idx) {
+//        ACConversation *conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
+//        conversation.updatedDate = [NSDate date];
+//        ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
+//        user.name = [NSString stringWithFormat:@"Acani %u", idx];
+//        [conversation addUsersObject:user];
+//    }
+//    MOCSave(_managedObjectContext);
 
     // Set up _window > UINavigationController > MessagesViewController.
     ACConversationsTableViewController *conversationsTableViewController = [[ACConversationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
