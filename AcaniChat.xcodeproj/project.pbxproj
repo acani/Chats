@@ -40,6 +40,8 @@
 		D2B4B02E15F4052D00FAF88C /* ACConversationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B02D15F4052D00FAF88C /* ACConversationsTableViewController.m */; };
 		D2B4B0A015F422B900FAF88C /* ACUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B09F15F422B900FAF88C /* ACUser.m */; };
 		D2B4B0A315F422F200FAF88C /* ACConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B0A215F422F200FAF88C /* ACConversation.m */; };
+		D2EFF36615FBA719002BEFDA /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EFF36415FBA719002BEFDA /* Default.png */; };
+		D2EFF36715FBA719002BEFDA /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EFF36515FBA719002BEFDA /* Default@2x.png */; };
 		D2F5A93B15EB27A100748238 /* ACMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D2F5A93A15EB27A100748238 /* ACMessage.m */; };
 		D2F5A95415EB341900748238 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F5A94B15EB33E100748238 /* libSocketRocket.a */; };
 		D2F5A95615EB3D1A00748238 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F5A95515EB3D1A00748238 /* libicucore.dylib */; };
@@ -138,6 +140,8 @@
 		D2B4B0A115F422F200FAF88C /* ACConversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACConversation.h; sourceTree = "<group>"; };
 		D2B4B0A215F422F200FAF88C /* ACConversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACConversation.m; sourceTree = "<group>"; };
 		D2EE64AB15EB45D20062AA0F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		D2EFF36415FBA719002BEFDA /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		D2EFF36515FBA719002BEFDA /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		D2F5A93915EB27A100748238 /* ACMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACMessage.h; sourceTree = "<group>"; };
 		D2F5A93A15EB27A100748238 /* ACMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACMessage.m; sourceTree = "<group>"; };
 		D2F5A93F15EB33E000748238 /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
@@ -283,22 +287,8 @@
 		D27BB05415EB093F0084AECA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D209006415EE5645001FED65 /* MessageBubbleBlue.png */,
-				D209006515EE5645001FED65 /* MessageBubbleBlue@2x.png */,
-				D209006615EE5645001FED65 /* MessageBubbleGray.png */,
-				D209006715EE5645001FED65 /* MessageBubbleGray@2x.png */,
-				D209006815EE5645001FED65 /* MessageBubbleHighlighted.png */,
-				D209006915EE5645001FED65 /* MessageBubbleHighlighted@2x.png */,
-				D209006A15EE5645001FED65 /* MessageBubbleTyping.png */,
-				D209006B15EE5645001FED65 /* MessageBubbleTyping@2x.png */,
-				D209006C15EE5646001FED65 /* MessageInputBarBackground.png */,
-				D209006D15EE5646001FED65 /* MessageInputBarBackground@2x.png */,
-				D209006E15EE5646001FED65 /* MessageInputFieldBackground.png */,
-				D209006F15EE5646001FED65 /* MessageInputFieldBackground@2x.png */,
-				D27BB05A15EB093F0084AECA /* SendButton.png */,
-				D209007015EE5646001FED65 /* SendButton@2x.png */,
-				D209007115EE5646001FED65 /* SendButtonHighlighted.png */,
-				D209007215EE5646001FED65 /* SendButtonHighlighted@2x.png */,
+				D2EFF37A15FBA739002BEFDA /* Icons & Launch */,
+				D2EFF37B15FBA7D4002BEFDA /* Messages */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -327,6 +317,38 @@
 				D27BB0D115EB1FD50084AECA /* UIView+CocoaPlant.h */,
 			);
 			path = CocoaPlant;
+			sourceTree = "<group>";
+		};
+		D2EFF37A15FBA739002BEFDA /* Icons & Launch */ = {
+			isa = PBXGroup;
+			children = (
+				D2EFF36415FBA719002BEFDA /* Default.png */,
+				D2EFF36515FBA719002BEFDA /* Default@2x.png */,
+			);
+			name = "Icons & Launch";
+			sourceTree = "<group>";
+		};
+		D2EFF37B15FBA7D4002BEFDA /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				D209006415EE5645001FED65 /* MessageBubbleBlue.png */,
+				D209006515EE5645001FED65 /* MessageBubbleBlue@2x.png */,
+				D209006615EE5645001FED65 /* MessageBubbleGray.png */,
+				D209006715EE5645001FED65 /* MessageBubbleGray@2x.png */,
+				D209006815EE5645001FED65 /* MessageBubbleHighlighted.png */,
+				D209006915EE5645001FED65 /* MessageBubbleHighlighted@2x.png */,
+				D209006A15EE5645001FED65 /* MessageBubbleTyping.png */,
+				D209006B15EE5645001FED65 /* MessageBubbleTyping@2x.png */,
+				D209006C15EE5646001FED65 /* MessageInputBarBackground.png */,
+				D209006D15EE5646001FED65 /* MessageInputBarBackground@2x.png */,
+				D209006E15EE5646001FED65 /* MessageInputFieldBackground.png */,
+				D209006F15EE5646001FED65 /* MessageInputFieldBackground@2x.png */,
+				D27BB05A15EB093F0084AECA /* SendButton.png */,
+				D209007015EE5646001FED65 /* SendButton@2x.png */,
+				D209007115EE5646001FED65 /* SendButtonHighlighted.png */,
+				D209007215EE5646001FED65 /* SendButtonHighlighted@2x.png */,
+			);
+			name = Messages;
 			sourceTree = "<group>";
 		};
 		D2F5A94015EB33E000748238 /* Products */ = {
@@ -465,6 +487,8 @@
 				D209007F15EE5646001FED65 /* SendButton@2x.png in Resources */,
 				D209008015EE5646001FED65 /* SendButtonHighlighted.png in Resources */,
 				D209008115EE5646001FED65 /* SendButtonHighlighted@2x.png in Resources */,
+				D2EFF36615FBA719002BEFDA /* Default.png in Resources */,
+				D2EFF36715FBA719002BEFDA /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
