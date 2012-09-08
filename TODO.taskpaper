@@ -9,6 +9,7 @@ AcaniChat:
 		- Show blue bullet for convsations with unread messages.
 
 	MessagesViewController:
+		- Send four lines of text correctly. @issue
 		- Scroll _tableView to bottom after collapsing input. @issue
 		- _textView autocorrect is hidden. @issue
 			- Try 40 height and -10 top contentOffset. @issue
@@ -27,7 +28,6 @@ AcaniChat:
 			- Add arrow accessory icon for all data types, except dates.
 			- Animate during message send (going from _textView to _tableView)
 				- Show Sending... progress indicator as self.navigationItem.titleView
-			- Check out real MessagesVC. Try adding toolbar.
 
 	Core Data:
 		- Persist drafts in _textView of each conversation.
