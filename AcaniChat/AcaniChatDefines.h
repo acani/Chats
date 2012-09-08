@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-#define HOST @"ws://acani-chat.jit.su/"
+#define HOST @"wss://acani-chat.jit.su/"
 //#define HOST @"ws://localhost:5000/"
 
 #define MOCSave(managedObjectContext) { \
