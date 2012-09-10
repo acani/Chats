@@ -5,6 +5,15 @@
 #import "ACConversation.h"
 #import "ACUser.h"
 
+#define UNREAD_DOT_IMAGE_VIEW_TAG        100
+#define LAST_MESSAGE_TEXT_LABEL_TAG      101
+#define LAST_MESSAGE_SENT_DATE_LABEL_TAG 102
+#define USERS_NAMES_LABEL_TAG            103
+
+#define LAST_MESSAGE_TEXT_FONT_SIZE      14
+#define LAST_MESSAGE_SENT_DATE_FONT_SIZE 14
+#define USERS_NAMES_FONT_SIZE            16
+
 @interface ACConversationsTableViewController () <NSFetchedResultsControllerDelegate> // , MFMessageComposeViewControllerDelegate>
 @end
 
@@ -14,9 +23,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.tableView.rowHeight = 61;
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 //    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
 }
+
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return (toInterfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+#endif
 
 //#pragma mark - Actions
 //
@@ -84,11 +100,66 @@
     if (!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+        // Create unreadDotImageView.
+        UIImageView *unreadDotImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"UnreadBullet"]];
+        unreadDotImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+        unreadDotImageView.tag = UNREAD_DOT_IMAGE_VIEW_TAG;
+        unreadDotImageView.backgroundColor = tableView.backgroundColor;       // speeds scrolling
+        unreadDotImageView.center = CGPointMake(15, 31);
+        [cell.contentView addSubview:unreadDotImageView];
+
+        // Create lastMessageTextLabel.
+        UILabel *lastMessageTextLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        lastMessageTextLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        lastMessageTextLabel.tag = LAST_MESSAGE_TEXT_LABEL_TAG;
+        lastMessageTextLabel.backgroundColor = tableView.backgroundColor;     // speeds scrolling
+        lastMessageTextLabel.textColor = [UIColor grayColor];
+        lastMessageTextLabel.font = [UIFont systemFontOfSize:LAST_MESSAGE_TEXT_FONT_SIZE];
+        lastMessageTextLabel.numberOfLines = 2;
+        [cell.contentView addSubview:lastMessageTextLabel];
+
+        // Create lastMessageSentDateLabel.
+        UILabel *lastMessageSentDateLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        lastMessageSentDateLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        lastMessageSentDateLabel.tag = LAST_MESSAGE_SENT_DATE_LABEL_TAG;
+        lastMessageSentDateLabel.backgroundColor = tableView.backgroundColor; // speeds scrolling
+        lastMessageSentDateLabel.textColor = [UIColor colorWithRed:52/255.0f green:111/255.0f blue:212/255.0f alpha:1];
+        lastMessageSentDateLabel.textAlignment = UITextAlignmentRight;
+        lastMessageSentDateLabel.font = [UIFont systemFontOfSize:LAST_MESSAGE_SENT_DATE_FONT_SIZE];
+        [cell.contentView addSubview:lastMessageSentDateLabel];
+
+        // Create usersNamesLabel.
+        UILabel *usersNamesLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        usersNamesLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        usersNamesLabel.tag = USERS_NAMES_LABEL_TAG;
+        usersNamesLabel.backgroundColor = tableView.backgroundColor;          // speeds scrolling
+        usersNamesLabel.font = [UIFont boldSystemFontOfSize:USERS_NAMES_FONT_SIZE];
+        [cell.contentView addSubview:usersNamesLabel];
     }
-    ACConversation *conversation = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = ((ACUser *)[conversation.users anyObject]).name;
-    cell.detailTextLabel.text = [NSDateFormatter localizedStringFromDate:conversation.updatedDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle];
+    [self tableView:tableView configureCell:cell withConversation:[self.fetchedResultsController objectAtIndexPath:indexPath]];
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView configureCell:(UITableViewCell *)cell withConversation:(ACConversation *)conversation {
+    // Configure unreadDotImageView.
+    [cell.contentView viewWithTag:UNREAD_DOT_IMAGE_VIEW_TAG].hidden = ![conversation.unread boolValue];
+
+    // Configure lastMessageTextLabel.
+    UILabel *lastMessageTextLabel = (UILabel *)[cell.contentView viewWithTag:LAST_MESSAGE_TEXT_LABEL_TAG];
+    CGFloat lastMessageTextLabelWidth = cell.contentView.frame.size.width-31-7;
+    lastMessageTextLabel.frame = CGRectMake(31, 22, lastMessageTextLabelWidth, (([conversation.lastMessageText sizeWithFont:lastMessageTextLabel.font].width > lastMessageTextLabelWidth) ? 36 : 18));
+    lastMessageTextLabel.text = conversation.lastMessageText;
+
+    // Configure lastMessageSentDateLabel.
+    UILabel *lastMessageSentDateLabel = (UILabel *)[cell.contentView viewWithTag:LAST_MESSAGE_SENT_DATE_LABEL_TAG];
+    CGFloat lastMessageSentDateLabelWidth = [(lastMessageSentDateLabel.text = [NSDateFormatter localizedStringFromDate:conversation.lastMessageSentDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]) sizeWithFont:lastMessageSentDateLabel.font].width;
+    lastMessageSentDateLabel.frame = CGRectMake(31+lastMessageTextLabelWidth-lastMessageSentDateLabelWidth, (conversation.lastMessageText ? 5 : 19), lastMessageSentDateLabelWidth, LAST_MESSAGE_SENT_DATE_FONT_SIZE+4);
+
+    // Configure usersNamesLabel.
+    UILabel *usersNamesLabel = (UILabel *)[cell.contentView viewWithTag:USERS_NAMES_LABEL_TAG];
+    usersNamesLabel.frame = CGRectMake(31, (conversation.lastMessageText ? 2 : 18), lastMessageTextLabelWidth-4-lastMessageSentDateLabelWidth, 20);
+    usersNamesLabel.text = ((ACUser *)[conversation.users anyObject]).name;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -105,7 +176,7 @@
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     [fetchRequest setEntity:[NSEntityDescription entityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext]];
     [fetchRequest setFetchBatchSize:20];
-    [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"updatedDate" ascending:YES]]];
+    [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"lastMessageSentDate" ascending:YES]]];
     [fetchRequest setRelationshipKeyPathsForPrefetching:@[@"recipients"]];
     _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"ACConversation"];
     _fetchedResultsController.delegate = self;
@@ -128,12 +199,9 @@
         case NSFetchedResultsChangeDelete:
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
-            //        case NSFetchedResultsChangeMove:
-            //            break;
-            //        case NSFetchedResultsChangeUpdate:
-            //            // TODO: Set cell.detailTextLabel.text to last sent message.text. Then, update here.
-            //            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
-            //            break;
+        case NSFetchedResultsChangeUpdate:
+            [self tableView:tableView configureCell:[tableView cellForRowAtIndexPath:indexPath] withConversation:anObject];
+            break;
     }
 }
 

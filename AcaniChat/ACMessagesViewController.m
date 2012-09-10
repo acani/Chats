@@ -51,6 +51,14 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
 @implementation ACMessagesViewController
 
+#pragma mark - NSObject
+
+- (void)dealloc {
+    UIKeyboardNotificationsUnobserve();
+}
+
+#pragma mark - UIViewController
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -83,6 +91,11 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     _textView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
     _textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
     _textView.font = [UIFont systemFontOfSize:MessageFontSize];
+    if (_conversation.draft) {
+        _textView.text = _conversation.draft;
+        UIKeyboardNotificationsObserve();
+        [_textView becomeFirstResponder];
+    }
     _textView.placeholder = NSLocalizedString(@" Message", nil);
     [messageInputBar addSubview:_textView];
     _previousTextViewContentHeight = MessageFontSize+20;
@@ -123,10 +136,14 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [super viewDidAppear:animated];
     UIKeyboardNotificationsObserve();
     [_tableView flashScrollIndicators];
+    _conversation.unread = @NO;
+    MOCSave(_managedObjectContext);
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     UIKeyboardNotificationsUnobserve(); // as soon as possible
+    _conversation.draft = ([_textView.text length] ? _textView.text: nil);
+    MOCSave(_managedObjectContext);
     [super viewWillDisappear:animated];
 }
 
@@ -147,6 +164,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
     [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&frameEnd];
 
+//    NSLog(@"animationDuration: %f", animationDuration); // TODO: Why 0.35 on viewDidLoad?
     [UIView animateWithDuration:animationDuration delay:0.0 options:(UIViewAnimationOptionsFromCurve(animationCurve) | UIViewAnimationOptionBeginFromCurrentState) animations:^{
          CGFloat viewHeight = [self.view convertRect:frameEnd fromView:nil].origin.y;
          UIView *messageInputBar = _textView.superview;

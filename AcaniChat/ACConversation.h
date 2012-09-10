@@ -5,7 +5,10 @@
 
 @interface ACConversation : NSManagedObject
 
-@property (nonatomic, retain) NSDate * updatedDate;
+@property (nonatomic, retain) NSString * draft;
+@property (nonatomic, retain) NSDate * lastMessageSentDate;
+@property (nonatomic, retain) NSString * lastMessageText;
+@property (nonatomic, retain) NSNumber * unread;
 @property (nonatomic, retain) NSSet *messages;
 @property (nonatomic, retain) NSSet *users;
 

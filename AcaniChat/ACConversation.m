@@ -4,7 +4,10 @@
 
 @implementation ACConversation
 
-@dynamic updatedDate;
+@dynamic draft;
+@dynamic lastMessageSentDate;
+@dynamic lastMessageText;
+@dynamic unread;
 @dynamic messages;
 @dynamic users;
 

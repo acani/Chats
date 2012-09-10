@@ -48,9 +48,9 @@
         _conversation = fetchedConversations[0];
     } else {
         _conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
-        _conversation.updatedDate = [NSDate date];
+        _conversation.lastMessageSentDate = [NSDate date];
         ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
-        user.name = @"Acani";
+        user.name = @"Matt Di Pasquale"; // @"Acani";
         [_conversation addUsersObject:user];
         MOCSave(_managedObjectContext);
     }
@@ -58,7 +58,7 @@
 //    // Insert mock conversations with mock users.
 //    for (NSUInteger idx = 1; idx < 20; ++idx) {
 //        ACConversation *conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
-//        conversation.updatedDate = [NSDate date];
+//        conversation.lastMessageSentDate = [NSDate date];
 //        ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
 //        user.name = [NSString stringWithFormat:@"Acani %u", idx];
 //        [conversation addUsersObject:user];
@@ -106,9 +106,8 @@
 
 - (void)saveMessageWithText:(NSString *)text {
     ACMessage *message = [NSEntityDescription insertNewObjectForEntityForName:@"ACMessage" inManagedObjectContext:_managedObjectContext];
-    message.read = [NSNumber numberWithBool:YES];
-    message.sentDate = [NSDate date];
-    message.text = text;
+    _conversation.lastMessageSentDate = message.sentDate = [NSDate date];
+    _conversation.lastMessageText = message.text = text;
     [_conversation addMessagesObject:message];
     MOCSave(_managedObjectContext);
 }
@@ -139,6 +138,8 @@
     ACMessagesViewController *messagesViewController = (ACMessagesViewController *)NAVIGATION_CONTROLLER().topViewController;
     if ([messagesViewController respondsToSelector:@selector(scrollToBottomAnimated:)]) {
         [messagesViewController scrollToBottomAnimated:YES];
+    } else {
+        _conversation.unread = @YES;
     }
 }
 

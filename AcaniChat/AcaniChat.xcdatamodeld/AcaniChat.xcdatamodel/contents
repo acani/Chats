@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1807" systemVersion="12A256" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="ACConversation" representedClassName="ACConversation" syncable="YES">
-        <attribute name="updatedDate" attributeType="Date" indexed="YES" syncable="YES"/>
+        <attribute name="draft" optional="YES" attributeType="String" minValueString="1" syncable="YES"/>
+        <attribute name="lastMessageSentDate" attributeType="Date" indexed="YES" syncable="YES"/>
+        <attribute name="lastMessageText" optional="YES" attributeType="String" minValueString="1" syncable="YES"/>
+        <attribute name="unread" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ACMessage" inverseName="conversation" inverseEntity="ACMessage" syncable="YES"/>
         <relationship name="users" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="ACUser" inverseName="conversations" inverseEntity="ACUser" syncable="YES"/>
     </entity>
     <entity name="ACMessage" representedClassName="ACMessage" syncable="YES">
-        <attribute name="read" attributeType="Boolean" syncable="YES"/>
         <attribute name="sentDate" attributeType="Date" syncable="YES"/>
         <attribute name="text" attributeType="String" minValueString="1" syncable="YES"/>
         <relationship name="conversation" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="ACConversation" inverseName="messages" inverseEntity="ACConversation" indexed="YES" syncable="YES"/>
@@ -16,8 +18,8 @@
         <relationship name="conversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ACConversation" inverseName="users" inverseEntity="ACConversation" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ACConversation" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="ACMessage" positionX="0" positionY="0" width="0" height="0"/>
-        <element name="ACUser" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="ACConversation" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="ACMessage" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="ACUser" positionX="0" positionY="0" width="128" height="75"/>
     </elements>
 </model>

@@ -3,12 +3,12 @@ AcaniChat:
 	ConversationsTableViewController:
 		- Add search bar to search all conversations.
 			http://www.iphonesdkarticles.com/2009/01/uitableview-searching-table-view.html
-		- Add last message.text as the detailTextLabel.text.
-		- Pretty format sentDate.
-		- Style date and move to upper right of cell.
-		- Show blue bullet for convsations with unread messages.
+		- Pretty format sentDate (Bold if it's a time.).
+		- Get correct UnreadBullet image or draw it with Quartz2D.
+		- Enhance "Edit" animation for each cell. Red circle should cover UnreadBullet.
 
 	MessagesViewController:
+		- Jump (don't animate) messageInputBar above keyboard if conversation.draft in viewDidLoad.
 		- Send four lines of text correctly. @issue
 		- Scroll _tableView to bottom after collapsing input. @issue
 		- _textView autocorrect is hidden. @issue
@@ -30,10 +30,6 @@ AcaniChat:
 				- Show Sending... progress indicator as self.navigationItem.titleView
 
 	Core Data:
-		- Persist drafts in _textView of each conversation.
-			Conversation has one Draft (one-to-one).
-			Draft can be  a concrete parent of Message.
-			Draft should have text & media but not timestamp & unread, etc.
 		- Send photo & video messages.
 			- Add media relationship to Message model.
 

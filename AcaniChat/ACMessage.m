@@ -3,7 +3,6 @@
 
 @implementation ACMessage
 
-@dynamic read;
 @dynamic sentDate;
 @dynamic text;
 @dynamic conversation;
