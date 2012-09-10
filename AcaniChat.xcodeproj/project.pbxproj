@@ -41,6 +41,8 @@
 		D2884AB115FD8E3C00021068 /* ACMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D2884AB015FD8E3C00021068 /* ACMessage.m */; };
 		D2884AB515FD8F9C00021068 /* UnreadBullet.png in Resources */ = {isa = PBXBuildFile; fileRef = D2884AB315FD8F9C00021068 /* UnreadBullet.png */; };
 		D2884AB615FD8F9C00021068 /* UnreadBullet@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2884AB415FD8F9C00021068 /* UnreadBullet@2x.png */; };
+		D2884AD715FD9FED00021068 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D2884AD615FD9FED00021068 /* Icon.png */; };
+		D2884AD915FD9FF700021068 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2884AD815FD9FF700021068 /* Icon@2x.png */; };
 		D2B4B02E15F4052D00FAF88C /* ACConversationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B02D15F4052D00FAF88C /* ACConversationsTableViewController.m */; };
 		D2B4B0A015F422B900FAF88C /* ACUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B09F15F422B900FAF88C /* ACUser.m */; };
 		D2EFF36615FBA719002BEFDA /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EFF36415FBA719002BEFDA /* Default.png */; };
@@ -140,6 +142,8 @@
 		D2884AB015FD8E3C00021068 /* ACMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACMessage.m; sourceTree = "<group>"; };
 		D2884AB315FD8F9C00021068 /* UnreadBullet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UnreadBullet.png; sourceTree = "<group>"; };
 		D2884AB415FD8F9C00021068 /* UnreadBullet@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UnreadBullet@2x.png"; sourceTree = "<group>"; };
+		D2884AD615FD9FED00021068 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		D2884AD815FD9FF700021068 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		D2B4B02C15F4052D00FAF88C /* ACConversationsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACConversationsTableViewController.h; sourceTree = "<group>"; };
 		D2B4B02D15F4052D00FAF88C /* ACConversationsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACConversationsTableViewController.m; sourceTree = "<group>"; };
 		D2B4B04715F415E200FAF88C /* AcaniChatDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AcaniChatDefines.h; sourceTree = "<group>"; };
@@ -338,6 +342,8 @@
 			children = (
 				D2EFF36415FBA719002BEFDA /* Default.png */,
 				D2EFF36515FBA719002BEFDA /* Default@2x.png */,
+				D2884AD615FD9FED00021068 /* Icon.png */,
+				D2884AD815FD9FF700021068 /* Icon@2x.png */,
 			);
 			name = "Icons & Launch";
 			sourceTree = "<group>";
@@ -505,6 +511,8 @@
 				D2EFF36715FBA719002BEFDA /* Default@2x.png in Resources */,
 				D2884AB515FD8F9C00021068 /* UnreadBullet.png in Resources */,
 				D2884AB615FD8F9C00021068 /* UnreadBullet@2x.png in Resources */,
+				D2884AD715FD9FED00021068 /* Icon.png in Resources */,
+				D2884AD915FD9FF700021068 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
