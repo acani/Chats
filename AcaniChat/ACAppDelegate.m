@@ -129,7 +129,7 @@
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-    NSLog(@"Received \"%@\"", message);
+//    NSLog(@"Received \"%@\"", message);
 
     NSUInteger messagesCount;
     NSArray *messageArray = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
@@ -157,7 +157,7 @@
         NSUInteger unreadMessagesCount = [_conversation.unreadMessagesCount unsignedIntegerValue] + messagesCount;
         [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessagesCount;
         _conversation.unreadMessagesCount = @(unreadMessagesCount);
-        messagesViewController.title = [NSString stringWithFormat:@"Messages (%u)", unreadMessagesCount];
+        messagesViewController.title = [NSString stringWithFormat:NSLocalizedString(@"Messages (%u)", nil), unreadMessagesCount];
     }
 }
 

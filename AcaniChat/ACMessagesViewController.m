@@ -90,6 +90,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     _textView.delegate = self;
     _textView.backgroundColor = [UIColor colorWithWhite:245/255.0f alpha:1];
     _textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
+    _textView.scrollsToTop = NO;
     _textView.font = [UIFont systemFontOfSize:MessageFontSize];
     if (_conversation.draft) {
         _textView.text = _conversation.draft;
@@ -138,6 +139,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [_tableView flashScrollIndicators];
     _conversation.unreadMessagesCount = @0;
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+    ((UIViewController *)self.navigationController.viewControllers[0]).title = NSLocalizedString(@"Messages", nil);
     MOCSave(_managedObjectContext);
 }
 
