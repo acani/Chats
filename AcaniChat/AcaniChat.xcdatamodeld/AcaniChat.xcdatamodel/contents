@@ -1,21 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1807" systemVersion="12A256" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="ACConversation" representedClassName="ACConversation" syncable="YES">
-        <attribute name="draft" optional="YES" attributeType="String" minValueString="1" syncable="YES"/>
-        <attribute name="lastMessageSentDate" attributeType="Date" indexed="YES" syncable="YES"/>
-        <attribute name="lastMessageText" optional="YES" attributeType="String" minValueString="1" syncable="YES"/>
-        <attribute name="unreadMessagesCount" attributeType="Integer 16" defaultValueString="NO" syncable="YES"/>
-        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ACMessage" inverseName="conversation" inverseEntity="ACMessage" syncable="YES"/>
-        <relationship name="users" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="ACUser" inverseName="conversations" inverseEntity="ACUser" syncable="YES"/>
+    <entity name="ACConversation" representedClassName="ACConversation">
+        <attribute name="draft" optional="YES" attributeType="String" minValueString="1">
+            <userInfo/>
+        </attribute>
+        <attribute name="lastMessageSentDate" attributeType="Date" indexed="YES">
+            <userInfo/>
+        </attribute>
+        <attribute name="lastMessageText" optional="YES" attributeType="String" minValueString="1">
+            <userInfo/>
+        </attribute>
+        <attribute name="unreadMessagesCount" attributeType="Integer 16" defaultValueString="0">
+            <userInfo/>
+        </attribute>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ACMessage" inverseName="conversation" inverseEntity="ACMessage">
+            <userInfo/>
+        </relationship>
+        <relationship name="users" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="ACUser" inverseName="conversations" inverseEntity="ACUser">
+            <userInfo/>
+        </relationship>
+        <userInfo/>
     </entity>
-    <entity name="ACMessage" representedClassName="ACMessage" syncable="YES">
-        <attribute name="sentDate" attributeType="Date" syncable="YES"/>
-        <attribute name="text" attributeType="String" minValueString="1" syncable="YES"/>
-        <relationship name="conversation" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="ACConversation" inverseName="messages" inverseEntity="ACConversation" indexed="YES" syncable="YES"/>
+    <entity name="ACMessage" representedClassName="ACMessage">
+        <attribute name="sentDate" attributeType="Date" indexed="YES">
+            <userInfo/>
+        </attribute>
+        <attribute name="text" attributeType="String" minValueString="1">
+            <userInfo/>
+        </attribute>
+        <relationship name="conversation" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="ACConversation" inverseName="messages" inverseEntity="ACConversation">
+            <userInfo/>
+        </relationship>
+        <userInfo/>
     </entity>
-    <entity name="ACUser" representedClassName="ACUser" syncable="YES">
-        <attribute name="name" attributeType="String" minValueString="1" syncable="YES"/>
-        <relationship name="conversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ACConversation" inverseName="users" inverseEntity="ACConversation" syncable="YES"/>
+    <entity name="ACUser" representedClassName="ACUser">
+        <attribute name="name" attributeType="String" minValueString="1">
+            <userInfo/>
+        </attribute>
+        <relationship name="conversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ACConversation" inverseName="users" inverseEntity="ACConversation">
+            <userInfo/>
+        </relationship>
+        <userInfo/>
     </entity>
     <elements>
         <element name="ACConversation" positionX="0" positionY="0" width="128" height="135"/>
