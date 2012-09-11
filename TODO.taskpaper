@@ -40,7 +40,6 @@ AcaniChat:
 		- Play a sound or vibrate when receiving a message.
 		- Receive messages while offline.
 			- Handle Push Notifications.
-			- Request server to send all messages after the last-saved messageID.
 
 	iPad Version:
 		- Study Messages app on the iPad

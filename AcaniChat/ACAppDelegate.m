@@ -87,9 +87,7 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    _webSocket.delegate = nil;
     [_webSocket close];
-    _webSocket = nil;
 }
 
 #pragma mark - Connect & Save/Send Messages
@@ -102,6 +100,7 @@
     _webSocket.delegate = self;
 
     [_webSocket open];
+    AppSetNetworkActivityIndicatorVisible(YES);
 }
 
 - (void)saveMessageWithText:(NSString *)text {
@@ -113,26 +112,38 @@
 }
 
 - (void)sendText:(NSString *)text {
-    [_webSocket send:[[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:@[text] options:0 error:NULL] encoding:NSUTF8StringEncoding]];
+    [_webSocket send:[NSJSONSerialization dataWithJSONObject:@[@1, @[text]] options:0 error:NULL]];
 }
 
 #pragma mark - SRWebSocketDelegate
 
-//- (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-//    // TODO: Tell server we're connected.
-//}
+- (void)webSocketDidOpen:(SRWebSocket *)webSocket {
+    [_webSocket send:[NSString stringWithFormat:@"[0,%u]", [_conversation.messages count]]];
+}
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
+    AppSetNetworkActivityIndicatorVisible(NO);
     [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot Connect", nil) message:[error localizedDescription] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
     _webSocket.delegate = nil;
     _webSocket = nil;
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-//    NSLog(@"Received \"%@\"", message);
-    NSArray *texts = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
-    for (NSString *text in texts) {
-        [self saveMessageWithText:text];
+    NSLog(@"Received \"%@\"", message);
+
+    NSArray *messageArray = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
+    switch ([messageArray[0] integerValue]) {
+        case 0: // [0, [["Hi"], ["Hey"], ["Bye"]]]
+            AppSetNetworkActivityIndicatorVisible(NO);
+            if (![messageArray[1] count]) return;
+            for (NSString *messageObjectString in messageArray[1]) {
+                [self saveMessageWithText:[NSJSONSerialization JSONObjectWithData:[messageObjectString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL][0]];
+            }
+            break;
+
+        case 1: // [1, ["Hi"]]
+            [self saveMessageWithText:messageArray[1][0]];
+            break;
     }
 
     ACMessagesViewController *messagesViewController = (ACMessagesViewController *)NAVIGATION_CONTROLLER().topViewController;

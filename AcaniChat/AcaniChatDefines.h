@@ -1,8 +1,25 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+
+#pragma mark - Networking
+
 #define HOST @"wss://acani-chat.jit.su/"
 //#define HOST @"ws://localhost:5000/"
+
+static NSUInteger _networkActivityIndicatorCount = 0;
+UIKIT_STATIC_INLINE void AppSetNetworkActivityIndicatorVisible(BOOL visible) {
+    if (visible) {
+        ++_networkActivityIndicatorCount;
+    } else {
+        assert(_networkActivityIndicatorCount > 0);
+        --_networkActivityIndicatorCount;
+    }
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = (_networkActivityIndicatorCount > 0);
+}
+
+
+#pragma mark - Core Data
 
 #define MOCSave(managedObjectContext) { \
 NSError __autoreleasing *error = nil; \
