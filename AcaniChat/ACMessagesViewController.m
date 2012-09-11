@@ -137,6 +137,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     UIKeyboardNotificationsObserve();
     [_tableView flashScrollIndicators];
     _conversation.unreadMessagesCount = @0;
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     MOCSave(_managedObjectContext);
 }
 

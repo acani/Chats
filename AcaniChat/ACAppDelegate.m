@@ -155,6 +155,7 @@
         [messagesViewController scrollToBottomAnimated:YES];
     } else { // assume topViewController is ACConversationsTableViewController.
         NSUInteger unreadMessagesCount = [_conversation.unreadMessagesCount unsignedIntegerValue] + messagesCount;
+        [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessagesCount;
         _conversation.unreadMessagesCount = @(unreadMessagesCount);
         messagesViewController.title = [NSString stringWithFormat:@"Messages (%u)", unreadMessagesCount];
     }
