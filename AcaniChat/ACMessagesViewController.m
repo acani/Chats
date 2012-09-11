@@ -136,7 +136,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [super viewDidAppear:animated];
     UIKeyboardNotificationsObserve();
     [_tableView flashScrollIndicators];
-    _conversation.unread = @NO;
+    _conversation.unreadMessagesCount = @0;
     MOCSave(_managedObjectContext);
 }
 

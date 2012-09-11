@@ -131,17 +131,21 @@
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
     NSLog(@"Received \"%@\"", message);
 
+    NSUInteger messagesCount;
     NSArray *messageArray = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
     switch ([messageArray[0] integerValue]) {
         case 0: // [0, [["Hi"], ["Hey"], ["Bye"]]]
             AppSetNetworkActivityIndicatorVisible(NO);
-            if (![messageArray[1] count]) return;
+
+            messagesCount = [messageArray[1] count];
+            if (!messagesCount) return;
             for (NSString *messageObjectString in messageArray[1]) {
                 [self saveMessageWithText:[NSJSONSerialization JSONObjectWithData:[messageObjectString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL][0]];
             }
             break;
 
         case 1: // [1, ["Hi"]]
+            messagesCount = 1;
             [self saveMessageWithText:messageArray[1][0]];
             break;
     }
@@ -149,8 +153,10 @@
     ACMessagesViewController *messagesViewController = (ACMessagesViewController *)NAVIGATION_CONTROLLER().topViewController;
     if ([messagesViewController respondsToSelector:@selector(scrollToBottomAnimated:)]) {
         [messagesViewController scrollToBottomAnimated:YES];
-    } else {
-        _conversation.unread = @YES;
+    } else { // assume topViewController is ACConversationsTableViewController.
+        NSUInteger unreadMessagesCount = [_conversation.unreadMessagesCount unsignedIntegerValue] + messagesCount;
+        _conversation.unreadMessagesCount = @(unreadMessagesCount);
+        messagesViewController.title = [NSString stringWithFormat:@"Messages (%u)", unreadMessagesCount];
     }
 }
 

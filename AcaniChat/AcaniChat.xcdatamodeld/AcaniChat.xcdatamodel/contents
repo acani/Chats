@@ -4,7 +4,7 @@
         <attribute name="draft" optional="YES" attributeType="String" minValueString="1" syncable="YES"/>
         <attribute name="lastMessageSentDate" attributeType="Date" indexed="YES" syncable="YES"/>
         <attribute name="lastMessageText" optional="YES" attributeType="String" minValueString="1" syncable="YES"/>
-        <attribute name="unread" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="unreadMessagesCount" attributeType="Integer 16" defaultValueString="NO" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ACMessage" inverseName="conversation" inverseEntity="ACMessage" syncable="YES"/>
         <relationship name="users" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="ACUser" inverseName="conversations" inverseEntity="ACUser" syncable="YES"/>
     </entity>

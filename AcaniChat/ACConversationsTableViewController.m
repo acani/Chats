@@ -143,7 +143,7 @@
 
 - (void)tableView:(UITableView *)tableView configureCell:(UITableViewCell *)cell withConversation:(ACConversation *)conversation {
     // Configure unreadDotImageView.
-    [cell.contentView viewWithTag:UNREAD_DOT_IMAGE_VIEW_TAG].hidden = ![conversation.unread boolValue];
+    [cell.contentView viewWithTag:UNREAD_DOT_IMAGE_VIEW_TAG].hidden = ![conversation.unreadMessagesCount boolValue];
 
     // Configure lastMessageTextLabel.
     UILabel *lastMessageTextLabel = (UILabel *)[cell.contentView viewWithTag:LAST_MESSAGE_TEXT_LABEL_TAG];

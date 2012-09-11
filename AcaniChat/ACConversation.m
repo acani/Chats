@@ -7,7 +7,7 @@
 @dynamic draft;
 @dynamic lastMessageSentDate;
 @dynamic lastMessageText;
-@dynamic unread;
+@dynamic unreadMessagesCount;
 @dynamic messages;
 @dynamic users;
 
