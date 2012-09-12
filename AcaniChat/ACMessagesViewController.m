@@ -370,12 +370,15 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController) return _fetchedResultsController;
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"ACMessage"];
+    NSError __autoreleasing *error = nil;
+    NSUInteger messagesCount = [_managedObjectContext countForFetchRequest:fetchRequest error:&error];
+    NSAssert(messagesCount != NSNotFound, @"-[NSManagedObjectContext countForFetchRequest:error:] error:\n\n%@", error);
+    [fetchRequest setFetchOffset:messagesCount-MESSAGE_COUNT_LIMIT];
     [fetchRequest setFetchBatchSize:10];
-    [fetchRequest setFetchLimit:MESSAGE_COUNT_LIMIT];
     [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES]]];
     _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"ACMessage"];
     _fetchedResultsController.delegate = self;
-    FRCPerformFetch(_fetchedResultsController);
+    NSAssert([_fetchedResultsController performFetch:&error], @"-[NSFetchedResultsController performFetch:] error:\n\n%@", error);
     return _fetchedResultsController;
 }    
 
