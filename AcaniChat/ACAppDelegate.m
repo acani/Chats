@@ -118,7 +118,7 @@
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-    [_webSocket send:[NSString stringWithFormat:@"[0,%u]", [_conversation.messages count]]];
+    [_webSocket send:[NSString stringWithFormat:@"[0,%u]", MOCCountAll(_managedObjectContext, @"ACMessage")]];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {

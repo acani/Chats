@@ -25,6 +25,12 @@ UIKIT_STATIC_INLINE void AppSetNetworkActivityIndicatorVisible(BOOL visible) {
 NSError __autoreleasing *error = nil; \
 NSAssert([managedObjectContext save:&error], @"-[NSManagedObjectContext save] error:\n\n%@", error); }
 
+#define MOCCount(managedObjectContext, fetchRequest) \
+NSManagedObjectContextCount(self, _cmd, managedObjectContext, fetchRequest)
+
+#define MOCCountAll(managedObjectContext, entityName) \
+MOCCount(_managedObjectContext, [NSFetchRequest fetchRequestWithEntityName:entityName])
+
 #define MOCFetch(managedObjectContext, fetchRequest) \
 NSManagedObjectContextFetch(self, _cmd, managedObjectContext, fetchRequest)
 
@@ -40,6 +46,13 @@ MOCDelete(managedObjectContext, [NSFetchRequest fetchRequestWithEntityName:entit
 #define FRCPerformFetch(fetchedResultsController) { \
 NSError __autoreleasing *error = nil; \
 NSAssert([fetchedResultsController performFetch:&error], @"-[NSFetchedResultsController performFetch:] error:\n\n%@", error); }
+
+NS_INLINE NSUInteger NSManagedObjectContextCount(id self, SEL _cmd, NSManagedObjectContext *managedObjectContext, NSFetchRequest *fetchRequest) {
+    NSError __autoreleasing *error = nil;
+    NSUInteger objectsCount = [managedObjectContext countForFetchRequest:fetchRequest error:&error];
+    NSAssert(objectsCount != NSNotFound, @"-[NSManagedObjectContext countForFetchRequest:error:] error:\n\n%@", error);
+    return objectsCount;
+}
 
 NS_INLINE NSArray *NSManagedObjectContextFetch(id self, SEL _cmd, NSManagedObjectContext *managedObjectContext, NSFetchRequest *fetchRequest) {
     NSError __autoreleasing *error = nil;
