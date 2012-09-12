@@ -42,8 +42,6 @@ AcaniChat:
 			- Handle Push Notifications.
 
 	Server:
-		- Delete acani-chat-server GitHub repo.
-		- Can I remove Procfile?
 		- Create a server that works with Apple Push Notification Service.
 
 	iPad Version:

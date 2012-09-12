@@ -159,7 +159,6 @@
 		D2EFF36415FBA719002BEFDA /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		D2EFF36515FBA719002BEFDA /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		D2F27E101600D48E00CAAF4C /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
-		D2F27E111600D48E00CAAF4C /* Procfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Procfile; sourceTree = "<group>"; };
 		D2F27E121600D48E00CAAF4C /* server.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = server.js; sourceTree = "<group>"; };
 		D2F5A93F15EB33E000748238 /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		D2F5A95515EB3D1A00748238 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
@@ -389,7 +388,6 @@
 			isa = PBXGroup;
 			children = (
 				D2F27E101600D48E00CAAF4C /* package.json */,
-				D2F27E111600D48E00CAAF4C /* Procfile */,
 				D2F27E121600D48E00CAAF4C /* server.js */,
 			);
 			path = Server;
