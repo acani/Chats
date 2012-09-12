@@ -23,6 +23,9 @@
 		D209008015EE5646001FED65 /* SendButtonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = D209007115EE5646001FED65 /* SendButtonHighlighted.png */; };
 		D209008115EE5646001FED65 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D209007215EE5646001FED65 /* SendButtonHighlighted@2x.png */; };
 		D22CA84915FF806E00F99E47 /* ACConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = D22CA84815FF806E00F99E47 /* ACConversation.m */; };
+		D237E8C81600AFC600AC42CD /* MessageReceived.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D237E8C71600AFC600AC42CD /* MessageReceived.aiff */; };
+		D237E8CA1600AFD200AC42CD /* MessageSent.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D237E8C91600AFD200AC42CD /* MessageSent.aiff */; };
+		D237E8D01600B30A00AC42CD /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D237E8CF1600B30A00AC42CD /* AudioToolbox.framework */; };
 		D27BAFFC15EAD3870084AECA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BAFFB15EAD3870084AECA /* UIKit.framework */; };
 		D27BAFFE15EAD3870084AECA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BAFFD15EAD3870084AECA /* Foundation.framework */; };
 		D27BB00015EAD3870084AECA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D27BAFFF15EAD3870084AECA /* CoreGraphics.framework */; };
@@ -116,6 +119,9 @@
 		D209007215EE5646001FED65 /* SendButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SendButtonHighlighted@2x.png"; sourceTree = "<group>"; };
 		D22CA84715FF806E00F99E47 /* ACConversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACConversation.h; sourceTree = "<group>"; };
 		D22CA84815FF806E00F99E47 /* ACConversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACConversation.m; sourceTree = "<group>"; };
+		D237E8C71600AFC600AC42CD /* MessageReceived.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = MessageReceived.aiff; sourceTree = "<group>"; };
+		D237E8C91600AFD200AC42CD /* MessageSent.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = MessageSent.aiff; sourceTree = "<group>"; };
+		D237E8CF1600B30A00AC42CD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		D273945C15F8C83300C09461 /* TODO.taskpaper */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO.taskpaper; sourceTree = "<group>"; };
 		D27BAFF715EAD3870084AECA /* AcaniChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AcaniChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D27BAFFB15EAD3870084AECA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -163,6 +169,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D237E8D01600B30A00AC42CD /* AudioToolbox.framework in Frameworks */,
 				D2F5A95A15EB3DB400748238 /* CFNetwork.framework in Frameworks */,
 				D27BB00215EAD3870084AECA /* CoreData.framework in Frameworks */,
 				D27BB00015EAD3870084AECA /* CoreGraphics.framework in Frameworks */,
@@ -214,6 +221,7 @@
 		D27BAFFA15EAD3870084AECA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D237E8CF1600B30A00AC42CD /* AudioToolbox.framework */,
 				D2F5A95915EB3DB400748238 /* CFNetwork.framework */,
 				D27BB00115EAD3870084AECA /* CoreData.framework */,
 				D27BAFFF15EAD3870084AECA /* CoreGraphics.framework */,
@@ -363,6 +371,8 @@
 				D209006D15EE5646001FED65 /* MessageInputBarBackground@2x.png */,
 				D209006E15EE5646001FED65 /* MessageInputFieldBackground.png */,
 				D209006F15EE5646001FED65 /* MessageInputFieldBackground@2x.png */,
+				D237E8C71600AFC600AC42CD /* MessageReceived.aiff */,
+				D237E8C91600AFD200AC42CD /* MessageSent.aiff */,
 				D27BB05A15EB093F0084AECA /* SendButton.png */,
 				D209007015EE5646001FED65 /* SendButton@2x.png */,
 				D209007115EE5646001FED65 /* SendButtonHighlighted.png */,
@@ -513,6 +523,8 @@
 				D2884AB615FD8F9C00021068 /* UnreadBullet@2x.png in Resources */,
 				D2884AD715FD9FED00021068 /* Icon.png in Resources */,
 				D2884AD915FD9FF700021068 /* Icon@2x.png in Resources */,
+				D237E8C81600AFC600AC42CD /* MessageReceived.aiff in Resources */,
+				D237E8CA1600AFD200AC42CD /* MessageSent.aiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

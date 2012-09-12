@@ -1,3 +1,4 @@
+#import <AudioToolbox/AudioToolbox.h>
 #import <SocketRocket/SRWebSocket.h>
 #import "AcaniChatDefines.h"
 #import "ACAppDelegate.h"
@@ -9,9 +10,27 @@
 
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
+#define ACAppDelegateCreateSystemSoundIDs() \
+ACMessageCreateSystemSoundIDs(&_messageReceivedSystemSoundID, &_messageSentSystemSoundID)
+
+CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSystemSoundID, SystemSoundID *_messageSentSystemSoundID) {
+    CFBundleRef mainBundle = CFBundleGetMainBundle();
+    CFStringRef resourceType = CFSTR("aiff");
+
+    CFURLRef messageReceivedURLRef = CFBundleCopyResourceURL(mainBundle, CFSTR("MessageReceived"), resourceType, NULL);
+    AudioServicesCreateSystemSoundID(messageReceivedURLRef, _messageReceivedSystemSoundID);
+    CFRelease(messageReceivedURLRef);
+
+    CFURLRef messageSentURLRef = CFBundleCopyResourceURL(mainBundle, CFSTR("MessageSent"), resourceType, NULL);
+    AudioServicesCreateSystemSoundID(messageSentURLRef, _messageSentSystemSoundID);
+    CFRelease(messageSentURLRef);
+}
+
 @interface ACAppDelegate () <SRWebSocketDelegate> {
     NSManagedObjectContext *_managedObjectContext;
     ACConversation *_conversation; // temporary mock
+    SystemSoundID _messageReceivedSystemSoundID;
+    SystemSoundID _messageSentSystemSoundID;
 }
 @end
 
@@ -65,6 +84,8 @@
 //    }
 //    MOCSave(_managedObjectContext);
 
+    ACAppDelegateCreateSystemSoundIDs();
+
     // Set up _window > UINavigationController > MessagesViewController.
     ACConversationsTableViewController *conversationsTableViewController = [[ACConversationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
     conversationsTableViewController.title = NSLocalizedString(@"Messages", nil);
@@ -83,10 +104,13 @@
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+    ACAppDelegateCreateSystemSoundIDs();
     [self _reconnect];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+    AudioServicesDisposeSystemSoundID(_messageReceivedSystemSoundID);
+    AudioServicesDisposeSystemSoundID(_messageSentSystemSoundID);
     [_webSocket close];
 }
 
@@ -113,6 +137,7 @@
 
 - (void)sendText:(NSString *)text {
     [_webSocket send:[NSJSONSerialization dataWithJSONObject:@[@1, @[text]] options:0 error:NULL]];
+    AudioServicesPlaySystemSound(_messageSentSystemSoundID);
 }
 
 #pragma mark - SRWebSocketDelegate
@@ -136,7 +161,6 @@
     switch ([messageArray[0] integerValue]) {
         case 0: // [0, [["Hi"], ["Hey"], ["Bye"]]]
             AppSetNetworkActivityIndicatorVisible(NO);
-
             messagesCount = [messageArray[1] count];
             if (!messagesCount) return;
             for (NSString *messageObjectString in messageArray[1]) {
@@ -159,6 +183,8 @@
         _conversation.unreadMessagesCount = @(unreadMessagesCount);
         messagesViewController.title = [NSString stringWithFormat:NSLocalizedString(@"Messages (%u)", nil), unreadMessagesCount];
     }
+
+    AudioServicesPlayAlertSound(_messageReceivedSystemSoundID);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
