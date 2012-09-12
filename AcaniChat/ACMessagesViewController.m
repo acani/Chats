@@ -139,7 +139,6 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [_tableView flashScrollIndicators];
     _conversation.unreadMessagesCount = @0;
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-    ((UIViewController *)self.navigationController.viewControllers[0]).title = NSLocalizedString(@"Messages", nil);
     MOCSave(_managedObjectContext);
 }
 

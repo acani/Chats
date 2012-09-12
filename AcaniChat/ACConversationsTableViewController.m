@@ -80,6 +80,7 @@
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    self.title = NSLocalizedString(@"Messages", nil);
     ACMessagesViewController *messagesViewController = [[ACMessagesViewController alloc] initWithNibName:nil bundle:nil];
     ACConversation *conversation = [self.fetchedResultsController objectAtIndexPath:indexPath];
     messagesViewController.title = ((ACUser *)[conversation.users anyObject]).name;
