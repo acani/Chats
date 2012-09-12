@@ -69,7 +69,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
         _conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
         _conversation.lastMessageSentDate = [NSDate date];
         ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
-        user.name = @"Matt Di Pasquale"; // @"Acani";
+        user.name = @"Acani";
         [_conversation addUsersObject:user];
         MOCSave(_managedObjectContext);
     }
