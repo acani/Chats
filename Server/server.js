@@ -1,0 +1,53 @@
+var WebSocketServer        = require('ws').Server,
+    web_socket_server      = new WebSocketServer({port: 5000, disableHixie: true}),
+    web_sockets            = {},
+    web_socket_primary_key = -1,
+    redis_client           = require('redis').createClient();
+
+web_socket_server.on('connection', function(web_socket) {
+
+  // Add newly created web_socket to web_sockets.
+  var web_socket_id = ++web_socket_primary_key;
+  web_sockets[web_socket_id] = web_socket;
+
+  web_socket.on('message', function(message) {
+    // console.log("message: " + message);
+
+    var message_array = JSON.parse(message); // TODO: Rescue and return error.
+    switch (message_array[0]) { // message type
+      case 0: // [type, messagesCount]
+      // Send the last 50 messages after the specified messageID.
+      redis_client.llen('messages', function(error, messages_length) {
+        if (error) throw error;
+        var latest_messages_length = message_array[1] - messages_length;
+        if (latest_messages_length) {
+          redis_client.lrange('messages', Math.max(-50, latest_messages_length), -1, function(error2, latest_messages) {
+            if (error2) throw error2;
+            if (latest_messages) {
+              web_socket.send(JSON.stringify([0, latest_messages]));
+            }
+          });
+        } else {
+          web_socket.send("[0,[]]");
+        }
+      });
+      break;
+
+      case 1: // [type, ["messageText"]]
+      // Save message to Redis.
+      redis_client.rpush('messages', JSON.stringify(message_array[1])); // TODO: Check errors.
+
+      // Broadcast message to other web_sockets.
+      for (var web_socket_key in web_sockets) {
+        if (web_socket_key != web_socket_id) {
+          web_sockets[web_socket_key].send(message); // TODO: Check error.
+        }
+      }
+      break;
+    }
+  });
+
+  web_socket.on('close', function() {
+    delete web_sockets[web_socket_id];
+  });
+});

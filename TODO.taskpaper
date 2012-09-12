@@ -1,5 +1,5 @@
 AcaniChat:
-	Native iPhone Messages.app with Websocket & Bonjour over Bluetooth
+	Native iPhone Messages.app with WebSocket & Bonjour over Bluetooth
 	ConversationsTableViewController:
 		- Add search bar to search all conversations.
 			http://www.iphonesdkarticles.com/2009/01/uitableview-searching-table-view.html
@@ -41,5 +41,13 @@ AcaniChat:
 		- Receive messages while offline.
 			- Handle Push Notifications.
 
+	Server:
+		- Delete acani-chat-server GitHub repo.
+		- Can I remove Procfile?
+		- Create a server that works with Apple Push Notification Service.
+
 	iPad Version:
 		- Study Messages app on the iPad
+
+	Miscellaneous:
+		- Clean up README.md.

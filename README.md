@@ -20,7 +20,17 @@
 
 * [Nodejitsu][13]-hosted instance of [acani-chat-server][12]
 * [Node.js `ws` module][17] to communicate with clients via [WebSocket][15]
+  * I chose `ws` because I think Socket.io (recommended by the Node.js website) uses `ws`. And, I didn't want the extra backwards compatibility that Socket.io offers.
 * [Redis][16] to store messages in a list
+
+##### Installation
+
+* Install Node.js & NPM from http://nodejs.org
+* Install Redis from http://redis.io or via `brew install redis`.
+
+##### Hosting
+
+Heroku doesn't support websockets yet, so I went with nodejitsu. modulus.io is another option. To host with nodejitsu, follow http://nodejitsu.com/paas/getting-started.html.
 
 
 ### Getting Started

@@ -158,6 +158,9 @@
 		D2EE64AB15EB45D20062AA0F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D2EFF36415FBA719002BEFDA /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		D2EFF36515FBA719002BEFDA /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		D2F27E101600D48E00CAAF4C /* package.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = package.json; sourceTree = "<group>"; };
+		D2F27E111600D48E00CAAF4C /* Procfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Procfile; sourceTree = "<group>"; };
+		D2F27E121600D48E00CAAF4C /* server.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = server.js; sourceTree = "<group>"; };
 		D2F5A93F15EB33E000748238 /* SocketRocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SocketRocket.xcodeproj; path = SocketRocket/SocketRocket.xcodeproj; sourceTree = "<group>"; };
 		D2F5A95515EB3D1A00748238 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		D2F5A95715EB3D9100748238 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -204,6 +207,7 @@
 				D27BB06515EB1F990084AECA /* Libraries */,
 				D27BAFFA15EAD3870084AECA /* Frameworks */,
 				D27BAFF815EAD3870084AECA /* Products */,
+				D2F27D191600D48E00CAAF4C /* Server */,
 				D2EE64AB15EB45D20062AA0F /* README.md */,
 				D273945C15F8C83300C09461 /* TODO.taskpaper */,
 			);
@@ -379,6 +383,16 @@
 				D209007215EE5646001FED65 /* SendButtonHighlighted@2x.png */,
 			);
 			name = Messages;
+			sourceTree = "<group>";
+		};
+		D2F27D191600D48E00CAAF4C /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				D2F27E101600D48E00CAAF4C /* package.json */,
+				D2F27E111600D48E00CAAF4C /* Procfile */,
+				D2F27E121600D48E00CAAF4C /* server.js */,
+			);
+			path = Server;
 			sourceTree = "<group>";
 		};
 		D2F5A94015EB33E000748238 /* Products */ = {

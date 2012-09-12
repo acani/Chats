@@ -1,0 +1,20 @@
+{
+  "name": "acani-chat",
+  "version": "0.0.8",
+  "description": "A simple Node.js chat server with Redis Pub/Sub over WebSocket",
+  "dependencies": {
+    "ws": "0.4.x",
+    "redis": "0.7.x"
+  },
+  "bundledDependencies": [
+    "redis"
+  ],
+  "engines": {
+    "node": "0.8.x",
+    "npm": "1.1.x"
+  },
+  "subdomain": "acani-chat",
+  "scripts": {
+    "start": "server.js"
+  }
+}
