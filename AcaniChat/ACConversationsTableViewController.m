@@ -164,9 +164,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    // TODO: nil out _conversation on ACAppDelegate, etc. to prevent crash if I receive message after deleting.
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [_managedObjectContext deleteObject:[self.fetchedResultsController objectAtIndexPath:indexPath]];
         MOCSave(_managedObjectContext);
+        self.title = NSLocalizedString(@"Messages", nil);
+        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     }
 }
 
