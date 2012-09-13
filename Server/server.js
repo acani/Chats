@@ -15,7 +15,7 @@ web_socket_server.on('connection', function(web_socket) {
 
     var message_array = JSON.parse(message); // TODO: Rescue and return error.
     switch (message_array[0]) { // message type
-      case 0: // [type, messagesCount], e.g., [0, 5]
+      case 0: // Last 50 Messages: [type, messagesCount], e.g., [0, 5]
       // Send the last 50 messages after the specified messageID.
       redis_client.llen('messages', function(error, messages_length) {
         if (error) throw error;
@@ -33,16 +33,26 @@ web_socket_server.on('connection', function(web_socket) {
       });
       break;
 
-      case 1: // [type, [timestamp, "messageText"]], e.g., [1, [978307200.0, "Hi"]]
-      // Save message to Redis.
-      redis_client.rpush('messages', JSON.stringify(message_array[1])); // TODO: Check errors.
+      case 1: // New Message: [type, "messageText", messagesSendingIndex], e.g., [1, "Hi", 0]
+      // Set sent_message to [sentDate, "messageText"].
+      var sent_date = Date.now()/1000;
+      var sent_message = JSON.stringify([sent_date, message_array[1]]);
 
-      // Broadcast message to other web_sockets.
-      for (var web_socket_key in web_sockets) {
-        if (web_socket_key != web_socket_id) {
-          web_sockets[web_socket_key].send(message); // TODO: Check error.
+      // Save sent_message to Redis.
+      redis_client.rpush('messages', sent_message, function(error, reply) {
+        if (error) throw error;
+
+        // Send sentDate back to client.
+        web_socket.send('[2,'+sent_date+','+message_array[2]+']');
+
+        // Broadcast message to other web_sockets.
+        for (var web_socket_key in web_sockets) {
+          if (web_socket_key != web_socket_id) {
+            web_sockets[web_socket_key].send(sent_message); // TODO: Should we check for error?
+          }
         }
-      }
+      }); // TODO: Check errors.
+
       break;
     }
   });

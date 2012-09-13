@@ -193,6 +193,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [_textView becomeFirstResponder];
 
     // Send message.
+    // TODO: Prevent this message from getting saved to Core Data if I hit back.
     ACMessage *message = [NSEntityDescription insertNewObjectForEntityForName:@"ACMessage" inManagedObjectContext:_managedObjectContext];
     _conversation.lastMessageSentDate = message.sentDate = [NSDate date];
     _conversation.lastMessageText = message.text = _textView.text;
@@ -200,12 +201,8 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
     [AC_APP_DELEGATE() sendMessage:message];
 
-    MOCSave(_managedObjectContext);
-
     _textView.text = nil;
     [self textViewDidChange:_textView];
-
-    [self scrollToBottomAnimated:YES];
 }
 
 #pragma mark - UITableViewDelegate
@@ -409,6 +406,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     [self.tableView endUpdates];
+    [self scrollToBottomAnimated:YES];
 }
 
 @end

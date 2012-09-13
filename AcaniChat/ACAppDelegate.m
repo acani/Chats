@@ -29,6 +29,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 @interface ACAppDelegate () <SRWebSocketDelegate> {
     NSManagedObjectContext *_managedObjectContext;
     ACConversation *_conversation; // temporary mock
+    NSMutableArray *_messagesSending;
     SystemSoundID _messageReceivedSystemSoundID;
     SystemSoundID _messageSentSystemSoundID;
 }
@@ -71,7 +72,6 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
         ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
         user.name = @"Acani";
         [_conversation addUsersObject:user];
-        MOCSave(_managedObjectContext);
     }
 
 //    // Insert mock conversations with mock users.
@@ -84,6 +84,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 //    }
 //    MOCSave(_managedObjectContext);
 
+    _messagesSending = [NSMutableArray array];
     ACAppDelegateCreateSystemSoundIDs();
 
     // Set up _window > UINavigationController > MessagesViewController.
@@ -99,11 +100,8 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     return YES;
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application {
-    MOCSave(_managedObjectContext);
-}
-
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+    _messagesSending = [NSMutableArray array];
     ACAppDelegateCreateSystemSoundIDs();
     [self _reconnect];
 }
@@ -127,6 +125,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     AppSetNetworkActivityIndicatorVisible(YES);
 }
 
+// messageJSONArray: [timestamp, "text"], e.g., [978307200.0, "Hi"]
 - (void)addMessageWithJSONArray:(NSArray *)messageJSONArray {
     ACMessage *message = [NSEntityDescription insertNewObjectForEntityForName:@"ACMessage" inManagedObjectContext:_managedObjectContext];
     _conversation.lastMessageSentDate = message.sentDate = [NSDate dateWithTimeIntervalSince1970:[messageJSONArray[0] doubleValue]];
@@ -135,9 +134,8 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 }
 
 - (void)sendMessage:(ACMessage *)message {
-    [_webSocket send:[NSJSONSerialization dataWithJSONObject:@[@1, @[@([message.sentDate timeIntervalSince1970]), message.text]] options:0 error:NULL]];
-    AudioServicesPlaySystemSound(_messageSentSystemSoundID);
-    _conversation.messagesLength = [NSNumber numberWithUnsignedInteger:[_conversation.messagesLength unsignedIntegerValue]+1];
+    [_webSocket send:[NSJSONSerialization dataWithJSONObject:@[@1, message.text, @([_messagesSending count])] options:0 error:NULL]];
+    [_messagesSending addObject:message];
 }
 
 #pragma mark - SRWebSocketDelegate
@@ -160,8 +158,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     NSArray *messageArray = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
     NSUInteger messagesCount;
     switch ([messageArray[0] integerValue]) { // type
-        // messageJSONArray: [timestamp, "text"], e.g., [978307200.0, "Hi"]
-        case 0:
+        case 0: // Last 50 Messages
             AppSetNetworkActivityIndicatorVisible(NO);
             if ([messageArray count] == 3) { // [type, messagesLength, newestMessages], e.g., [0, 7, [[978307200.0, "Hi"], [978307201.0, "Hey"]]]
                 _conversation.messagesLength = messageArray[1];
@@ -175,10 +172,19 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
             }
             break;
 
-        case 1: // [type, message][1, [978307200.0, "Hi"]]
+        case 1: // New Message: [type, message], e.g., [1, [978307200.0, "Hi"]]
             messagesCount = 1;
             [self addMessageWithJSONArray:messageArray[1]];
             break;
+
+        case 2: // Message-Sent Confirmation: [type, sentDate, messagesSendingIndex], e.g., [2, 978307200.0, 0]
+            AudioServicesPlaySystemSound(_messageSentSystemSoundID);
+            _conversation.messagesLength = [NSNumber numberWithUnsignedInteger:[_conversation.messagesLength unsignedIntegerValue]+1];
+            NSUInteger messagesSendingIndex = [messageArray[2] unsignedIntegerValue];
+            ((ACMessage *)_messagesSending[messagesSendingIndex]).sentDate = [NSDate dateWithTimeIntervalSince1970:[messageArray[1] doubleValue]];
+            [_messagesSending removeObjectAtIndex:messagesSendingIndex];
+            MOCSave(_managedObjectContext);
+            return;
     }
 
     ACMessagesViewController *messagesViewController = (ACMessagesViewController *)NAVIGATION_CONTROLLER().topViewController;
@@ -198,6 +204,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     _webSocket.delegate = nil;
     _webSocket = nil;
+    _messagesSending = nil;
 }
 
 @end
