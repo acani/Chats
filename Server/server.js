@@ -33,7 +33,7 @@ web_socket_server.on('connection', function(web_socket) {
       });
       break;
 
-      case 1: // [type, ["messageText"]], e.g., [1, ["Hi!"]]
+      case 1: // [type, [timestamp, "messageText"]], e.g., [1, [978307200.0, "Hi"]]
       // Save message to Redis.
       redis_client.rpush('messages', JSON.stringify(message_array[1])); // TODO: Check errors.
 

@@ -127,15 +127,15 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     AppSetNetworkActivityIndicatorVisible(YES);
 }
 
-- (void)addMessageWithText:(NSString *)text {
+- (void)addMessageWithJSONArray:(NSArray *)messageJSONArray {
     ACMessage *message = [NSEntityDescription insertNewObjectForEntityForName:@"ACMessage" inManagedObjectContext:_managedObjectContext];
-    _conversation.lastMessageSentDate = message.sentDate = [NSDate date];
-    _conversation.lastMessageText = message.text = text;
+    _conversation.lastMessageSentDate = message.sentDate = [NSDate dateWithTimeIntervalSince1970:[messageJSONArray[0] doubleValue]];
+    _conversation.lastMessageText = message.text = messageJSONArray[1];
     [_conversation addMessagesObject:message];
 }
 
-- (void)sendText:(NSString *)text {
-    [_webSocket send:[NSJSONSerialization dataWithJSONObject:@[@1, @[text]] options:0 error:NULL]];
+- (void)sendMessage:(ACMessage *)message {
+    [_webSocket send:[NSJSONSerialization dataWithJSONObject:@[@1, @[@([message.sentDate timeIntervalSince1970]), message.text]] options:0 error:NULL]];
     AudioServicesPlaySystemSound(_messageSentSystemSoundID);
     _conversation.messagesLength = [NSNumber numberWithUnsignedInteger:[_conversation.messagesLength unsignedIntegerValue]+1];
 }
@@ -156,26 +156,28 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
 //    NSLog(@"Received \"%@\"", message);
 
-    NSUInteger messagesCount;
+    // messageArray: [type, ... ], e.g., [0, ... ]
     NSArray *messageArray = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
-    switch ([messageArray[0] integerValue]) {
+    NSUInteger messagesCount;
+    switch ([messageArray[0] integerValue]) { // type
+        // messageJSONArray: [timestamp, "text"], e.g., [978307200.0, "Hi"]
         case 0:
             AppSetNetworkActivityIndicatorVisible(NO);
-            if ([messageArray count] == 3) { // [type, messagesLength, newestMessages], e.g., [0, 7, [["Hi"], ["Hey"]]]
+            if ([messageArray count] == 3) { // [type, messagesLength, newestMessages], e.g., [0, 7, [[978307200.0, "Hi"], [978307201.0, "Hey"]]]
                 _conversation.messagesLength = messageArray[1];
                 NSArray *messagesJSONString = messageArray[2];
                 messagesCount = [messagesJSONString count];
                 for (NSString *messageJSONString in messagesJSONString) {
-                    [self addMessageWithText:[NSJSONSerialization JSONObjectWithData:[messageJSONString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL][0]];
+                    [self addMessageWithJSONArray:[NSJSONSerialization JSONObjectWithData:[messageJSONString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL]];
                 }
             } else {                         // [type], e.g., [0], no new messages
                 return;
             }
             break;
 
-        case 1: // [1, ["Hi"]]
+        case 1: // [type, message][1, [978307200.0, "Hi"]]
             messagesCount = 1;
-            [self addMessageWithText:messageArray[1][0]];
+            [self addMessageWithJSONArray:messageArray[1]];
             break;
     }
 

@@ -2,7 +2,7 @@
 
 #define AC_APP_DELEGATE() ((ACAppDelegate *)[[UIApplication sharedApplication] delegate])
 
-@class SRWebSocket;
+@class ACMessage, SRWebSocket;
 
 @interface ACAppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -10,7 +10,6 @@
 
 @property (strong, nonatomic) SRWebSocket *webSocket;
 
-- (void)addMessageWithText:(NSString *)text;
-- (void)sendText:(NSString *)text;
+- (void)sendMessage:(ACMessage *)message;
 
 @end

@@ -193,13 +193,18 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [_textView becomeFirstResponder];
 
     // Send message.
-    NSString *text = _textView.text;
-    ACAppDelegate *appDelegate = AC_APP_DELEGATE();
-    [appDelegate addMessageWithText:text];
-    [appDelegate sendText:text];
+    ACMessage *message = [NSEntityDescription insertNewObjectForEntityForName:@"ACMessage" inManagedObjectContext:_managedObjectContext];
+    _conversation.lastMessageSentDate = message.sentDate = [NSDate date];
+    _conversation.lastMessageText = message.text = _textView.text;
+    [_conversation addMessagesObject:message];
+
+    [AC_APP_DELEGATE() sendMessage:message];
+
     MOCSave(_managedObjectContext);
+
     _textView.text = nil;
     [self textViewDidChange:_textView];
+
     [self scrollToBottomAnimated:YES];
 }
 
