@@ -1,6 +1,6 @@
 {
   "name": "acani-chat",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A simple Node.js chat server with Redis Pub/Sub over WebSocket",
   "dependencies": {
     "ws": "0.4.x",
