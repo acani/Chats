@@ -5,10 +5,14 @@ AcaniChat:
 			http://www.iphonesdkarticles.com/2009/01/uitableview-searching-table-view.html
 		- Pretty format sentDate (Bold if it's a time.).
 		- Get correct UnreadBullet image or draw it with Quartz2D.
-		- Enhance "Edit" animation for each cell. Red circle should cover UnreadBullet.
+		- Enhance "Edit" animation for each cell.
+			- Red circle should cover UnreadBullet.
+			- Hide sentDateLabel.
 
 	MessagesViewController:
-		- Jump (don't animate) messageInputBar above keyboard if conversation.draft in viewDidLoad.
+		- Allow sending more than one message at the same time. @issue
+		- I can push ACMessagesViewController many times. @issue
+		- Jump (don't animate) messageInputBar above keyboard if conversation.draft in viewDidLoad. @issue
 		- Send four lines of text correctly. @issue
 		- Scroll _tableView to bottom after collapsing input. @issue
 		- _textView autocorrect is hidden. @issue

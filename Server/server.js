@@ -48,7 +48,7 @@ web_socket_server.on('connection', function(web_socket) {
         // Broadcast message to other web_sockets.
         for (var web_socket_key in web_sockets) {
           if (web_socket_key != web_socket_id) {
-            web_sockets[web_socket_key].send(sent_message); // TODO: Should we check for error?
+            web_sockets[web_socket_key].send('[1,'+sent_message+']'); // TODO: Should we check for error?
           }
         }
       }); // TODO: Check errors.
