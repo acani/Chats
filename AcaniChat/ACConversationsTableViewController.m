@@ -107,7 +107,7 @@
         unreadDotImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         unreadDotImageView.tag = UNREAD_DOT_IMAGE_VIEW_TAG;
         unreadDotImageView.backgroundColor = tableView.backgroundColor;       // speeds scrolling
-        unreadDotImageView.center = CGPointMake(15, 31);
+        unreadDotImageView.center = CGPointMake(16, 31);
         [cell.contentView addSubview:unreadDotImageView];
 
         // Create lastMessageTextLabel.
