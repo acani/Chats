@@ -92,11 +92,6 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     _textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
     _textView.scrollsToTop = NO;
     _textView.font = [UIFont systemFontOfSize:MessageFontSize];
-    if (_conversation.draft) {
-        _textView.text = _conversation.draft;
-        UIKeyboardNotificationsObserve();
-        [_textView becomeFirstResponder];
-    }
     _textView.placeholder = NSLocalizedString(@" Message", nil);
     [messageInputBar addSubview:_textView];
     _previousTextViewContentHeight = MessageFontSize+20;
@@ -121,11 +116,18 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [_sendButton setTitle:NSLocalizedString(@"Send", nil) forState:UIControlStateNormal];
     [_sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
     [_sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
-    _sendButton.enabled = NO;
-    _sendButton.titleLabel.alpha = 0.5f; // Sam S. says 0.4f
     [messageInputBar addSubview:_sendButton];
 
     [self.view addSubview:messageInputBar];
+
+    if (_conversation.draft) {
+        _textView.text = _conversation.draft;
+        UIKeyboardNotificationsObserve();
+        [_textView becomeFirstResponder];
+    } else {
+        _sendButton.enabled = NO;
+        _sendButton.titleLabel.alpha = 0.5f; // Sam S. says 0.4f
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
