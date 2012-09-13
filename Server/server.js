@@ -15,25 +15,25 @@ web_socket_server.on('connection', function(web_socket) {
 
     var message_array = JSON.parse(message); // TODO: Rescue and return error.
     switch (message_array[0]) { // message type
-      case 0: // [type, messagesCount]
+      case 0: // [type, messagesCount], e.g., [0, 5]
       // Send the last 50 messages after the specified messageID.
       redis_client.llen('messages', function(error, messages_length) {
         if (error) throw error;
-        var latest_messages_length = message_array[1] - messages_length;
-        if (latest_messages_length) {
-          redis_client.lrange('messages', Math.max(-50, latest_messages_length), -1, function(error2, latest_messages) {
+        var new_messages_length = messages_length - message_array[1];
+        if (new_messages_length) {
+          redis_client.lrange('messages', -Math.min(50, new_messages_length), -1, function(error2, newest_messages) {
             if (error2) throw error2;
-            if (latest_messages) {
-              web_socket.send(JSON.stringify([0, latest_messages]));
+            if (newest_messages) {
+              web_socket.send(JSON.stringify([0, messages_length, newest_messages]));
             }
           });
         } else {
-          web_socket.send("[0,[]]");
+          web_socket.send('[0]');
         }
       });
       break;
 
-      case 1: // [type, ["messageText"]]
+      case 1: // [type, ["messageText"]], e.g., [1, ["Hi!"]]
       // Save message to Redis.
       redis_client.rpush('messages', JSON.stringify(message_array[1])); // TODO: Check errors.
 

@@ -10,6 +10,9 @@
         <attribute name="lastMessageText" optional="YES" attributeType="String" minValueString="1">
             <userInfo/>
         </attribute>
+        <attribute name="messagesLength" attributeType="Integer 32" defaultValueString="0">
+            <userInfo/>
+        </attribute>
         <attribute name="unreadMessagesCount" attributeType="Integer 16" defaultValueString="0">
             <userInfo/>
         </attribute>
@@ -43,7 +46,7 @@
         <userInfo/>
     </entity>
     <elements>
-        <element name="ACConversation" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="ACConversation" positionX="0" positionY="0" width="128" height="150"/>
         <element name="ACMessage" positionX="0" positionY="0" width="128" height="90"/>
         <element name="ACUser" positionX="0" positionY="0" width="128" height="75"/>
     </elements>

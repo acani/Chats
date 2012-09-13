@@ -8,6 +8,7 @@
 @dynamic lastMessageSentDate;
 @dynamic lastMessageText;
 @dynamic unreadMessagesCount;
+@dynamic messagesLength;
 @dynamic messages;
 @dynamic users;
 

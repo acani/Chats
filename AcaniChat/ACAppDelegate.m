@@ -143,7 +143,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-    [_webSocket send:[NSString stringWithFormat:@"[0,%u]", MOCCountAll(_managedObjectContext, @"ACMessage")]];
+    [_webSocket send:[NSString stringWithFormat:@"[0,%u]", [_conversation.messagesLength unsignedIntegerValue]]];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
@@ -159,12 +159,17 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     NSUInteger messagesCount;
     NSArray *messageArray = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
     switch ([messageArray[0] integerValue]) {
-        case 0: // [0, [["Hi"], ["Hey"], ["Bye"]]]
+        case 0:
             AppSetNetworkActivityIndicatorVisible(NO);
-            messagesCount = [messageArray[1] count];
-            if (!messagesCount) return;
-            for (NSString *messageObjectString in messageArray[1]) {
-                [self saveMessageWithText:[NSJSONSerialization JSONObjectWithData:[messageObjectString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL][0]];
+            if ([messageArray count] == 3) { // [type, messagesLength, newestMessages], e.g., [0, 7, [["Hi"], ["Hey"]]]
+                _conversation.messagesLength = messageArray[1];
+                NSArray *messagesJSONString = messageArray[2];
+                messagesCount = [messagesJSONString count];
+                for (NSString *messageJSONString in messagesJSONString) {
+                    [self saveMessageWithText:[NSJSONSerialization JSONObjectWithData:[messageJSONString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL][0]];
+                }
+            } else {                         // [type], e.g., [0], no new messages
+                return;
             }
             break;
 
@@ -180,7 +185,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     } else { // assume topViewController is ACConversationsTableViewController.
         NSUInteger unreadMessagesCount = [_conversation.unreadMessagesCount unsignedIntegerValue] + messagesCount;
         [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessagesCount;
-        _conversation.unreadMessagesCount = @(unreadMessagesCount);
+        _conversation.unreadMessagesCount = [NSNumber numberWithUnsignedInteger:unreadMessagesCount];
         messagesViewController.title = [NSString stringWithFormat:NSLocalizedString(@"Messages (%u)", nil), unreadMessagesCount];
     }
 
