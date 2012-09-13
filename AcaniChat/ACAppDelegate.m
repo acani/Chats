@@ -165,10 +165,10 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
             AppSetNetworkActivityIndicatorVisible(NO);
             if ([messageArray count] == 3) { // [type, messagesLength, newestMessages], e.g., [0, 7, [[978307200.0, "Hi"], [978307201.0, "Hey"]]]
                 _conversation.messagesLength = messageArray[1];
-                NSArray *messagesJSONString = messageArray[2];
-                messagesCount = [messagesJSONString count];
-                for (NSString *messageJSONString in messagesJSONString) {
-                    [self addMessageWithJSONArray:[NSJSONSerialization JSONObjectWithData:[messageJSONString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL]];
+                NSArray *messageJSONArrays = messageArray[2];
+                messagesCount = [messageJSONArrays count];
+                for (NSArray *messageJSONArray in messageJSONArrays) {
+                    [self addMessageWithJSONArray:messageJSONArray];
                 }
             } else {                         // [type], e.g., [0], no new messages
                 return;

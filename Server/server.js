@@ -24,7 +24,7 @@ web_socket_server.on('connection', function(web_socket) {
           redis_client.lrange('messages', -Math.min(50, new_messages_length), -1, function(error2, newest_messages) {
             if (error2) throw error2;
             if (newest_messages) {
-              web_socket.send(JSON.stringify([0, messages_length, newest_messages]));
+              web_socket.send(JSON.stringify([0, messages_length, newest_messages.map(JSON.parse)]));
             }
           });
         } else {
