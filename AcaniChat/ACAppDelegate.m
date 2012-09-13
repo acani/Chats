@@ -127,17 +127,17 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     AppSetNetworkActivityIndicatorVisible(YES);
 }
 
-- (void)saveMessageWithText:(NSString *)text {
+- (void)addMessageWithText:(NSString *)text {
     ACMessage *message = [NSEntityDescription insertNewObjectForEntityForName:@"ACMessage" inManagedObjectContext:_managedObjectContext];
     _conversation.lastMessageSentDate = message.sentDate = [NSDate date];
     _conversation.lastMessageText = message.text = text;
     [_conversation addMessagesObject:message];
-    MOCSave(_managedObjectContext);
 }
 
 - (void)sendText:(NSString *)text {
     [_webSocket send:[NSJSONSerialization dataWithJSONObject:@[@1, @[text]] options:0 error:NULL]];
     AudioServicesPlaySystemSound(_messageSentSystemSoundID);
+    _conversation.messagesLength = [NSNumber numberWithUnsignedInteger:[_conversation.messagesLength unsignedIntegerValue]+1];
 }
 
 #pragma mark - SRWebSocketDelegate
@@ -166,7 +166,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
                 NSArray *messagesJSONString = messageArray[2];
                 messagesCount = [messagesJSONString count];
                 for (NSString *messageJSONString in messagesJSONString) {
-                    [self saveMessageWithText:[NSJSONSerialization JSONObjectWithData:[messageJSONString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL][0]];
+                    [self addMessageWithText:[NSJSONSerialization JSONObjectWithData:[messageJSONString dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL][0]];
                 }
             } else {                         // [type], e.g., [0], no new messages
                 return;
@@ -175,7 +175,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 
         case 1: // [1, ["Hi"]]
             messagesCount = 1;
-            [self saveMessageWithText:messageArray[1][0]];
+            [self addMessageWithText:messageArray[1][0]];
             break;
     }
 
@@ -190,6 +190,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     }
 
     AudioServicesPlayAlertSound(_messageReceivedSystemSoundID);
+    MOCSave(_managedObjectContext);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {

@@ -10,7 +10,7 @@
 
 @property (strong, nonatomic) SRWebSocket *webSocket;
 
-- (void)saveMessageWithText:(NSString *)text;
+- (void)addMessageWithText:(NSString *)text;
 - (void)sendText:(NSString *)text;
 
 @end

@@ -193,11 +193,12 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     // Send message.
     NSString *text = _textView.text;
     ACAppDelegate *appDelegate = AC_APP_DELEGATE();
-    [appDelegate saveMessageWithText:text];
-    [self scrollToBottomAnimated:YES];
+    [appDelegate addMessageWithText:text];
     [appDelegate sendText:text];
+    MOCSave(_managedObjectContext);
     _textView.text = nil;
     [self textViewDidChange:_textView];
+    [self scrollToBottomAnimated:YES];
 }
 
 #pragma mark - UITableViewDelegate
@@ -373,7 +374,9 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     NSError __autoreleasing *error = nil;
     NSUInteger messagesCount = [_managedObjectContext countForFetchRequest:fetchRequest error:&error];
     NSAssert(messagesCount != NSNotFound, @"-[NSManagedObjectContext countForFetchRequest:error:] error:\n\n%@", error);
-    [fetchRequest setFetchOffset:messagesCount-MESSAGE_COUNT_LIMIT];
+    if (messagesCount > MESSAGE_COUNT_LIMIT) {
+        [fetchRequest setFetchOffset:messagesCount-MESSAGE_COUNT_LIMIT];
+    }
     [fetchRequest setFetchBatchSize:10];
     [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES]]];
     _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"ACMessage"];
