@@ -5,14 +5,15 @@
 #import "ACConversation.h"
 #import "ACUser.h"
 
-#define UNREAD_DOT_IMAGE_VIEW_TAG        100
-#define LAST_MESSAGE_TEXT_LABEL_TAG      101
-#define LAST_MESSAGE_SENT_DATE_LABEL_TAG 102
-#define USERS_NAMES_LABEL_TAG            103
+#define UNREAD_DOT_IMAGE_VIEW_TAG              100
+#define LAST_MESSAGE_TEXT_LABEL_TAG            101
+#define LAST_MESSAGE_SENT_DATE_LABEL_TAG       102
+#define USERS_NAMES_LABEL_TAG                  103
 
-#define LAST_MESSAGE_TEXT_FONT_SIZE      14
-#define LAST_MESSAGE_SENT_DATE_FONT_SIZE 14
-#define USERS_NAMES_FONT_SIZE            16
+#define LAST_MESSAGE_TEXT_FONT_SIZE            14
+#define LAST_MESSAGE_SENT_DATE_FONT_SIZE       14
+#define LAST_MESSAGE_SENT_DATE_AM_PM_FONT_SIZE 12
+#define USERS_NAMES_FONT_SIZE                  16
 
 @interface ACConversationsTableViewController () <NSFetchedResultsControllerDelegate> // , MFMessageComposeViewControllerDelegate>
 @end
@@ -129,7 +130,6 @@
         lastMessageSentDateLabel.textColor = [UIColor colorWithRed:52/255.0f green:111/255.0f blue:212/255.0f alpha:1];
         lastMessageSentDateLabel.highlightedTextColor = [UIColor whiteColor];
         lastMessageSentDateLabel.textAlignment = UITextAlignmentRight;
-        lastMessageSentDateLabel.font = [UIFont systemFontOfSize:LAST_MESSAGE_SENT_DATE_FONT_SIZE];
         [cell.contentView addSubview:lastMessageSentDateLabel];
 
         // Create usersNamesLabel.
@@ -157,7 +157,51 @@
 
     // Configure lastMessageSentDateLabel.
     UILabel *lastMessageSentDateLabel = (UILabel *)[cell.contentView viewWithTag:LAST_MESSAGE_SENT_DATE_LABEL_TAG];
-    CGFloat lastMessageSentDateLabelWidth = [(lastMessageSentDateLabel.text = [NSDateFormatter localizedStringFromDate:conversation.lastMessageSentDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]) sizeWithFont:lastMessageSentDateLabel.font].width;
+
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *dateComponents = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:[NSDate date]];
+    [dateComponents setDay:dateComponents.day-1];
+    NSDate *yesterday = [calendar dateFromComponents:dateComponents];
+    [dateComponents setDay:dateComponents.day-1];
+    NSDate *twoDaysAgo = [calendar dateFromComponents:dateComponents];
+    [dateComponents setDay:dateComponents.day-5];
+    NSDate *lastWeek = [calendar dateFromComponents:dateComponents];
+
+    NSDate *lastMessageSentDate = conversation.lastMessageSentDate;
+    if ([lastMessageSentDate compare:yesterday] == NSOrderedDescending) {
+        char buffer[9]; // 12:15 PM -- 8 chars + 1 for NUL terminator \0
+        time_t time = [lastMessageSentDate timeIntervalSince1970];
+        strftime(buffer, 9, "%-l:%M %p", localtime(&time));
+
+        lastMessageSentDateLabel.font = [UIFont boldSystemFontOfSize:LAST_MESSAGE_SENT_DATE_FONT_SIZE];
+        NSString *lastMessageSentDateLabelText = [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+        if ([lastMessageTextLabel respondsToSelector:@selector(attributedText)]) {
+            NSMutableAttributedString *lastMessageSentDateLabelAttributedText = [[NSMutableAttributedString alloc] initWithString:lastMessageSentDateLabelText];
+            [lastMessageSentDateLabelAttributedText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:LAST_MESSAGE_SENT_DATE_AM_PM_FONT_SIZE] range:NSMakeRange([lastMessageSentDateLabelText length]-3, 3)];
+            lastMessageSentDateLabel.attributedText = lastMessageSentDateLabelAttributedText;
+        } else {
+            lastMessageSentDateLabel.text = lastMessageSentDateLabelText;
+        }
+    } else {
+        lastMessageSentDateLabel.font = [UIFont systemFontOfSize:LAST_MESSAGE_SENT_DATE_FONT_SIZE];
+        if ([lastMessageSentDate compare:twoDaysAgo] == NSOrderedDescending) {
+            lastMessageSentDateLabel.text = NSLocalizedString(@"Yesterday", nil);
+        } else {
+            char buffer[11];
+            time_t time = [lastMessageSentDate timeIntervalSince1970];
+            if ([lastMessageSentDate compare:lastWeek] == NSOrderedDescending) {
+                // Wednesday -- 9 chars + 1 for NUL terminator \0
+                strftime(buffer, 11, "%A", localtime(&time));
+                lastMessageSentDateLabel.text = [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+            } else {
+                // 12/24/2012 -- 10 chars + 1 for NUL terminator \0
+                strftime(buffer, 11, "%-m/%-e/%Y", localtime(&time));
+                lastMessageSentDateLabel.text = [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+            }
+        }
+    }
+
+    CGFloat lastMessageSentDateLabelWidth = [lastMessageSentDateLabel.text sizeWithFont:lastMessageSentDateLabel.font].width;
     lastMessageSentDateLabel.frame = CGRectMake(31+lastMessageTextLabelWidth-lastMessageSentDateLabelWidth, (conversation.lastMessageText ? 5 : 19), lastMessageSentDateLabelWidth, LAST_MESSAGE_SENT_DATE_FONT_SIZE+4);
 
     // Configure usersNamesLabel.
