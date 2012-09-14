@@ -22,6 +22,8 @@
 		D209007F15EE5646001FED65 /* SendButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D209007015EE5646001FED65 /* SendButton@2x.png */; };
 		D209008015EE5646001FED65 /* SendButtonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = D209007115EE5646001FED65 /* SendButtonHighlighted.png */; };
 		D209008115EE5646001FED65 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D209007215EE5646001FED65 /* SendButtonHighlighted@2x.png */; };
+		D215488B16034E150043F9E7 /* UnreadBulletHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = D215488916034E150043F9E7 /* UnreadBulletHighlighted.png */; };
+		D215488C16034E150043F9E7 /* UnreadBulletHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D215488A16034E150043F9E7 /* UnreadBulletHighlighted@2x.png */; };
 		D237E8C81600AFC600AC42CD /* MessageReceived.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D237E8C71600AFC600AC42CD /* MessageReceived.aiff */; };
 		D237E8CA1600AFD200AC42CD /* MessageSent.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D237E8C91600AFD200AC42CD /* MessageSent.aiff */; };
 		D237E8D01600B30A00AC42CD /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D237E8CF1600B30A00AC42CD /* AudioToolbox.framework */; };
@@ -117,6 +119,8 @@
 		D209007015EE5646001FED65 /* SendButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SendButton@2x.png"; sourceTree = "<group>"; };
 		D209007115EE5646001FED65 /* SendButtonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SendButtonHighlighted.png; sourceTree = "<group>"; };
 		D209007215EE5646001FED65 /* SendButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SendButtonHighlighted@2x.png"; sourceTree = "<group>"; };
+		D215488916034E150043F9E7 /* UnreadBulletHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UnreadBulletHighlighted.png; sourceTree = "<group>"; };
+		D215488A16034E150043F9E7 /* UnreadBulletHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UnreadBulletHighlighted@2x.png"; sourceTree = "<group>"; };
 		D237E8C71600AFC600AC42CD /* MessageReceived.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = MessageReceived.aiff; sourceTree = "<group>"; };
 		D237E8C91600AFD200AC42CD /* MessageSent.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = MessageSent.aiff; sourceTree = "<group>"; };
 		D237E8CF1600B30A00AC42CD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -344,6 +348,8 @@
 			children = (
 				D2884AB315FD8F9C00021068 /* UnreadBullet.png */,
 				D2884AB415FD8F9C00021068 /* UnreadBullet@2x.png */,
+				D215488916034E150043F9E7 /* UnreadBulletHighlighted.png */,
+				D215488A16034E150043F9E7 /* UnreadBulletHighlighted@2x.png */,
 			);
 			name = Conversations;
 			sourceTree = "<group>";
@@ -537,6 +543,8 @@
 				D2884AD915FD9FF700021068 /* Icon@2x.png in Resources */,
 				D237E8C81600AFC600AC42CD /* MessageReceived.aiff in Resources */,
 				D237E8CA1600AFD200AC42CD /* MessageSent.aiff in Resources */,
+				D215488B16034E150043F9E7 /* UnreadBulletHighlighted.png in Resources */,
+				D215488C16034E150043F9E7 /* UnreadBulletHighlighted@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

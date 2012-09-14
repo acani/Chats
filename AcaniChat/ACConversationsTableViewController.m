@@ -103,7 +103,7 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
         // Create unreadDotImageView.
-        UIImageView *unreadDotImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"UnreadBullet"]];
+        UIImageView *unreadDotImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"UnreadBullet"] highlightedImage:[UIImage imageNamed:@"UnreadBulletHighlighted"]];
         unreadDotImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         unreadDotImageView.tag = UNREAD_DOT_IMAGE_VIEW_TAG;
         unreadDotImageView.backgroundColor = tableView.backgroundColor;       // speeds scrolling
@@ -116,6 +116,7 @@
         lastMessageTextLabel.tag = LAST_MESSAGE_TEXT_LABEL_TAG;
         lastMessageTextLabel.backgroundColor = tableView.backgroundColor;     // speeds scrolling
         lastMessageTextLabel.textColor = [UIColor grayColor];
+        lastMessageTextLabel.highlightedTextColor = [UIColor whiteColor];
         lastMessageTextLabel.font = [UIFont systemFontOfSize:LAST_MESSAGE_TEXT_FONT_SIZE];
         lastMessageTextLabel.numberOfLines = 2;
         [cell.contentView addSubview:lastMessageTextLabel];
@@ -126,6 +127,7 @@
         lastMessageSentDateLabel.tag = LAST_MESSAGE_SENT_DATE_LABEL_TAG;
         lastMessageSentDateLabel.backgroundColor = tableView.backgroundColor; // speeds scrolling
         lastMessageSentDateLabel.textColor = [UIColor colorWithRed:52/255.0f green:111/255.0f blue:212/255.0f alpha:1];
+        lastMessageSentDateLabel.highlightedTextColor = [UIColor whiteColor];
         lastMessageSentDateLabel.textAlignment = UITextAlignmentRight;
         lastMessageSentDateLabel.font = [UIFont systemFontOfSize:LAST_MESSAGE_SENT_DATE_FONT_SIZE];
         [cell.contentView addSubview:lastMessageSentDateLabel];
@@ -135,6 +137,7 @@
         usersNamesLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         usersNamesLabel.tag = USERS_NAMES_LABEL_TAG;
         usersNamesLabel.backgroundColor = tableView.backgroundColor;          // speeds scrolling
+        usersNamesLabel.highlightedTextColor = [UIColor whiteColor];
         usersNamesLabel.font = [UIFont boldSystemFontOfSize:USERS_NAMES_FONT_SIZE];
         [cell.contentView addSubview:usersNamesLabel];
     }
