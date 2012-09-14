@@ -159,16 +159,9 @@
     UILabel *lastMessageSentDateLabel = (UILabel *)[cell.contentView viewWithTag:LAST_MESSAGE_SENT_DATE_LABEL_TAG];
 
     NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSDateComponents *dateComponents = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:[NSDate date]];
-    [dateComponents setDay:dateComponents.day-1];
-    NSDate *yesterday = [calendar dateFromComponents:dateComponents];
-    [dateComponents setDay:dateComponents.day-1];
-    NSDate *twoDaysAgo = [calendar dateFromComponents:dateComponents];
-    [dateComponents setDay:dateComponents.day-5];
-    NSDate *lastWeek = [calendar dateFromComponents:dateComponents];
-
+    NSDateComponents *dateComponents = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:[NSDate date]]; // today
     NSDate *lastMessageSentDate = conversation.lastMessageSentDate;
-    if ([lastMessageSentDate compare:yesterday] == NSOrderedDescending) {
+    if ([[calendar dateFromComponents:dateComponents] compare:lastMessageSentDate] != NSOrderedDescending) {
         char buffer[9]; // 12:15 PM -- 8 chars + 1 for NUL terminator \0
         time_t time = [lastMessageSentDate timeIntervalSince1970];
         strftime(buffer, 9, "%-l:%M %p", localtime(&time));
@@ -184,12 +177,14 @@
         }
     } else {
         lastMessageSentDateLabel.font = [UIFont systemFontOfSize:LAST_MESSAGE_SENT_DATE_FONT_SIZE];
-        if ([lastMessageSentDate compare:twoDaysAgo] == NSOrderedDescending) {
+        [dateComponents setDay:dateComponents.day-1];     // yesterday
+        if ([[calendar dateFromComponents:dateComponents] compare:lastMessageSentDate] != NSOrderedDescending) {
             lastMessageSentDateLabel.text = NSLocalizedString(@"Yesterday", nil);
         } else {
             char buffer[11];
             time_t time = [lastMessageSentDate timeIntervalSince1970];
-            if ([lastMessageSentDate compare:lastWeek] == NSOrderedDescending) {
+            [dateComponents setDay:dateComponents.day-5]; // day before last week
+            if ([[calendar dateFromComponents:dateComponents] compare:lastMessageSentDate] != NSOrderedDescending) {
                 // Wednesday -- 9 chars + 1 for NUL terminator \0
                 strftime(buffer, 11, "%A", localtime(&time));
                 lastMessageSentDateLabel.text = [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
