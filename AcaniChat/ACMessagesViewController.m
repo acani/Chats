@@ -139,7 +139,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [super viewDidAppear:animated];
     UIKeyboardNotificationsObserve();
     [_tableView flashScrollIndicators];
-    _conversation.unreadMessagesCount = [NSNumber numberWithUnsignedInteger:0];
+    _conversation.unreadMessagesCount = @((NSUInteger)0);
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     MOCSave(_managedObjectContext);
 }

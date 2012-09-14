@@ -29,7 +29,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 @interface ACAppDelegate () <SRWebSocketDelegate> {
     NSManagedObjectContext *_managedObjectContext;
     ACConversation *_conversation; // temporary mock
-    NSMutableArray *_messagesSending;
+    NSMutableDictionary *_messagesSending;
     SystemSoundID _messageReceivedSystemSoundID;
     SystemSoundID _messageSentSystemSoundID;
 }
@@ -84,7 +84,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 //    }
 //    MOCSave(_managedObjectContext);
 
-    _messagesSending = [NSMutableArray array];
+    _messagesSending = [NSMutableDictionary dictionary];
     ACAppDelegateCreateSystemSoundIDs();
 
     // Set up _window > UINavigationController > MessagesViewController.
@@ -101,7 +101,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    _messagesSending = [NSMutableArray array];
+    _messagesSending = [NSMutableDictionary dictionary];
     ACAppDelegateCreateSystemSoundIDs();
     [self _reconnect];
 }
@@ -134,8 +134,9 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 }
 
 - (void)sendMessage:(ACMessage *)message {
-    [_webSocket send:[NSJSONSerialization dataWithJSONObject:@[@1, message.text, @([_messagesSending count])] options:0 error:NULL]];
-    [_messagesSending addObject:message];
+    NSNumber *messageSendingIndex = @([_messagesSending count]);
+    [_webSocket send:[NSJSONSerialization dataWithJSONObject:@[@1, message.text, messageSendingIndex] options:0 error:NULL]];
+    [_messagesSending setObject:message forKey:messageSendingIndex];
 }
 
 #pragma mark - SRWebSocketDelegate
@@ -179,10 +180,10 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 
         case 2: // Message-Sent Confirmation: [type, sentDate, messagesSendingIndex], e.g., [2, 978307200.0, 0]
             AudioServicesPlaySystemSound(_messageSentSystemSoundID);
-            _conversation.messagesLength = [NSNumber numberWithUnsignedInteger:[_conversation.messagesLength unsignedIntegerValue]+1];
-            NSUInteger messagesSendingIndex = [messageArray[2] unsignedIntegerValue];
-            ((ACMessage *)_messagesSending[messagesSendingIndex]).sentDate = [NSDate dateWithTimeIntervalSince1970:[messageArray[1] doubleValue]];
-            [_messagesSending removeObjectAtIndex:messagesSendingIndex];
+            _conversation.messagesLength = @([_conversation.messagesLength unsignedIntegerValue]+((NSUInteger)1));
+            NSNumber *messageSendingIndex = messageArray[2];
+            ((ACMessage *)_messagesSending[messageSendingIndex]).sentDate = [NSDate dateWithTimeIntervalSince1970:[messageArray[1] doubleValue]];
+            [_messagesSending removeObjectForKey:messageSendingIndex];
             MOCSave(_managedObjectContext);
             return;
     }
@@ -193,7 +194,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     } else { // assume topViewController is ACConversationsTableViewController.
         NSUInteger unreadMessagesCount = [_conversation.unreadMessagesCount unsignedIntegerValue] + messagesCount;
         [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessagesCount;
-        _conversation.unreadMessagesCount = [NSNumber numberWithUnsignedInteger:unreadMessagesCount];
+        _conversation.unreadMessagesCount = @(unreadMessagesCount);
         messagesViewController.title = [NSString stringWithFormat:NSLocalizedString(@"Messages (%u)", nil), unreadMessagesCount];
     }
 
