@@ -39,7 +39,6 @@ AcaniChat uses [Objective-C literals][8], so make sure you have Xcode 4.5 or lat
 
     git clone https://github.com/acani/AcaniChat.git
     cd AcaniChat
-    git checkout edge
     git submodule update --init
     open AcaniChat.xcproj
 
