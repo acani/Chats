@@ -8,10 +8,30 @@
 #import "ACMessage.h"
 #import "ACUser.h"
 
+// messageType
+#define NEWEST_MESSAGES_GET                          0
+#define DEVICE_TOKEN_CONNECT                         1
+#define DEVICE_TOKEN_SAVE                            2
+#define DEVICE_TOKEN_UPDATE                          3
+#define NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT 4
+#define MESSAGE_TEXT_SEND                            5
+#define MESSAGE_TEXT_RECEIVE                         6
+
+// TODO: Find a better way to insert these strings into message compile-time.
+#define NEWEST_MESSAGES_GET_STRING                          @"0"
+#define DEVICE_TOKEN_CONNECT_STRING                         @"1"
+#define DEVICE_TOKEN_SAVE_STRING                            @"2"
+#define DEVICE_TOKEN_UPDATE_STRING                          @"3"
+#define NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT_STRING @"4"
+#define MESSAGE_TEXT_SEND_STRING                            @"5"
+#define MESSAGE_TEXT_RECEIVE_STRING                         @"6"
+
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
 #define ACAppDelegateCreateSystemSoundIDs() \
 ACMessageCreateSystemSoundIDs(&_messageReceivedSystemSoundID, &_messageSentSystemSoundID)
+
+static NSString *const ACDeviceTokenKey = @"ACDeviceTokenKey";
 
 CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSystemSoundID, SystemSoundID *_messageSentSystemSoundID) {
     CFBundleRef mainBundle = CFBundleGetMainBundle();
@@ -26,16 +46,30 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     CFRelease(messageSentURLRef);
 }
 
+NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
+    NSUInteger dataLength = [data length];
+    NSMutableString *string = [NSMutableString stringWithCapacity:dataLength*2];
+    const unsigned char *dataBytes = [data bytes];
+    for (NSInteger idx = 0; idx < dataLength; ++idx) {
+        [string appendFormat:@"%02x", dataBytes[idx]];
+    }
+    return string;
+}
+
 @interface ACAppDelegate () <SRWebSocketDelegate> {
+    NSData                 *_deviceToken;
     NSManagedObjectContext *_managedObjectContext;
-    ACConversation *_conversation; // temporary mock
-    NSMutableDictionary *_messagesSending;
-    SystemSoundID _messageReceivedSystemSoundID;
-    SystemSoundID _messageSentSystemSoundID;
+    ACConversation         *_conversation; // temporary mock
+    NSMutableDictionary    *_messagesSendingDictionary;
+    NSNumber               *_messagesSendingDictionaryPrimaryKey;
+    SystemSoundID           _messageReceivedSystemSoundID;
+    SystemSoundID           _messageSentSystemSoundID;
 }
 @end
 
 @implementation ACAppDelegate
+
+#pragma mark - State Transitions
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Set up Core Data stack.
@@ -84,7 +118,8 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 //    }
 //    MOCSave(_managedObjectContext);
 
-    _messagesSending = [NSMutableDictionary dictionary];
+    _messagesSendingDictionary = [NSMutableDictionary dictionary];
+    _messagesSendingDictionaryPrimaryKey = @(0);
     ACAppDelegateCreateSystemSoundIDs();
 
     // Set up _window > UINavigationController > MessagesViewController.
@@ -97,13 +132,9 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 
     [self _reconnect];
 
-    return YES;
-}
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    _messagesSending = [NSMutableDictionary dictionary];
-    ACAppDelegateCreateSystemSoundIDs();
-    [self _reconnect];
+    return YES;
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
@@ -111,6 +142,46 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     AudioServicesDisposeSystemSoundID(_messageSentSystemSoundID);
     [_webSocket close];
 }
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    _messagesSendingDictionary = [NSMutableDictionary dictionary];
+    ACAppDelegateCreateSystemSoundIDs();
+    [self _reconnect];
+}
+
+#pragma mark - Remote Notifications
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
+//    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@", newDeviceToken);
+
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    NSData *deviceToken = [standardUserDefaults dataForKey:ACDeviceTokenKey];
+    if ([newDeviceToken isEqualToData:deviceToken]) return;
+    [standardUserDefaults setObject:newDeviceToken forKey:ACDeviceTokenKey];
+
+    if (!deviceToken) {
+        // DEVICE_TOKEN_SAVE:
+        // messageType|newDeviceToken, e.g., DEVICE_TOKEN_SAVE|c9a632...
+        [_webSocket send:[NSString stringWithFormat:DEVICE_TOKEN_SAVE_STRING"|%@", ACHexadecimalStringWithData(newDeviceToken)]];
+    } else {
+        // DEVICE_TOKEN_UPDATE:
+        // messageType|deviceToken|newDeviceToken, e.g., DEVICE_TOKEN_UPDATE|c9a632...|473aba...
+        [_webSocket send:[NSString stringWithFormat:DEVICE_TOKEN_UPDATE_STRING"|%@|%@", ACHexadecimalStringWithData(deviceToken), ACHexadecimalStringWithData(newDeviceToken)]];
+    }
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+//    NSLog(@"didFailToRegisterForRemoteNotificationsWithError: %@", error);
+    [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot Register for Pushes", nil) message:[error localizedDescription] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
+}
+
+//- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+//    NSLog(@"didReceiveRemoteNotification: %@", userInfo);
+//    NSLog(@"application.applicationState: %i", application.applicationState);
+//    if (application.applicationState == UIApplicationStateActive) {
+//    } else { // UIApplicationStateInactive (tapped action button)
+//    }
+//}
 
 #pragma mark - Connect & Save/Send Messages
 
@@ -125,27 +196,42 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
     AppSetNetworkActivityIndicatorVisible(YES);
 }
 
-// messageJSONArray: [timestamp, "text"], e.g., [978307200.0, "Hi"]
-- (void)addMessageWithJSONArray:(NSArray *)messageJSONArray {
+// messagePipedString: "messageSentTimeIntervalSince1970|messageText", e.g., @"978307200.0|Hi"
+- (void)addMessageWithPipedString:(NSString *)messagePipedString {
     ACMessage *message = [NSEntityDescription insertNewObjectForEntityForName:@"ACMessage" inManagedObjectContext:_managedObjectContext];
-    _conversation.lastMessageSentDate = message.sentDate = [NSDate dateWithTimeIntervalSince1970:[messageJSONArray[0] doubleValue]];
-    _conversation.lastMessageText = message.text = messageJSONArray[1];
+    NSUInteger indexOfNextPipe = [messagePipedString rangeOfString:@"|" options:NSLiteralSearch].location;
+    _conversation.lastMessageSentDate = message.sentDate = [NSDate dateWithTimeIntervalSince1970:[[messagePipedString substringToIndex:indexOfNextPipe] doubleValue]];
+    _conversation.lastMessageText = message.text = [messagePipedString substringFromIndex:indexOfNextPipe+1];
     [_conversation addMessagesObject:message];
 }
 
 - (void)sendMessage:(ACMessage *)message {
-    NSNumber *messageSendingIndex = @([_messagesSending count]);
-    [_webSocket send:[NSJSONSerialization dataWithJSONObject:@[@1, message.text, messageSendingIndex] options:0 error:NULL]];
-    [_messagesSending setObject:message forKey:messageSendingIndex];
+    // MESSAGE_TEXT_SEND:
+    // messageType|messagesSendingKey|messageText, e.g., MESSAGE_TEXT_SEND|0|Hi
+    [_webSocket send:[NSString stringWithFormat:MESSAGE_TEXT_SEND_STRING"|%u|%@", [_messagesSendingDictionaryPrimaryKey unsignedIntegerValue], message.text]];
+    [_messagesSendingDictionary setObject:message forKey:_messagesSendingDictionaryPrimaryKey];
+    _messagesSendingDictionaryPrimaryKey = @([_messagesSendingDictionaryPrimaryKey unsignedIntegerValue]+1);
 }
 
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-    [_webSocket send:[NSString stringWithFormat:@"[0,%u]", [_conversation.messagesLength unsignedIntegerValue]]];
+//    NSLog(@"webSocketDidOpen: %@", webSocket);
+
+    NSData *deviceToken = [[NSUserDefaults standardUserDefaults] dataForKey:ACDeviceTokenKey];
+    if (deviceToken) {
+        // NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT:
+        // messageType|messagesLength|deviceToken, e.g., NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT|5|c9a632...
+        [_webSocket send:[NSString stringWithFormat:NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT_STRING"|%u|%@", [_conversation.messagesLength unsignedIntegerValue], ACHexadecimalStringWithData(deviceToken)]];
+    } else {
+        // NEWEST_MESSAGES_GET:
+        // messageType|messagesLength,             e.g., NEWEST_MESSAGES_GET|5
+        [_webSocket send:[NSString stringWithFormat:NEWEST_MESSAGES_GET_STRING"|%u", [_conversation.messagesLength unsignedIntegerValue]]];
+    }
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
+//    NSLog(@"webSocket:didFailWithError: %@", error);
     AppSetNetworkActivityIndicatorVisible(NO);
     [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Cannot Connect", nil) message:[error localizedDescription] delegate:nil cancelButtonTitle:NSLocalizedString(@"OK", nil) otherButtonTitles:nil] show];
     _webSocket.delegate = nil;
@@ -155,37 +241,58 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
 //    NSLog(@"Received \"%@\"", message);
 
-    // messageArray: [type, ... ], e.g., [0, ... ]
-    NSArray *messageArray = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
+    // Parse out messageType & messageContent from message.
+    NSUInteger indexOfNextPipe = [message rangeOfString:@"|" options:NSLiteralSearch].location;
+    NSInteger  messageType;
+    NSString  *messageContent;
+    if (indexOfNextPipe == NSNotFound) {
+        messageType    = [message integerValue];
+        messageContent = nil;
+    } else {
+        messageType    = [[message substringToIndex:indexOfNextPipe] integerValue];
+        messageContent = [message substringFromIndex:indexOfNextPipe+1];
+    }
+
     NSUInteger messagesCount;
-    switch ([messageArray[0] integerValue]) { // type
-        case 0: // Last 50 Messages
+    switch (messageType) {
+        case NEWEST_MESSAGES_GET:
+            // messageType|messagesLength|newestMessagesPipedStrings, e.g., NEWEST_MESSAGES_GET|7|["978307200.0|Hi", "978307201.0|Hey"]
+            // messageType,                                     i.e., NEWEST_MESSAGES_GET (empty)
             AppSetNetworkActivityIndicatorVisible(NO);
-            if ([messageArray count] == 3) { // [type, messagesLength, newestMessages], e.g., [0, 7, [[978307200.0, "Hi"], [978307201.0, "Hey"]]]
-                _conversation.messagesLength = messageArray[1];
-                NSArray *messageJSONArrays = messageArray[2];
-                messagesCount = [messageJSONArrays count];
-                for (NSArray *messageJSONArray in messageJSONArrays) {
-                    [self addMessageWithJSONArray:messageJSONArray];
+            if (messageContent) {
+                indexOfNextPipe = [messageContent rangeOfString:@"|" options:NSLiteralSearch].location;
+                _conversation.messagesLength = @((NSUInteger)[[messageContent substringToIndex:indexOfNextPipe] integerValue]);
+                NSArray *newestMessagesPipedStrings = [NSJSONSerialization JSONObjectWithData:[[messageContent substringFromIndex:indexOfNextPipe+1] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
+                messagesCount = [newestMessagesPipedStrings count];
+                for (NSString *messagePipedString in newestMessagesPipedStrings) {
+                    [self addMessageWithPipedString:messagePipedString];
                 }
-            } else {                         // [type], e.g., [0], no new messages
+            } else {
                 return;
             }
             break;
 
-        case 1: // New Message: [type, message], e.g., [1, [978307200.0, "Hi"]]
-            messagesCount = 1;
-            [self addMessageWithJSONArray:messageArray[1]];
-            break;
-
-        case 2: // Message-Sent Confirmation: [type, sentDate, messagesSendingIndex], e.g., [2, 978307200.0, 0]
+        case MESSAGE_TEXT_SEND:
+            // messageType|messagesSendingKey|messageSentTimeIntervalSince1970, e.g., MESSAGE_TEXT_SEND|0|978307200.0
             AudioServicesPlaySystemSound(_messageSentSystemSoundID);
             _conversation.messagesLength = @([_conversation.messagesLength unsignedIntegerValue]+((NSUInteger)1));
-            NSNumber *messageSendingIndex = messageArray[2];
-            ((ACMessage *)_messagesSending[messageSendingIndex]).sentDate = [NSDate dateWithTimeIntervalSince1970:[messageArray[1] doubleValue]];
-            [_messagesSending removeObjectForKey:messageSendingIndex];
+            indexOfNextPipe = [messageContent rangeOfString:@"|" options:NSLiteralSearch].location;
+        {
+            NSNumber *messagesSendingKey = @((NSUInteger)[[messageContent substringToIndex:indexOfNextPipe] integerValue]);
+            ((ACMessage *)_messagesSendingDictionary[messagesSendingKey]).sentDate = [NSDate dateWithTimeIntervalSince1970:[[messageContent substringFromIndex:indexOfNextPipe+1] doubleValue]];
+            [_messagesSendingDictionary removeObjectForKey:messagesSendingKey];
+        }
+            if (![_messagesSendingDictionary count]) {
+                _messagesSendingDictionaryPrimaryKey = @(0);
+            }
             MOCSave(_managedObjectContext);
             return;
+
+        case MESSAGE_TEXT_RECEIVE:
+            // messageType|messageSentTimeIntervalSince1970|messageText, e.g., MESSAGE_TEXT_RECEIVE|978307200.0|Hi
+            messagesCount = 1;
+            [self addMessageWithPipedString:messageContent];
+            break;
     }
 
     ACMessagesViewController *messagesViewController = (ACMessagesViewController *)NAVIGATION_CONTROLLER().topViewController;
@@ -205,7 +312,7 @@ CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSyst
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     _webSocket.delegate = nil;
     _webSocket = nil;
-    _messagesSending = nil;
+    _messagesSendingDictionary = nil;
 }
 
 @end
