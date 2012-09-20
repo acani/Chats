@@ -1,5 +1,5 @@
 #import <MessageUI/MessageUI.h>
-#import "AcaniChatDefines.h"
+#import "AcaniDefines.h"
 #import "ACConversationsTableViewController.h"
 #import "ACMessagesViewController.h"
 #import "ACConversation.h"

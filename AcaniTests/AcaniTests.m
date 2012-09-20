@@ -1,9 +1,9 @@
 #import <SenTestingKit/SenTestingKit.h>
 
-@interface AcaniChatTests : SenTestCase
+@interface AcaniTests : SenTestCase
 @end
 
-@implementation AcaniChatTests
+@implementation AcaniTests
 
 - (void)setUp {
     [super setUp];
@@ -16,7 +16,7 @@
 }
 
 - (void)testExample {
-    STFail(@"Unit tests are not implemented yet in AcaniChatTests");
+    STFail(@"Unit tests are not implemented yet in AcaniTests");
 }
 
 @end

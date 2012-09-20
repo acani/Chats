@@ -1,4 +1,4 @@
-AcaniChat:
+Acani:
 	Native iPhone Messages.app with WebSocket & Bonjour over Bluetooth
 	ConversationsTableViewController:
 		- Add search bar to search all conversations.
@@ -52,3 +52,4 @@ AcaniChat:
 
 	Miscellaneous:
 		- Clean up README.md.
+		- Create Acani test project with new Xcode and apply differences.

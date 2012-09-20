@@ -1,8 +1,8 @@
-# AcaniChat
+# Acani
 
 ## Native iPhone Messages.app with WebSocket & Bonjour over Bluetooth
 
-![AcaniChat Conversations Screenshot][1] &nbsp;&nbsp;&nbsp;&nbsp; ![AcaniChat Messages Screenshot][11]
+![Acani Conversations Screenshot][1] &nbsp;&nbsp;&nbsp;&nbsp; ![Acani Messages Screenshot][11]
 
 
 ### Technology
@@ -35,17 +35,17 @@ Heroku doesn't support websockets yet, so I went with nodejitsu. modulus.io is a
 
 ### Getting Started
 
-AcaniChat uses [Objective-C literals][8], so make sure you have Xcode 4.5 or later, which you can download from [iOS Dev Center : Beta Downloads][9].
+Acani uses [Objective-C literals][8], so make sure you have Xcode 4.5 or later, which you can download from [iOS Dev Center : Beta Downloads][9].
 
-    git clone https://github.com/acani/AcaniChat.git
-    cd AcaniChat
+    git clone https://github.com/acani/Acani.git
+    cd Acani
     git submodule update --init
-    open AcaniChat.xcproj
+    open Acani.xcodeproj
 
 
 ### License
 
-AcaniChat, except for those images copied from Apple's ChatKit.framework, is released under the [MIT License][10].
+Acani, except for those images copied from Apple's ChatKit.framework, is released under the [MIT License][10].
 
 How to find Apple's ChatKit.framework images, e.g.:
 
@@ -72,7 +72,7 @@ How to find Apple's ChatKit.framework images, e.g.:
 * [StackOverflow: Creating a “chat bubble” on the iPhone, like Tweetie.][5]
 
 
-  [1]: https://github.com/acani/AcaniChat/raw/master/Screenshots/Conversations.png
+  [1]: https://github.com/acani/Acani/raw/master/Screenshots/Conversations.png
   [2]: https://github.com/jpick/twitterfon
   [3]: http://vimeo.com/8718829
   [4]: http://stackoverflow.com/questions/663435/implement-view-like-standard-iphone-sms-chat-bubbles-view
@@ -82,7 +82,7 @@ How to find Apple's ChatKit.framework images, e.g.:
   [8]: http://clang.llvm.org/docs/ObjectiveCLiterals.html
   [9]: https://developer.apple.com/devcenter/ios/index.action#betadownloads
   [10]: http://www.opensource.org/licenses/MIT
-  [11]: https://github.com/acani/AcaniChat/raw/master/Screenshots/Messages.png
+  [11]: https://github.com/acani/Acani/raw/master/Screenshots/Messages.png
   [12]: https://github.com/acani/acani-chat-server
   [13]: http://nodejitsu.com/
   [14]: https://github.com/square/SocketRocket
