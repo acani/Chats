@@ -3,7 +3,8 @@ var WebSocketServer                    = require('ws').Server,
     web_socket_connections             = {},
     web_socket_connections_primary_key = -1,
     apns                               = require('apn'),
-    apns_connection                    = new apns.Connection(),
+    apns_connection                    = new apns.Connection({cert: 'apns/development_cer.pem', key: 'apns/development_p12.pem', gateway: 'gateway.sandbox.push.apple.com'}),
+    // apns_connection                    = new apns.Connection({cert: 'apns/production_cer.pem', key: 'apns/production_p12.pem'}),
     redis_client                       = require('redis').createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
 
 // $ redis-cli -h <hostname> -p <port> -a <password>
