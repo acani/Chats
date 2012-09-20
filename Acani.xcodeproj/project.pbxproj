@@ -456,6 +456,7 @@
 		D27BAFEE15EAD3870084AECA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = AC;
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = "Acani Inc.";
 			};
