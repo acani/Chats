@@ -1,6 +1,6 @@
 #import <MessageUI/MessageUI.h>
 #import "AcaniDefines.h"
-#import "ACConversationsTableViewController.h"
+#import "ACConversationsViewController.h"
 #import "ACMessagesViewController.h"
 #import "ACConversation.h"
 #import "ACUser.h"
@@ -15,10 +15,10 @@
 #define LAST_MESSAGE_SENT_DATE_AM_PM_FONT_SIZE 12
 #define USERS_NAMES_FONT_SIZE                  16
 
-@interface ACConversationsTableViewController () <NSFetchedResultsControllerDelegate> // , MFMessageComposeViewControllerDelegate>
+@interface ACConversationsViewController () <NSFetchedResultsControllerDelegate> // , MFMessageComposeViewControllerDelegate>
 @end
 
-@implementation ACConversationsTableViewController
+@implementation ACConversationsViewController
 
 #pragma mark - UIViewController
 

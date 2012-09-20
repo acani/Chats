@@ -1,6 +1,6 @@
 Acani:
 	Native iPhone Messages.app with WebSocket & Bonjour over Bluetooth
-	ConversationsTableViewController:
+	ACConversationsViewController:
 		- Add search bar to search all conversations.
 			http://www.iphonesdkarticles.com/2009/01/uitableview-searching-table-view.html
 		- Get correct UnreadBullet image or draw it with Quartz2D.
@@ -9,7 +9,7 @@ Acani:
 			- Hide sentDateLabel.
 		- Compare screen shots with native app to make sure everything's perfect.
 
-	MessagesViewController:
+	ACMessagesViewController:
 		- Decrease width of _textView by a bit. @issue
 		- Delete potential unsent messages. @issue
 		- I can push ACMessagesViewController many times. @issue

@@ -2,7 +2,7 @@
 #import <SocketRocket/SRWebSocket.h>
 #import "AcaniDefines.h"
 #import "ACAppDelegate.h"
-#import "ACConversationsTableViewController.h"
+#import "ACConversationsViewController.h"
 #import "ACMessagesViewController.h"
 #import "ACConversation.h"
 #import "ACMessage.h"
@@ -123,11 +123,11 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
     ACAppDelegateCreateSystemSoundIDs();
 
     // Set up _window > UINavigationController > MessagesViewController.
-    ACConversationsTableViewController *conversationsTableViewController = [[ACConversationsTableViewController alloc] initWithStyle:UITableViewStylePlain];
-    conversationsTableViewController.title = NSLocalizedString(@"Messages", nil);
-    conversationsTableViewController.managedObjectContext = _managedObjectContext;
+    ACConversationsViewController *conversationsViewController = [[ACConversationsViewController alloc] initWithStyle:UITableViewStylePlain];
+    conversationsViewController.title = NSLocalizedString(@"Messages", nil);
+    conversationsViewController.managedObjectContext = _managedObjectContext;
     _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    _window.rootViewController = [[UINavigationController alloc] initWithRootViewController:conversationsTableViewController];
+    _window.rootViewController = [[UINavigationController alloc] initWithRootViewController:conversationsViewController];
     [_window makeKeyAndVisible];
 
     [self _reconnect];
@@ -298,7 +298,7 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
     ACMessagesViewController *messagesViewController = (ACMessagesViewController *)NAVIGATION_CONTROLLER().topViewController;
     if ([messagesViewController respondsToSelector:@selector(scrollToBottomAnimated:)]) {
         [messagesViewController scrollToBottomAnimated:YES];
-    } else { // assume topViewController is ACConversationsTableViewController.
+    } else { // assume topViewController is ACConversationsViewController.
         NSUInteger unreadMessagesCount = [_conversation.unreadMessagesCount unsignedIntegerValue] + messagesCount;
         [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessagesCount;
         _conversation.unreadMessagesCount = @(unreadMessagesCount);

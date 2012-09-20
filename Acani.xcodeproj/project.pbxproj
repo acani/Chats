@@ -48,7 +48,7 @@
 		D2884AB615FD8F9C00021068 /* UnreadBullet@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2884AB415FD8F9C00021068 /* UnreadBullet@2x.png */; };
 		D2884AD715FD9FED00021068 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D2884AD615FD9FED00021068 /* Icon.png */; };
 		D2884AD915FD9FF700021068 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2884AD815FD9FF700021068 /* Icon@2x.png */; };
-		D2B4B02E15F4052D00FAF88C /* ACConversationsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B02D15F4052D00FAF88C /* ACConversationsTableViewController.m */; };
+		D2B4B02E15F4052D00FAF88C /* ACConversationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B02D15F4052D00FAF88C /* ACConversationsViewController.m */; };
 		D2B4B0A015F422B900FAF88C /* ACUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B09F15F422B900FAF88C /* ACUser.m */; };
 		D2EFF36615FBA719002BEFDA /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EFF36415FBA719002BEFDA /* Default.png */; };
 		D2EFF36715FBA719002BEFDA /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EFF36515FBA719002BEFDA /* Default@2x.png */; };
@@ -154,8 +154,8 @@
 		D2884AB415FD8F9C00021068 /* UnreadBullet@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UnreadBullet@2x.png"; sourceTree = "<group>"; };
 		D2884AD615FD9FED00021068 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		D2884AD815FD9FF700021068 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
-		D2B4B02C15F4052D00FAF88C /* ACConversationsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACConversationsTableViewController.h; sourceTree = "<group>"; };
-		D2B4B02D15F4052D00FAF88C /* ACConversationsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACConversationsTableViewController.m; sourceTree = "<group>"; };
+		D2B4B02C15F4052D00FAF88C /* ACConversationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACConversationsViewController.h; sourceTree = "<group>"; };
+		D2B4B02D15F4052D00FAF88C /* ACConversationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACConversationsViewController.m; sourceTree = "<group>"; };
 		D2B4B04715F415E200FAF88C /* AcaniDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AcaniDefines.h; sourceTree = "<group>"; };
 		D2B4B09E15F422B900FAF88C /* ACUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACUser.h; sourceTree = "<group>"; };
 		D2B4B09F15F422B900FAF88C /* ACUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACUser.m; sourceTree = "<group>"; };
@@ -299,8 +299,8 @@
 		D27BB05315EB01F00084AECA /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D2B4B02C15F4052D00FAF88C /* ACConversationsTableViewController.h */,
-				D2B4B02D15F4052D00FAF88C /* ACConversationsTableViewController.m */,
+				D2B4B02C15F4052D00FAF88C /* ACConversationsViewController.h */,
+				D2B4B02D15F4052D00FAF88C /* ACConversationsViewController.m */,
 				D27BB01215EAD3870084AECA /* ACMessagesViewController.h */,
 				D27BB01315EAD3870084AECA /* ACMessagesViewController.m */,
 			);
@@ -584,7 +584,7 @@
 				D27BB01115EAD3870084AECA /* Acani.xcdatamodeld in Sources */,
 				D27BB01415EAD3870084AECA /* ACMessagesViewController.m in Sources */,
 				D27BB06415EB0C620084AECA /* ACPlaceholderTextView.m in Sources */,
-				D2B4B02E15F4052D00FAF88C /* ACConversationsTableViewController.m in Sources */,
+				D2B4B02E15F4052D00FAF88C /* ACConversationsViewController.m in Sources */,
 				D2B4B0A015F422B900FAF88C /* ACUser.m in Sources */,
 				D2884AB115FD8E3C00021068 /* ACMessage.m in Sources */,
 				D281E5FE1601653600364FA8 /* ACConversation.m in Sources */,
