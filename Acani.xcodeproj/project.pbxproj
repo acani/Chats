@@ -24,6 +24,8 @@
 		D209008115EE5646001FED65 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D209007215EE5646001FED65 /* SendButtonHighlighted@2x.png */; };
 		D215488B16034E150043F9E7 /* UnreadBulletHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = D215488916034E150043F9E7 /* UnreadBulletHighlighted.png */; };
 		D215488C16034E150043F9E7 /* UnreadBulletHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D215488A16034E150043F9E7 /* UnreadBulletHighlighted@2x.png */; };
+		D224A9BC160B4EC100D0CC30 /* ACUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D224A9BB160B4EC100D0CC30 /* ACUsersViewController.m */; };
+		D224A9EA160B780000D0CC30 /* ACUserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D224A9E9160B780000D0CC30 /* ACUserCell.m */; };
 		D237E8C81600AFC600AC42CD /* MessageReceived.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D237E8C71600AFC600AC42CD /* MessageReceived.aiff */; };
 		D237E8CA1600AFD200AC42CD /* MessageSent.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D237E8C91600AFD200AC42CD /* MessageSent.aiff */; };
 		D237E8D01600B30A00AC42CD /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D237E8CF1600B30A00AC42CD /* AudioToolbox.framework */; };
@@ -121,6 +123,10 @@
 		D209007215EE5646001FED65 /* SendButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SendButtonHighlighted@2x.png"; sourceTree = "<group>"; };
 		D215488916034E150043F9E7 /* UnreadBulletHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UnreadBulletHighlighted.png; sourceTree = "<group>"; };
 		D215488A16034E150043F9E7 /* UnreadBulletHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UnreadBulletHighlighted@2x.png"; sourceTree = "<group>"; };
+		D224A9BA160B4EC100D0CC30 /* ACUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACUsersViewController.h; sourceTree = "<group>"; };
+		D224A9BB160B4EC100D0CC30 /* ACUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACUsersViewController.m; sourceTree = "<group>"; };
+		D224A9E8160B780000D0CC30 /* ACUserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACUserCell.h; sourceTree = "<group>"; };
+		D224A9E9160B780000D0CC30 /* ACUserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACUserCell.m; sourceTree = "<group>"; };
 		D237E8C71600AFC600AC42CD /* MessageReceived.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = MessageReceived.aiff; sourceTree = "<group>"; };
 		D237E8C91600AFD200AC42CD /* MessageSent.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = MessageSent.aiff; sourceTree = "<group>"; };
 		D237E8CF1600B30A00AC42CD /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -303,6 +309,8 @@
 				D2B4B02D15F4052D00FAF88C /* ACConversationsViewController.m */,
 				D27BB01215EAD3870084AECA /* ACMessagesViewController.h */,
 				D27BB01315EAD3870084AECA /* ACMessagesViewController.m */,
+				D224A9BA160B4EC100D0CC30 /* ACUsersViewController.h */,
+				D224A9BB160B4EC100D0CC30 /* ACUsersViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -322,6 +330,8 @@
 			children = (
 				D27BB06215EB0C620084AECA /* ACPlaceholderTextView.h */,
 				D27BB06315EB0C620084AECA /* ACPlaceholderTextView.m */,
+				D224A9E8160B780000D0CC30 /* ACUserCell.h */,
+				D224A9E9160B780000D0CC30 /* ACUserCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -329,8 +339,8 @@
 		D27BB06515EB1F990084AECA /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				D2F5A93F15EB33E000748238 /* SocketRocket.xcodeproj */,
 				D27BB0B515EB1FD50084AECA /* CocoaPlant */,
+				D2F5A93F15EB33E000748238 /* SocketRocket.xcodeproj */,
 			);
 			path = Libraries;
 			sourceTree = "<group>";
@@ -588,6 +598,8 @@
 				D2B4B0A015F422B900FAF88C /* ACUser.m in Sources */,
 				D2884AB115FD8E3C00021068 /* ACMessage.m in Sources */,
 				D281E5FE1601653600364FA8 /* ACConversation.m in Sources */,
+				D224A9BC160B4EC100D0CC30 /* ACUsersViewController.m in Sources */,
+				D224A9EA160B780000D0CC30 /* ACUserCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,7 +648,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -655,7 +667,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

@@ -3,6 +3,7 @@
 #import "AcaniDefines.h"
 #import "ACAppDelegate.h"
 #import "ACConversationsViewController.h"
+#import "ACUsersViewController.h"
 #import "ACMessagesViewController.h"
 #import "ACConversation.h"
 #import "ACMessage.h"
@@ -122,12 +123,17 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
     _messagesSendingDictionaryPrimaryKey = @(0);
     ACAppDelegateCreateSystemSoundIDs();
 
-    // Set up _window > UINavigationController > MessagesViewController.
-    ACConversationsViewController *conversationsViewController = [[ACConversationsViewController alloc] initWithStyle:UITableViewStylePlain];
-    conversationsViewController.title = NSLocalizedString(@"Messages", nil);
-    conversationsViewController.managedObjectContext = _managedObjectContext;
+    // Set up _window > UINavigationController > UsersViewController.
+    UICollectionViewFlowLayout *usersLayout = [[UICollectionViewFlowLayout alloc] init];
+    usersLayout.minimumLineSpacing = 4;
+    usersLayout.minimumInteritemSpacing = 4;
+    usersLayout.itemSize = CGSizeMake(75, 75);
+    usersLayout.sectionInset = UIEdgeInsetsMake(4, 4, 4, 4);
+    ACUsersViewController *usersViewController = [[ACUsersViewController alloc] initWithCollectionViewLayout:usersLayout];
+    usersViewController.title = NSLocalizedString(@"Users", nil);
+    usersViewController.managedObjectContext = _managedObjectContext;
     _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    _window.rootViewController = [[UINavigationController alloc] initWithRootViewController:conversationsViewController];
+    _window.rootViewController = [[UINavigationController alloc] initWithRootViewController:usersViewController];
     [_window makeKeyAndVisible];
 
     [self _reconnect];
@@ -298,11 +304,13 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
     ACMessagesViewController *messagesViewController = (ACMessagesViewController *)NAVIGATION_CONTROLLER().topViewController;
     if ([messagesViewController respondsToSelector:@selector(scrollToBottomAnimated:)]) {
         [messagesViewController scrollToBottomAnimated:YES];
-    } else { // assume topViewController is ACConversationsViewController.
+    } else {
         NSUInteger unreadMessagesCount = [_conversation.unreadMessagesCount unsignedIntegerValue] + messagesCount;
         [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessagesCount;
         _conversation.unreadMessagesCount = @(unreadMessagesCount);
-        messagesViewController.title = [NSString stringWithFormat:NSLocalizedString(@"Messages (%u)", nil), unreadMessagesCount];
+        if ([messagesViewController isMemberOfClass:[ACConversationsViewController class]]) {
+            messagesViewController.title = [NSString stringWithFormat:NSLocalizedString(@"Messages (%u)", nil), unreadMessagesCount];
+        }
     }
 
     AudioServicesPlayAlertSound(_messageReceivedSystemSoundID);

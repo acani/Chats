@@ -25,15 +25,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.rowHeight = 61;
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissAction)];
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
 //    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose target:self action:@selector(composeAction)];
 }
 
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return (toInterfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+- (void)dismissAction {
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
-#endif
 
 //#pragma mark - Actions
 //
@@ -168,13 +167,9 @@
 
         lastMessageSentDateLabel.font = [UIFont boldSystemFontOfSize:LAST_MESSAGE_SENT_DATE_FONT_SIZE];
         NSString *lastMessageSentDateLabelText = [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
-        if ([lastMessageTextLabel respondsToSelector:@selector(attributedText)]) {
-            NSMutableAttributedString *lastMessageSentDateLabelAttributedText = [[NSMutableAttributedString alloc] initWithString:lastMessageSentDateLabelText];
-            [lastMessageSentDateLabelAttributedText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:LAST_MESSAGE_SENT_DATE_AM_PM_FONT_SIZE] range:NSMakeRange([lastMessageSentDateLabelText length]-3, 3)];
-            lastMessageSentDateLabel.attributedText = lastMessageSentDateLabelAttributedText;
-        } else {
-            lastMessageSentDateLabel.text = lastMessageSentDateLabelText;
-        }
+        NSMutableAttributedString *lastMessageSentDateLabelAttributedText = [[NSMutableAttributedString alloc] initWithString:lastMessageSentDateLabelText];
+        [lastMessageSentDateLabelAttributedText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:LAST_MESSAGE_SENT_DATE_AM_PM_FONT_SIZE] range:NSMakeRange([lastMessageSentDateLabelText length]-3, 3)];
+        lastMessageSentDateLabel.attributedText = lastMessageSentDateLabelAttributedText;
     } else {
         lastMessageSentDateLabel.font = [UIFont systemFontOfSize:LAST_MESSAGE_SENT_DATE_FONT_SIZE];
         [dateComponents setDay:dateComponents.day-1];     // yesterday

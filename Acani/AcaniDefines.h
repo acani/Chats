@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
-
 
 #pragma mark - Networking
 
@@ -17,7 +17,6 @@ UIKIT_STATIC_INLINE void AppSetNetworkActivityIndicatorVisible(BOOL visible) {
     }
     [UIApplication sharedApplication].networkActivityIndicatorVisible = (_networkActivityIndicatorCount > 0);
 }
-
 
 #pragma mark - Core Data
 
