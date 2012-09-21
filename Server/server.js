@@ -12,11 +12,11 @@ redis_client.auth(process.env.REDIS_AUTH, function(error) { if (error) throw err
 
 
 // Message Type
-var NEWEST_MESSAGES_GET                          = 0,
+var MESSAGES_NEWEST_GET                          = 0,
     DEVICE_TOKEN_CONNECT                         = 1,
     DEVICE_TOKEN_SAVE                            = 2,
     DEVICE_TOKEN_UPDATE                          = 3,
-    NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT = 4,
+    MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT = 4,
     MESSAGE_TEXT_SEND                            = 5,
     MESSAGE_TEXT_RECEIVE                         = 6;
 
@@ -34,19 +34,19 @@ web_socket_server.on('connection', function(web_socket_connection) {
     // console.log("message: " + message);
 
     // Functions
-    function replyWithNewestMessages(messagesLength) {
+    function sendMessagesNewest(messagesLength) {
       redis_client.llen('messages', function(error, messages_length) {
         if (error) throw error;
-        var new_messages_length = messages_length - messagesLength;
-        if (new_messages_length) {
-          redis_client.lrange('messages', -Math.min(50, new_messages_length), -1, function(error2, newest_messages) {
+        var messages_new_length = messages_length - messagesLength;
+        if (messages_new_length) {
+          redis_client.lrange('messages', (messages_new_length > 50 ? messages_length-50 : messagesLength), messages_length-1, function(error2, messages_newest) {
             if (error2) throw error2;
-            if (newest_messages) {
-              web_socket_connection.send(NEWEST_MESSAGES_GET+'|'+messages_length+'|'+JSON.stringify(newest_messages));
+            if (messages_newest) {
+              web_socket_connection.send(MESSAGES_NEWEST_GET+'|'+messages_length+'|'+JSON.stringify(messages_newest));
             }
           });
         } else {
-          web_socket_connection.send(NEWEST_MESSAGES_GET.toString());
+          web_socket_connection.send(MESSAGES_NEWEST_GET.toString());
         }
       });
     };
@@ -65,18 +65,18 @@ web_socket_server.on('connection', function(web_socket_connection) {
 
     switch (message_type) {
 
-      case NEWEST_MESSAGES_GET:
-      // Client messages, immediately after connecting, to get newest_messages.
-      // Server replies with newest_messages, limited to 50.
+      case MESSAGES_NEWEST_GET:
+      // Client messages, immediately after connecting, to get messages_newest.
+      // Server replies with messages_newest, limited to 50.
       //
-      // Client Message: message_type|messagesLength,                  e.g., NEWEST_MESSAGES_GET|5
-      // Server Reply:   message_type|messages_length|newest_messages, e.g., NEWEST_MESSAGES_GET|7|["978307200.0|Hi", "978307201.0|Hey"]
-      //   - If Empty:   message_type,                                 i.e., NEWEST_MESSAGES_GET
+      // Client Message: message_type|messagesLength,                  e.g., MESSAGES_NEWEST_GET|5
+      // Server Reply:   message_type|messages_length|messages_newest, e.g., MESSAGES_NEWEST_GET|7|["978307200.0|Hi", "978307201.0|Hey"]
+      //   - If Empty:   message_type,                                 i.e., MESSAGES_NEWEST_GET
       //
       // messagesLength:  client's last received messages_length or 0, incremented every time client sends/receives a message
       // messages_length: server's 'messages' list length
-      // newest_messages: array of strings with format: "sent_timestamp|messageText" (See MESSAGE_TEXT_SEND)
-      replyWithNewestMessages(message_content /* messagesLength */);
+      // messages_newest: array of strings with format: "sent_timestamp|messageText" (See MESSAGE_TEXT_SEND)
+      sendMessagesNewest(message_content /* messagesLength */);
       break;
 
       case DEVICE_TOKEN_SAVE:
@@ -116,17 +116,17 @@ web_socket_server.on('connection', function(web_socket_connection) {
       });
       break;
 
-      case NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT:
-      // This case is like NEWEST_MESSAGES_GET plus connecting the device token.
+      case MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT:
+      // This case is like MESSAGES_NEWEST_GET plus connecting the device token.
       //
-      // Client Message: message_type|messagesLength|deviceToken, e.g., NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT|5|c9a632...
+      // Client Message: message_type|messagesLength|deviceToken, e.g., MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT|5|c9a632...
 
       // Parse out arguments from message_content.
       index_of_next_pipe = message_content.indexOf('|');
       var messagesLength = message_content.substring(0, index_of_next_pipe),
           deviceToken    = message_content.substring(index_of_next_pipe+1);
 
-      replyWithNewestMessages(messagesLength);
+      sendMessagesNewest(messagesLength);
       deviceTokenConnect(deviceToken);
       break;
 

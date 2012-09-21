@@ -10,20 +10,20 @@
 #import "ACUser.h"
 
 // messageType
-#define NEWEST_MESSAGES_GET                          0
+#define MESSAGES_NEWEST_GET                          0
 #define DEVICE_TOKEN_CONNECT                         1
 #define DEVICE_TOKEN_SAVE                            2
 #define DEVICE_TOKEN_UPDATE                          3
-#define NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT 4
+#define MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT 4
 #define MESSAGE_TEXT_SEND                            5
 #define MESSAGE_TEXT_RECEIVE                         6
 
 // TODO: Find a better way to insert these strings into message compile-time.
-#define NEWEST_MESSAGES_GET_STRING                          @"0"
+#define MESSAGES_NEWEST_GET_STRING                          @"0"
 #define DEVICE_TOKEN_CONNECT_STRING                         @"1"
 #define DEVICE_TOKEN_SAVE_STRING                            @"2"
 #define DEVICE_TOKEN_UPDATE_STRING                          @"3"
-#define NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT_STRING @"4"
+#define MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING @"4"
 #define MESSAGE_TEXT_SEND_STRING                            @"5"
 #define MESSAGE_TEXT_RECEIVE_STRING                         @"6"
 
@@ -226,13 +226,13 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
 
     NSData *deviceToken = [[NSUserDefaults standardUserDefaults] dataForKey:ACDeviceTokenKey];
     if (deviceToken) {
-        // NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT:
-        // messageType|messagesLength|deviceToken, e.g., NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT|5|c9a632...
-        [_webSocket send:[NSString stringWithFormat:NEWEST_MESSAGES_GET_AND_DEVICE_TOKEN_CONNECT_STRING"|%u|%@", [_conversation.messagesLength unsignedIntegerValue], ACHexadecimalStringWithData(deviceToken)]];
+        // MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT:
+        // messageType|messagesLength|deviceToken, e.g., MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT|5|c9a632...
+        [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING"|%u|%@", [_conversation.messagesLength unsignedIntegerValue], ACHexadecimalStringWithData(deviceToken)]];
     } else {
-        // NEWEST_MESSAGES_GET:
-        // messageType|messagesLength,             e.g., NEWEST_MESSAGES_GET|5
-        [_webSocket send:[NSString stringWithFormat:NEWEST_MESSAGES_GET_STRING"|%u", [_conversation.messagesLength unsignedIntegerValue]]];
+        // MESSAGES_NEWEST_GET:
+        // messageType|messagesLength,             e.g., MESSAGES_NEWEST_GET|5
+        [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_STRING"|%u", [_conversation.messagesLength unsignedIntegerValue]]];
     }
 }
 
@@ -261,16 +261,16 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
 
     NSUInteger messagesCount;
     switch (messageType) {
-        case NEWEST_MESSAGES_GET:
-            // messageType|messagesLength|newestMessagesPipedStrings, e.g., NEWEST_MESSAGES_GET|7|["978307200.0|Hi", "978307201.0|Hey"]
-            // messageType,                                     i.e., NEWEST_MESSAGES_GET (empty)
+        case MESSAGES_NEWEST_GET:
+            // messageType|messagesLength|messagesNewestPipedStrings, e.g., MESSAGES_NEWEST_GET|7|["978307200.0|Hi", "978307201.0|Hey"]
+            // messageType,                                     i.e., MESSAGES_NEWEST_GET (empty)
             AppSetNetworkActivityIndicatorVisible(NO);
             if (messageContent) {
                 indexOfNextPipe = [messageContent rangeOfString:@"|" options:NSLiteralSearch].location;
                 _conversation.messagesLength = @((NSUInteger)[[messageContent substringToIndex:indexOfNextPipe] integerValue]);
-                NSArray *newestMessagesPipedStrings = [NSJSONSerialization JSONObjectWithData:[[messageContent substringFromIndex:indexOfNextPipe+1] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
-                messagesCount = [newestMessagesPipedStrings count];
-                for (NSString *messagePipedString in newestMessagesPipedStrings) {
+                NSArray *messagesNewestPipedStrings = [NSJSONSerialization JSONObjectWithData:[[messageContent substringFromIndex:indexOfNextPipe+1] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
+                messagesCount = [messagesNewestPipedStrings count];
+                for (NSString *messagePipedString in messagesNewestPipedStrings) {
                     [self addMessageWithPipedString:messagePipedString];
                 }
             } else {
