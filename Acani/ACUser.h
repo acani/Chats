@@ -6,6 +6,7 @@
 @interface ACUser : NSManagedObject
 
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * userID;
 @property (nonatomic, retain) NSSet *conversations;
 
 @end

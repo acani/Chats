@@ -50,8 +50,8 @@
 		D2884AB615FD8F9C00021068 /* UnreadBullet@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2884AB415FD8F9C00021068 /* UnreadBullet@2x.png */; };
 		D2884AD715FD9FED00021068 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D2884AD615FD9FED00021068 /* Icon.png */; };
 		D2884AD915FD9FF700021068 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2884AD815FD9FF700021068 /* Icon@2x.png */; };
+		D29F90AE160CD2DB008666A3 /* ACUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D29F90AD160CD2DB008666A3 /* ACUser.m */; };
 		D2B4B02E15F4052D00FAF88C /* ACConversationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B02D15F4052D00FAF88C /* ACConversationsViewController.m */; };
-		D2B4B0A015F422B900FAF88C /* ACUser.m in Sources */ = {isa = PBXBuildFile; fileRef = D2B4B09F15F422B900FAF88C /* ACUser.m */; };
 		D2EFF36615FBA719002BEFDA /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EFF36415FBA719002BEFDA /* Default.png */; };
 		D2EFF36715FBA719002BEFDA /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2EFF36515FBA719002BEFDA /* Default@2x.png */; };
 		D2F5A95415EB341900748238 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F5A94B15EB33E100748238 /* libSocketRocket.a */; };
@@ -160,11 +160,11 @@
 		D2884AB415FD8F9C00021068 /* UnreadBullet@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UnreadBullet@2x.png"; sourceTree = "<group>"; };
 		D2884AD615FD9FED00021068 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		D2884AD815FD9FF700021068 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		D29F90AC160CD2DB008666A3 /* ACUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACUser.h; sourceTree = "<group>"; };
+		D29F90AD160CD2DB008666A3 /* ACUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACUser.m; sourceTree = "<group>"; };
 		D2B4B02C15F4052D00FAF88C /* ACConversationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACConversationsViewController.h; sourceTree = "<group>"; };
 		D2B4B02D15F4052D00FAF88C /* ACConversationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACConversationsViewController.m; sourceTree = "<group>"; };
 		D2B4B04715F415E200FAF88C /* AcaniDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AcaniDefines.h; sourceTree = "<group>"; };
-		D2B4B09E15F422B900FAF88C /* ACUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACUser.h; sourceTree = "<group>"; };
-		D2B4B09F15F422B900FAF88C /* ACUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACUser.m; sourceTree = "<group>"; };
 		D2EE64AB15EB45D20062AA0F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		D2EFF36415FBA719002BEFDA /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		D2EFF36515FBA719002BEFDA /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -292,12 +292,12 @@
 			isa = PBXGroup;
 			children = (
 				D27BB00F15EAD3870084AECA /* Acani.xcdatamodeld */,
+				D29F90AC160CD2DB008666A3 /* ACUser.h */,
+				D29F90AD160CD2DB008666A3 /* ACUser.m */,
 				D281E5FC1601653600364FA8 /* ACConversation.h */,
 				D281E5FD1601653600364FA8 /* ACConversation.m */,
 				D2884AAF15FD8E3C00021068 /* ACMessage.h */,
 				D2884AB015FD8E3C00021068 /* ACMessage.m */,
-				D2B4B09E15F422B900FAF88C /* ACUser.h */,
-				D2B4B09F15F422B900FAF88C /* ACUser.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -595,11 +595,11 @@
 				D27BB01415EAD3870084AECA /* ACMessagesViewController.m in Sources */,
 				D27BB06415EB0C620084AECA /* ACPlaceholderTextView.m in Sources */,
 				D2B4B02E15F4052D00FAF88C /* ACConversationsViewController.m in Sources */,
-				D2B4B0A015F422B900FAF88C /* ACUser.m in Sources */,
 				D2884AB115FD8E3C00021068 /* ACMessage.m in Sources */,
 				D281E5FE1601653600364FA8 /* ACConversation.m in Sources */,
 				D224A9BC160B4EC100D0CC30 /* ACUsersViewController.m in Sources */,
 				D224A9EA160B780000D0CC30 /* ACUserCell.m in Sources */,
+				D29F90AE160CD2DB008666A3 /* ACUser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

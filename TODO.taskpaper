@@ -1,5 +1,8 @@
 Acani:
 	Native iPhone Messages.app with WebSocket & Bonjour over Bluetooth
+	ACUsersViewController:
+		- Display users in UsersViewController.
+
 	ACConversationsViewController:
 		- Add search bar to search all conversations.
 			http://www.iphonesdkarticles.com/2009/01/uitableview-searching-table-view.html
@@ -45,6 +48,9 @@ Acani:
 			- Handle Push Notifications.
 
 	Server:
+		- Use arrays, not piped strings.
+		- Condense _AND_DEVICE_TOKEN_CONNECT into one.
+		- Make ACUser subclass of NSObject.
 		- Create a server that works with Apple Push Notification Service.
 
 	iPad Version:

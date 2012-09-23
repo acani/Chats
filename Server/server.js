@@ -12,13 +12,16 @@ redis_client.auth(process.env.REDIS_AUTH, function(error) { if (error) throw err
 
 
 // Message Type
-var MESSAGES_NEWEST_GET                          = 0,
-    DEVICE_TOKEN_CONNECT                         = 1,
-    DEVICE_TOKEN_SAVE                            = 2,
-    DEVICE_TOKEN_UPDATE                          = 3,
-    MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT = 4,
-    MESSAGE_TEXT_SEND                            = 5,
-    MESSAGE_TEXT_RECEIVE                         = 6;
+// TODO: Condense _AND_DEVICE_TOKEN_CONNECT into one.
+var USERS_NEAREST_GET                            = 0,
+    USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT   = 1,
+    MESSAGES_NEWEST_GET                          = 2,
+    MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT = 3,
+    DEVICE_TOKEN_CONNECT                         = 4,
+    DEVICE_TOKEN_SAVE                            = 5,
+    DEVICE_TOKEN_UPDATE                          = 6,
+    MESSAGE_TEXT_SEND                            = 7,
+    MESSAGE_TEXT_RECEIVE                         = 8;
 
 
 // WebSocket Server
@@ -34,6 +37,23 @@ web_socket_server.on('connection', function(web_socket_connection) {
     // console.log("message: " + message);
 
     // Functions
+    function sendUsersNearest() {
+      // TODO: Sort by nearest (MongoDB).
+      // TODO: Limit to 50 (sorted set).
+      redis_client.smembers('deviceTokens', deviceToken, function(error, users_nearest) {
+        if (error) throw error;
+        if (device_token) {
+          var device_token_index = users_nearest.indexOf(device_token);
+          if (device_token_index === -1) {
+            throw "Can't find device_token in deviceTokens"
+          } else {
+            users_nearest.splice(device_token_index, 1); // removes me
+          }
+        }
+        web_socket_connection.send(USERS_NEAREST_GET+'|'+JSON.stringify(users_nearest));
+      });
+    }
+
     function sendMessagesNewest(messagesLength) {
       redis_client.llen('messages', function(error, messages_length) {
         if (error) throw error;
@@ -59,24 +79,67 @@ web_socket_server.on('connection', function(web_socket_connection) {
     };
 
     // Parse out message_type & message_content from message.
-    var index_of_next_pipe = message.indexOf('|'),
-        message_type       = parseInt(message.substring(0, index_of_next_pipe)),
-        message_content    = message.substring(index_of_next_pipe+1);
+    var index_of_next_pipe = message.indexOf('|');
+    var message_type, message_content;
+    if (index_of_next_pipe === -1) {
+      message_type    = parseInt(message);
+      message_content = message;
+    } else {
+      message_type    = parseInt(message.substring(0, index_of_next_pipe)),
+      message_content = message.substring(index_of_next_pipe+1);
+    }
 
     switch (message_type) {
 
+      case USERS_NEAREST_GET:
+      // Client messages, immediately after connecting, to get users_nearest.
+      // Server replies with users_nearest, limited to 50.
+      //
+      // Client Message: message_type,               e.g., USERS_NEAREST_GET
+      // Server Reply:   message_type|users_nearest, e.g., USERS_NEAREST_GET|["c9a632...","473aba..."]
+      //   - If Empty:   message_type|[]             i.e., USERS_NEAREST_GET|[]
+      //
+      // users_nearest: array of deviceTokens (for now)
+      sendUsersNearest();
+      break;
+
+      case USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT:
+      // Same as USERS_NEAREST_GET. Add connect device_token.
+      //
+      // Client Message: message_type|deviceToken, e.g., USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT|c9a632...
+      sendUsersNearest();
+      deviceTokenConnect(message_content /* deviceToken */);
+      break;
+
       case MESSAGES_NEWEST_GET:
+      // TODO: Rm messages_length from reply.
+      // TODO: Rm messages_length from reply.
+      
       // Client messages, immediately after connecting, to get messages_newest.
       // Server replies with messages_newest, limited to 50.
       //
       // Client Message: message_type|messagesLength,                  e.g., MESSAGES_NEWEST_GET|5
-      // Server Reply:   message_type|messages_length|messages_newest, e.g., MESSAGES_NEWEST_GET|7|["978307200.0|Hi", "978307201.0|Hey"]
+      // Server Reply:   message_type|messages_length|messages_newest, e.g., MESSAGES_NEWEST_GET|7|["978307200.0|Hi","978307201.0|Hey"]
       //   - If Empty:   message_type,                                 i.e., MESSAGES_NEWEST_GET
       //
       // messagesLength:  client's last received messages_length or 0, incremented every time client sends/receives a message
       // messages_length: server's 'messages' list length
       // messages_newest: array of strings with format: "sent_timestamp|messageText" (See MESSAGE_TEXT_SEND)
       sendMessagesNewest(message_content /* messagesLength */);
+      break;
+
+      case MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT:
+      // Same as MESSAGES_NEWEST_GET. Add connect device_token.
+      //
+      // Client Message: message_type|messagesLength|deviceToken, e.g., MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT|5|c9a632...
+
+      // Parse out arguments from message_content.
+      index_of_next_pipe = message_content.indexOf('|');
+      var messagesLength = message_content.substring(0, index_of_next_pipe),
+          deviceToken    = message_content.substring(index_of_next_pipe+1);
+
+      sendMessagesNewest(messagesLength);
+      deviceTokenConnect(deviceToken);
       break;
 
       case DEVICE_TOKEN_SAVE:
@@ -114,20 +177,6 @@ web_socket_server.on('connection', function(web_socket_connection) {
           });
         });
       });
-      break;
-
-      case MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT:
-      // This case is like MESSAGES_NEWEST_GET plus connecting the device token.
-      //
-      // Client Message: message_type|messagesLength|deviceToken, e.g., MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT|5|c9a632...
-
-      // Parse out arguments from message_content.
-      index_of_next_pipe = message_content.indexOf('|');
-      var messagesLength = message_content.substring(0, index_of_next_pipe),
-          deviceToken    = message_content.substring(index_of_next_pipe+1);
-
-      sendMessagesNewest(messagesLength);
-      deviceTokenConnect(deviceToken);
       break;
 
       case MESSAGE_TEXT_SEND:

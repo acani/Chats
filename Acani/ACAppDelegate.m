@@ -10,22 +10,26 @@
 #import "ACUser.h"
 
 // messageType
-#define MESSAGES_NEWEST_GET                          0
-#define DEVICE_TOKEN_CONNECT                         1
-#define DEVICE_TOKEN_SAVE                            2
-#define DEVICE_TOKEN_UPDATE                          3
-#define MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT 4
-#define MESSAGE_TEXT_SEND                            5
-#define MESSAGE_TEXT_RECEIVE                         6
+#define USERS_NEAREST_GET                            0
+#define USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT   1
+#define MESSAGES_NEWEST_GET                          2
+#define DEVICE_TOKEN_CONNECT                         3
+#define DEVICE_TOKEN_SAVE                            4
+#define DEVICE_TOKEN_UPDATE                          5
+#define MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT 6
+#define MESSAGE_TEXT_SEND                            7
+#define MESSAGE_TEXT_RECEIVE                         8
 
 // TODO: Find a better way to insert these strings into message compile-time.
-#define MESSAGES_NEWEST_GET_STRING                          @"0"
-#define DEVICE_TOKEN_CONNECT_STRING                         @"1"
-#define DEVICE_TOKEN_SAVE_STRING                            @"2"
-#define DEVICE_TOKEN_UPDATE_STRING                          @"3"
-#define MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING @"4"
-#define MESSAGE_TEXT_SEND_STRING                            @"5"
-#define MESSAGE_TEXT_RECEIVE_STRING                         @"6"
+#define USERS_NEAREST_GET_STRING                            @"0"
+#define USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT_STRING   @"1"
+#define MESSAGES_NEWEST_GET_STRING                          @"2"
+#define DEVICE_TOKEN_CONNECT_STRING                         @"3"
+#define DEVICE_TOKEN_SAVE_STRING                            @"4"
+#define DEVICE_TOKEN_UPDATE_STRING                          @"5"
+#define MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING @"6"
+#define MESSAGE_TEXT_SEND_STRING                            @"7"
+#define MESSAGE_TEXT_RECEIVE_STRING                         @"8"
 
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
@@ -225,14 +229,27 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
 //    NSLog(@"webSocketDidOpen: %@", webSocket);
 
     NSData *deviceToken = [[NSUserDefaults standardUserDefaults] dataForKey:ACDeviceTokenKey];
-    if (deviceToken) {
-        // MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT:
-        // messageType|messagesLength|deviceToken, e.g., MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT|5|c9a632...
-        [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING"|%u|%@", [_conversation.messagesLength unsignedIntegerValue], ACHexadecimalStringWithData(deviceToken)]];
+    UIViewController *topViewController = NAVIGATION_CONTROLLER().topViewController;
+    if ([topViewController isMemberOfClass:[ACMessagesViewController class]]) {
+        if (deviceToken) {
+            // MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT:
+            // messageType|messagesLength|deviceToken, e.g., MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT|5|c9a632...
+            [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING"|%u|%@", [_conversation.messagesLength unsignedIntegerValue], ACHexadecimalStringWithData(deviceToken)]];
+        } else {
+            // MESSAGES_NEWEST_GET:
+            // messageType|messagesLength,             e.g., MESSAGES_NEWEST_GET|5
+            [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_STRING"|%u", [_conversation.messagesLength unsignedIntegerValue]]];
+        }
     } else {
-        // MESSAGES_NEWEST_GET:
-        // messageType|messagesLength,             e.g., MESSAGES_NEWEST_GET|5
-        [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_STRING"|%u", [_conversation.messagesLength unsignedIntegerValue]]];
+        if (deviceToken) {
+            // USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT:
+            // messageType|deviceToken,                e.g., USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT|c9a632...
+            [_webSocket send:[NSString stringWithFormat:USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT_STRING"|%@", ACHexadecimalStringWithData(deviceToken)]];
+        } else {
+            // USERS_NEAREST_GET:
+            // messageType,                            e.g., USERS_NEAREST_GET
+            [_webSocket send:USERS_NEAREST_GET_STRING];
+        }
     }
 }
 
@@ -261,6 +278,22 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
 
     NSUInteger messagesCount;
     switch (messageType) {
+        case USERS_NEAREST_GET:
+            // messageType|usersNearest, e.g., USERS_NEAREST_GET|["c9a632...","473aba..."]
+            // messageType|[],           i.e., USERS_NEAREST_GET|[] (empty)
+            AppSetNetworkActivityIndicatorVisible(NO);
+
+        {
+            NSArray *usersNearest = [NSJSONSerialization JSONObjectWithData:[messageContent dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
+            // TODO: Only add new users (no duplicates).
+            for (NSString *userString in usersNearest) {
+                ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
+                user.userID = userString;
+            }
+        }
+            MOCSave(_managedObjectContext);
+            return;
+
         case MESSAGES_NEWEST_GET:
             // messageType|messagesLength|messagesNewestPipedStrings, e.g., MESSAGES_NEWEST_GET|7|["978307200.0|Hi", "978307201.0|Hey"]
             // messageType,                                     i.e., MESSAGES_NEWEST_GET (empty)

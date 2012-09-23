@@ -37,9 +37,10 @@
         <userInfo/>
     </entity>
     <entity name="ACUser" representedClassName="ACUser">
-        <attribute name="name" attributeType="String" minValueString="1">
+        <attribute name="name" optional="YES" attributeType="String" minValueString="1">
             <userInfo/>
         </attribute>
+        <attribute name="userID" attributeType="String" minValueString="1" indexed="YES" syncable="YES"/>
         <relationship name="conversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ACConversation" inverseName="users" inverseEntity="ACConversation">
             <userInfo/>
         </relationship>
@@ -48,6 +49,6 @@
     <elements>
         <element name="ACConversation" positionX="0" positionY="0" width="128" height="150"/>
         <element name="ACMessage" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="ACUser" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="ACUser" positionX="0" positionY="0" width="128" height="90"/>
     </elements>
 </model>

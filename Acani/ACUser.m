@@ -4,6 +4,7 @@
 @implementation ACUser
 
 @dynamic name;
+@dynamic userID;
 @dynamic conversations;
 
 @end
