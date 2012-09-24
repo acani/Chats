@@ -21,15 +21,15 @@
 #define MESSAGE_TEXT_RECEIVE                         8
 
 // TODO: Find a better way to insert these strings into message compile-time.
-#define USERS_NEAREST_GET_STRING                            @"0"
-#define USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT_STRING   @"1"
-#define MESSAGES_NEWEST_GET_STRING                          @"2"
-#define DEVICE_TOKEN_CONNECT_STRING                         @"3"
-#define DEVICE_TOKEN_SAVE_STRING                            @"4"
-#define DEVICE_TOKEN_UPDATE_STRING                          @"5"
-#define MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING @"6"
-#define MESSAGE_TEXT_SEND_STRING                            @"7"
-#define MESSAGE_TEXT_RECEIVE_STRING                         @"8"
+#define USERS_NEAREST_GET_STRING                            @"[0"
+#define USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT_STRING   @"[1"
+#define MESSAGES_NEWEST_GET_STRING                          @"[2"
+#define DEVICE_TOKEN_CONNECT_STRING                         @"[3"
+#define DEVICE_TOKEN_SAVE_STRING                            @"[4"
+#define DEVICE_TOKEN_UPDATE_STRING                          @"[5"
+#define MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING @"[6"
+#define MESSAGE_TEXT_SEND_STRING                            @"[7"
+#define MESSAGE_TEXT_RECEIVE_STRING                         @"[8"
 
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
@@ -171,12 +171,12 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
 
     if (!deviceToken) {
         // DEVICE_TOKEN_SAVE:
-        // messageType|newDeviceToken, e.g., DEVICE_TOKEN_SAVE|c9a632...
-        [_webSocket send:[NSString stringWithFormat:DEVICE_TOKEN_SAVE_STRING"|%@", ACHexadecimalStringWithData(newDeviceToken)]];
+        // messageType,newDeviceToken, e.g., DEVICE_TOKEN_SAVE,"c9a632..."]
+        [_webSocket send:[NSString stringWithFormat:DEVICE_TOKEN_SAVE_STRING",\"%@\"]", ACHexadecimalStringWithData(newDeviceToken)]];
     } else {
         // DEVICE_TOKEN_UPDATE:
-        // messageType|deviceToken|newDeviceToken, e.g., DEVICE_TOKEN_UPDATE|c9a632...|473aba...
-        [_webSocket send:[NSString stringWithFormat:DEVICE_TOKEN_UPDATE_STRING"|%@|%@", ACHexadecimalStringWithData(deviceToken), ACHexadecimalStringWithData(newDeviceToken)]];
+        // messageType,deviceToken,newDeviceToken, e.g., DEVICE_TOKEN_UPDATE,c9a632...,473aba...
+        [_webSocket send:[NSString stringWithFormat:DEVICE_TOKEN_UPDATE_STRING",\"%@\",\"%@\"]", ACHexadecimalStringWithData(deviceToken), ACHexadecimalStringWithData(newDeviceToken)]];
     }
 }
 
@@ -206,19 +206,18 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
     AppSetNetworkActivityIndicatorVisible(YES);
 }
 
-// messagePipedString: "messageSentTimeIntervalSince1970|messageText", e.g., @"978307200.0|Hi"
-- (void)addMessageWithPipedString:(NSString *)messagePipedString {
+// messageArray: @[sent_timestamp,messageText], e.g., @[978307200.0,@"Hi"]
+- (void)addMessageWithArray:(NSArray *)messageArray {
     ACMessage *message = [NSEntityDescription insertNewObjectForEntityForName:@"ACMessage" inManagedObjectContext:_managedObjectContext];
-    NSUInteger indexOfNextPipe = [messagePipedString rangeOfString:@"|" options:NSLiteralSearch].location;
-    _conversation.lastMessageSentDate = message.sentDate = [NSDate dateWithTimeIntervalSince1970:[[messagePipedString substringToIndex:indexOfNextPipe] doubleValue]];
-    _conversation.lastMessageText = message.text = [messagePipedString substringFromIndex:indexOfNextPipe+1];
+    _conversation.lastMessageSentDate = message.sentDate = [NSDate dateWithTimeIntervalSince1970:[messageArray[0] /* sent_timestamp */ doubleValue]];
+    _conversation.lastMessageText = message.text = messageArray[1] /* messageText */;
     [_conversation addMessagesObject:message];
 }
 
 - (void)sendMessage:(ACMessage *)message {
     // MESSAGE_TEXT_SEND:
-    // messageType|messagesSendingKey|messageText, e.g., MESSAGE_TEXT_SEND|0|Hi
-    [_webSocket send:[NSString stringWithFormat:MESSAGE_TEXT_SEND_STRING"|%u|%@", [_messagesSendingDictionaryPrimaryKey unsignedIntegerValue], message.text]];
+    // [messageType,messagesSendingKey,messageText], e.g., [MESSAGE_TEXT_SEND,0,"Hi"]
+    [_webSocket send:[NSString stringWithFormat:MESSAGE_TEXT_SEND_STRING",%u,\"%@\"]", [_messagesSendingDictionaryPrimaryKey unsignedIntegerValue], [message.text stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange(0, [message.text length])]]];
     [_messagesSendingDictionary setObject:message forKey:_messagesSendingDictionaryPrimaryKey];
     _messagesSendingDictionaryPrimaryKey = @([_messagesSendingDictionaryPrimaryKey unsignedIntegerValue]+1);
 }
@@ -233,22 +232,22 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
     if ([topViewController isMemberOfClass:[ACMessagesViewController class]]) {
         if (deviceToken) {
             // MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT:
-            // messageType|messagesLength|deviceToken, e.g., MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT|5|c9a632...
-            [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING"|%u|%@", [_conversation.messagesLength unsignedIntegerValue], ACHexadecimalStringWithData(deviceToken)]];
+            // [messageType,messagesLength,deviceToken], e.g., [MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT,5,"c9a632..."]
+            [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING",%u,\"%@\"]", [_conversation.messagesLength unsignedIntegerValue], ACHexadecimalStringWithData(deviceToken)]];
         } else {
             // MESSAGES_NEWEST_GET:
-            // messageType|messagesLength,             e.g., MESSAGES_NEWEST_GET|5
-            [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_STRING"|%u", [_conversation.messagesLength unsignedIntegerValue]]];
+            // [messageType,messagesLength],             e.g., [MESSAGES_NEWEST_GET,5]
+            [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_STRING",%u]", [_conversation.messagesLength unsignedIntegerValue]]];
         }
     } else {
         if (deviceToken) {
             // USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT:
-            // messageType|deviceToken,                e.g., USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT|c9a632...
-            [_webSocket send:[NSString stringWithFormat:USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT_STRING"|%@", ACHexadecimalStringWithData(deviceToken)]];
+            // [messageType,deviceToken],                e.g., [USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT,"c9a632..."]
+            [_webSocket send:[NSString stringWithFormat:USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT_STRING",\"%@\"]", ACHexadecimalStringWithData(deviceToken)]];
         } else {
             // USERS_NEAREST_GET:
             // messageType,                            e.g., USERS_NEAREST_GET
-            [_webSocket send:USERS_NEAREST_GET_STRING];
+            [_webSocket send:USERS_NEAREST_GET_STRING"]"];
         }
     }
 }
@@ -264,29 +263,16 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
 //    NSLog(@"Received \"%@\"", message);
 
-    // Parse out messageType & messageContent from message.
-    NSUInteger indexOfNextPipe = [message rangeOfString:@"|" options:NSLiteralSearch].location;
-    NSInteger  messageType;
-    NSString  *messageContent;
-    if (indexOfNextPipe == NSNotFound) {
-        messageType    = [message integerValue];
-        messageContent = nil;
-    } else {
-        messageType    = [[message substringToIndex:indexOfNextPipe] integerValue];
-        messageContent = [message substringFromIndex:indexOfNextPipe+1];
-    }
-
     NSUInteger messagesCount;
-    switch (messageType) {
+    NSArray *messageArray = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
+    switch ([message[0] /* messageType */ integerValue]) {
         case USERS_NEAREST_GET:
-            // messageType|usersNearest, e.g., USERS_NEAREST_GET|["c9a632...","473aba..."]
-            // messageType|[],           i.e., USERS_NEAREST_GET|[] (empty)
+            // [messageType,usersNearest], e.g., [USERS_NEAREST_GET,["c9a632...","473aba..."]]
             AppSetNetworkActivityIndicatorVisible(NO);
 
         {
-            NSArray *usersNearest = [NSJSONSerialization JSONObjectWithData:[messageContent dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
             // TODO: Only add new users (no duplicates).
-            for (NSString *userString in usersNearest) {
+            for (NSString *userString in messageArray[1] /* usersNearest */) {
                 ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
                 user.userID = userString;
             }
@@ -295,30 +281,28 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
             return;
 
         case MESSAGES_NEWEST_GET:
-            // messageType|messagesLength|messagesNewestPipedStrings, e.g., MESSAGES_NEWEST_GET|7|["978307200.0|Hi", "978307201.0|Hey"]
-            // messageType,                                     i.e., MESSAGES_NEWEST_GET (empty)
+            // [messageType,messagesLength,messageArraysNewest], e.g., [MESSAGES_NEWEST_GET,7,[[978307200.0,"Hi"], [978307201.0,"Hey"]]]
             AppSetNetworkActivityIndicatorVisible(NO);
-            if (messageContent) {
-                indexOfNextPipe = [messageContent rangeOfString:@"|" options:NSLiteralSearch].location;
-                _conversation.messagesLength = @((NSUInteger)[[messageContent substringToIndex:indexOfNextPipe] integerValue]);
-                NSArray *messagesNewestPipedStrings = [NSJSONSerialization JSONObjectWithData:[[messageContent substringFromIndex:indexOfNextPipe+1] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
-                messagesCount = [messagesNewestPipedStrings count];
-                for (NSString *messagePipedString in messagesNewestPipedStrings) {
-                    [self addMessageWithPipedString:messagePipedString];
+        {
+            NSArray *messageArraysNewest = messageArray[2];
+            messagesCount = [messageArraysNewest count];
+            if (messagesCount) {
+                _conversation.messagesLength = @([_conversation.messagesLength unsignedIntegerValue]+messagesCount);
+                for (NSArray *messageArray in messageArraysNewest) {
+                    [self addMessageWithArray:messageArray];
                 }
             } else {
                 return;
             }
-            break;
+        } break;
 
         case MESSAGE_TEXT_SEND:
-            // messageType|messagesSendingKey|messageSentTimeIntervalSince1970, e.g., MESSAGE_TEXT_SEND|0|978307200.0
+            // [messageType,messagesSendingKey,sent_timestamp], e.g., [MESSAGE_TEXT_SEND,0,978307200.0]
             AudioServicesPlaySystemSound(_messageSentSystemSoundID);
             _conversation.messagesLength = @([_conversation.messagesLength unsignedIntegerValue]+((NSUInteger)1));
-            indexOfNextPipe = [messageContent rangeOfString:@"|" options:NSLiteralSearch].location;
         {
-            NSNumber *messagesSendingKey = @((NSUInteger)[[messageContent substringToIndex:indexOfNextPipe] integerValue]);
-            ((ACMessage *)_messagesSendingDictionary[messagesSendingKey]).sentDate = [NSDate dateWithTimeIntervalSince1970:[[messageContent substringFromIndex:indexOfNextPipe+1] doubleValue]];
+            NSNumber *messagesSendingKey = messageArray[1];
+            ((ACMessage *)_messagesSendingDictionary[messagesSendingKey]).sentDate = [NSDate dateWithTimeIntervalSince1970:[messageArray[2] doubleValue]];
             [_messagesSendingDictionary removeObjectForKey:messagesSendingKey];
         }
             if (![_messagesSendingDictionary count]) {
@@ -328,9 +312,9 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
             return;
 
         case MESSAGE_TEXT_RECEIVE:
-            // messageType|messageSentTimeIntervalSince1970|messageText, e.g., MESSAGE_TEXT_RECEIVE|978307200.0|Hi
+            // [messageType,[sent_timestamp,messageText]], e.g., [MESSAGE_TEXT_RECEIVE,[978307200.0,"Hi"]]
             messagesCount = 1;
-            [self addMessageWithPipedString:messageContent];
+            [self addMessageWithArray:messageArray[1]];
             break;
     }
 

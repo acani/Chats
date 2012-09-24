@@ -48,7 +48,6 @@ Acani:
 			- Handle Push Notifications.
 
 	Server:
-		- Use arrays, not piped strings.
 		- Condense _AND_DEVICE_TOKEN_CONNECT into one.
 		- Make ACUser subclass of NSObject.
 		- Create a server that works with Apple Push Notification Service.

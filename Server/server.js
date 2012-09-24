@@ -40,7 +40,7 @@ web_socket_server.on('connection', function(web_socket_connection) {
     function sendUsersNearest() {
       // TODO: Sort by nearest (MongoDB).
       // TODO: Limit to 50 (sorted set).
-      redis_client.smembers('deviceTokens', deviceToken, function(error, users_nearest) {
+      redis_client.smembers('deviceTokens', function(error, users_nearest) {
         if (error) throw error;
         if (device_token) {
           var device_token_index = users_nearest.indexOf(device_token);
@@ -50,7 +50,7 @@ web_socket_server.on('connection', function(web_socket_connection) {
             users_nearest.splice(device_token_index, 1); // removes me
           }
         }
-        web_socket_connection.send(USERS_NEAREST_GET+'|'+JSON.stringify(users_nearest));
+        web_socket_connection.send('['+USERS_NEAREST_GET+','+JSON.stringify(users_nearest+']'));
       });
     }
 
@@ -62,11 +62,11 @@ web_socket_server.on('connection', function(web_socket_connection) {
           redis_client.lrange('messages', (messages_new_length > 50 ? messages_length-50 : messagesLength), messages_length-1, function(error2, messages_newest) {
             if (error2) throw error2;
             if (messages_newest) {
-              web_socket_connection.send(MESSAGES_NEWEST_GET+'|'+messages_length+'|'+JSON.stringify(messages_newest));
+              web_socket_connection.send('['+MESSAGES_NEWEST_GET+','+messages_length+','+JSON.stringify(newest_messages.map(JSON.parse))+"]");
             }
           });
         } else {
-          web_socket_connection.send(MESSAGES_NEWEST_GET.toString());
+          web_socket_connection.send('['+MESSAGES_NEWEST_GET+'0,[]]');
         }
       });
     };
@@ -78,26 +78,16 @@ web_socket_server.on('connection', function(web_socket_connection) {
       });
     };
 
-    // Parse out message_type & message_content from message.
-    var index_of_next_pipe = message.indexOf('|');
-    var message_type, message_content;
-    if (index_of_next_pipe === -1) {
-      message_type    = parseInt(message);
-      message_content = message;
-    } else {
-      message_type    = parseInt(message.substring(0, index_of_next_pipe)),
-      message_content = message.substring(index_of_next_pipe+1);
-    }
-
-    switch (message_type) {
+    var message_array = JSON.parse(message); // TODO: Rescue and return error.
+    switch (message_array[0]) { // message_type
 
       case USERS_NEAREST_GET:
       // Client messages, immediately after connecting, to get users_nearest.
       // Server replies with users_nearest, limited to 50.
       //
-      // Client Message: message_type,               e.g., USERS_NEAREST_GET
-      // Server Reply:   message_type|users_nearest, e.g., USERS_NEAREST_GET|["c9a632...","473aba..."]
-      //   - If Empty:   message_type|[]             i.e., USERS_NEAREST_GET|[]
+      // Client Message: [message_type],               e.g., [USERS_NEAREST_GET]
+      // Server Reply:   [message_type,users_nearest], e.g., [USERS_NEAREST_GET,["c9a632...","473aba..."]]
+      //   - If Empty:   [message_type,[]]             i.e., [USERS_NEAREST_GET,[]]
       //
       // users_nearest: array of deviceTokens (for now)
       sendUsersNearest();
@@ -106,69 +96,62 @@ web_socket_server.on('connection', function(web_socket_connection) {
       case USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT:
       // Same as USERS_NEAREST_GET. Add connect device_token.
       //
-      // Client Message: message_type|deviceToken, e.g., USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT|c9a632...
+      // Client Message: [message_type,deviceToken], e.g., [USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT,"c9a632..."]
       sendUsersNearest();
-      deviceTokenConnect(message_content /* deviceToken */);
+      deviceTokenConnect(message_array[1] /* deviceToken */);
       break;
 
       case MESSAGES_NEWEST_GET:
       // TODO: Rm messages_length from reply.
       // TODO: Rm messages_length from reply.
-      
+
       // Client messages, immediately after connecting, to get messages_newest.
       // Server replies with messages_newest, limited to 50.
       //
-      // Client Message: message_type|messagesLength,                  e.g., MESSAGES_NEWEST_GET|5
-      // Server Reply:   message_type|messages_length|messages_newest, e.g., MESSAGES_NEWEST_GET|7|["978307200.0|Hi","978307201.0|Hey"]
-      //   - If Empty:   message_type,                                 i.e., MESSAGES_NEWEST_GET
+      // Client Message: [message_type,messagesLength],                  e.g., [MESSAGES_NEWEST_GET,5]
+      // Server Reply:   [message_type,messages_length,messages_newest], e.g., [MESSAGES_NEWEST_GET,7,[[978307200.0,"Hi"],[978307201.0,"Hey"]]]
+      //   - If Empty:   [message_type],                                 i.e., [MESSAGES_NEWEST_GET,0,[]]
       //
       // messagesLength:  client's last received messages_length or 0, incremented every time client sends/receives a message
       // messages_length: server's 'messages' list length
-      // messages_newest: array of strings with format: "sent_timestamp|messageText" (See MESSAGE_TEXT_SEND)
-      sendMessagesNewest(message_content /* messagesLength */);
+      // messages_newest: array of sent_messages (See MESSAGE_TEXT_SEND)
+      sendMessagesNewest(message_array[1] /* messagesLength */);
       break;
 
       case MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT:
       // Same as MESSAGES_NEWEST_GET. Add connect device_token.
       //
-      // Client Message: message_type|messagesLength|deviceToken, e.g., MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT|5|c9a632...
-
-      // Parse out arguments from message_content.
-      index_of_next_pipe = message_content.indexOf('|');
-      var messagesLength = message_content.substring(0, index_of_next_pipe),
-          deviceToken    = message_content.substring(index_of_next_pipe+1);
-
-      sendMessagesNewest(messagesLength);
-      deviceTokenConnect(deviceToken);
+      // Client Message: [message_type,messagesLength,deviceToken], e.g., [MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT,5,"c9a632..."]
+      //
+      // deviceToken: see DEVICE_TOKEN_SAVE
+      sendMessagesNewest(message_array[1] /* messagesLength */);
+      deviceTokenConnect(message_array[2] /* deviceToken */);
       break;
 
       case DEVICE_TOKEN_SAVE:
       // Client sends this message to save its newDeviceToken.
       //
-      // Client Message: message_type|newDeviceToken, e.g., DEVICE_TOKEN_SAVE|c9a632...
+      // Client Message: [message_type,newDeviceToken], e.g., [DEVICE_TOKEN_SAVE,"c9a632..."]
       //
       // deviceToken: used with Apple Push Notification Service (APNs)
       redis_client.sadd('deviceTokens', message_content, function(error, reply) {
         if (error) throw error;
-        deviceTokenConnect(message_content);
+        deviceTokenConnect(message_array[1] /* deviceToken */);
       });
       break;
 
       case DEVICE_TOKEN_UPDATE:
       // Client sends this message to update its deviceToken.
       //
-      // Client Message:  message_type|deviceToken|newDeviceToken, e.g., DEVICE_TOKEN_UPDATE|c9a632...|473aba...
+      // Client Message:  [message_type,deviceToken,newDeviceToken], e.g., [DEVICE_TOKEN_UPDATE,"c9a632...","473aba..."]
       //
       // deviceToken: see DEVICE_TOKEN_SAVE
 
-      // Parse out arguments from message_content.
-      index_of_next_pipe = message_content.indexOf('|');
-      var deviceToken    = message_content.substring(0, index_of_next_pipe);
-
       // TODO: Use Reids transactions here.
+      var deviceToken = message_array[1];
       redis_client.srem('deviceTokens', deviceToken, function(error, reply) {
         if (error) throw error;
-        var newDeviceToken = message_content.substring(index_of_next_pipe+1);
+        var newDeviceToken = message_array[2];
         redis_client.sadd('deviceTokens', newDeviceToken, function(error, reply) {
           if (error) throw error;
           redis_client.srem('deviceTokensConnected', deviceToken, function(error, reply) {
@@ -184,33 +167,29 @@ web_socket_server.on('connection', function(web_socket_connection) {
       // Server replies with confirmation and message sent_timestamp.
       // Server broadcasts message to all other web_socket_connections.
       //
-      // Client Message:   message_type|messagesSendingKey|messageText,    e.g., MESSAGE_TEXT_SEND|0|Hi
-      // Server Reply:     message_type|messagesSendingKey|sent_timestamp, e.g., MESSAGE_TEXT_SEND|0|978307200.0
-      // Server Broadcast: message_type|sent_timestamp|messageText,        e.g., MESSAGE_TEXT_RECEIVE|978307200.0|Hi
+      // Client Message:   [message_type,messagesSendingKey,messageText],    e.g., [MESSAGE_TEXT_SEND,0,"Hi"]
+      // Server Reply:     [message_type,messagesSendingKey,sent_timestamp], e.g., [MESSAGE_TEXT_SEND,0,978307200.0]
+      // Server Broadcast: [message_type,sent_message],                      e.g., [MESSAGE_TEXT_RECEIVE,[978307200.0,"Hi"]]
       //
       // messagesSendingKey: key of message in client's _messagesSendingDictionary, which allows sending multiple messages simultaneously
       // sent_timestamp:     server's time interval, in seconds (double), since 1970 on receipt of message
+      // sent_message:       [sent_timestamp,messageText]
 
-      // Parse out arguments from message_content.
-      index_of_next_pipe     = message_content.indexOf('|');
-      var messagesSendingKey = message_content.substring(0, index_of_next_pipe);
-      var messageText        = message_content.substring(index_of_next_pipe+1);
-
-      // Set sent_message to 'sent_timestamp|messageText'.
+      // Set sent_message to [sent_timestamp,messageText].
       var sent_timestamp = Date.now()/1000;
-      var sent_message = sent_timestamp+'|'+messageText;
+      var sent_message = JSON.stringify([sent_timestamp, message_array[2] /* messageText */ ]);
 
       // Save sent_message to Redis.
       redis_client.rpush('messages', sent_message, function(error, reply) {
         if (error) throw error;
 
         // Send sent_timestamp back to client.
-        web_socket_connection.send(MESSAGE_TEXT_SEND+'|'+messagesSendingKey+'|'+sent_timestamp);
+        web_socket_connection.send('['+MESSAGE_TEXT_SEND+','+message_array[1] /* messagesSendingKey */ +','+sent_timestamp+']');
 
         // Broadcast message to other web_socket_connections.
         for (var web_socket_connection_key in web_socket_connections) {
           if (web_socket_connection_key !== web_socket_connection_id) {
-            web_socket_connections[web_socket_connection_key].send(MESSAGE_TEXT_RECEIVE+'|'+sent_message); // TODO: Should we check for error?
+            web_socket_connections[web_socket_connection_key].send('['+MESSAGE_TEXT_RECEIVE+','+sent_message+']'); // TODO: Should we check for error?
           }
         }
 
