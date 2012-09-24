@@ -12,16 +12,13 @@ redis_client.auth(process.env.REDIS_AUTH, function(error) { if (error) throw err
 
 
 // Message Type
-// TODO: Condense _AND_DEVICE_TOKEN_CONNECT into one.
 var USERS_NEAREST_GET                            = 0,
-    USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT   = 1,
-    MESSAGES_NEWEST_GET                          = 2,
-    MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT = 3,
-    DEVICE_TOKEN_CONNECT                         = 4,
-    DEVICE_TOKEN_SAVE                            = 5,
-    DEVICE_TOKEN_UPDATE                          = 6,
-    MESSAGE_TEXT_SEND                            = 7,
-    MESSAGE_TEXT_RECEIVE                         = 8;
+    MESSAGES_NEWEST_GET                          = 1,
+    DEVICE_TOKEN_CONNECT                         = 2,
+    DEVICE_TOKEN_SAVE                            = 3,
+    DEVICE_TOKEN_UPDATE                          = 4,
+    MESSAGE_TEXT_SEND                            = 5,
+    MESSAGE_TEXT_RECEIVE                         = 6;
 
 
 // WebSocket Server
@@ -50,7 +47,7 @@ web_socket_server.on('connection', function(web_socket_connection) {
             users_nearest.splice(device_token_index, 1); // removes me
           }
         }
-        web_socket_connection.send('['+USERS_NEAREST_GET+','+JSON.stringify(users_nearest+']'));
+        web_socket_connection.send('['+USERS_NEAREST_GET+','+JSON.stringify(users_nearest)+']');
       });
     }
 
@@ -85,20 +82,15 @@ web_socket_server.on('connection', function(web_socket_connection) {
       // Client messages, immediately after connecting, to get users_nearest.
       // Server replies with users_nearest, limited to 50.
       //
-      // Client Message: [message_type],               e.g., [USERS_NEAREST_GET]
+      // Client Message: [message_type,deviceToken],   e.g., [USERS_NEAREST_GET,"c9a632..."]
       // Server Reply:   [message_type,users_nearest], e.g., [USERS_NEAREST_GET,["c9a632...","473aba..."]]
-      //   - If Empty:   [message_type,[]]             i.e., [USERS_NEAREST_GET,[]]
       //
+      // deviceToken:   see DEVICE_TOKEN_SAVE (optional)
       // users_nearest: array of deviceTokens (for now)
+      if (message_array.length === 2) {
+        deviceTokenConnect(message_array[1] /* deviceToken */);
+      }
       sendUsersNearest();
-      break;
-
-      case USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT:
-      // Same as USERS_NEAREST_GET. Add connect device_token.
-      //
-      // Client Message: [message_type,deviceToken], e.g., [USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT,"c9a632..."]
-      sendUsersNearest();
-      deviceTokenConnect(message_array[1] /* deviceToken */);
       break;
 
       case MESSAGES_NEWEST_GET:
@@ -108,24 +100,18 @@ web_socket_server.on('connection', function(web_socket_connection) {
       // Client messages, immediately after connecting, to get messages_newest.
       // Server replies with messages_newest, limited to 50.
       //
-      // Client Message: [message_type,messagesLength],                  e.g., [MESSAGES_NEWEST_GET,5]
+      // Client Message: [message_type,messagesLength,deviceToken],      e.g., [MESSAGES_NEWEST_GET,5,"c9a632..."]
       // Server Reply:   [message_type,messages_length,messages_newest], e.g., [MESSAGES_NEWEST_GET,7,[[978307200.0,"Hi"],[978307201.0,"Hey"]]]
       //   - If Empty:   [message_type],                                 i.e., [MESSAGES_NEWEST_GET,0,[]]
       //
+      // deviceToken:     see DEVICE_TOKEN_SAVE (optional)
       // messagesLength:  client's last received messages_length or 0, incremented every time client sends/receives a message
       // messages_length: server's 'messages' list length
       // messages_newest: array of sent_messages (See MESSAGE_TEXT_SEND)
+      if (message_array.length === 3) {
+        deviceTokenConnect(message_array[2] /* deviceToken */);
+      }
       sendMessagesNewest(message_array[1] /* messagesLength */);
-      break;
-
-      case MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT:
-      // Same as MESSAGES_NEWEST_GET. Add connect device_token.
-      //
-      // Client Message: [message_type,messagesLength,deviceToken], e.g., [MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT,5,"c9a632..."]
-      //
-      // deviceToken: see DEVICE_TOKEN_SAVE
-      sendMessagesNewest(message_array[1] /* messagesLength */);
-      deviceTokenConnect(message_array[2] /* deviceToken */);
       break;
 
       case DEVICE_TOKEN_SAVE:

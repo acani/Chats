@@ -11,25 +11,21 @@
 
 // messageType
 #define USERS_NEAREST_GET                            0
-#define USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT   1
-#define MESSAGES_NEWEST_GET                          2
-#define DEVICE_TOKEN_CONNECT                         3
-#define DEVICE_TOKEN_SAVE                            4
-#define DEVICE_TOKEN_UPDATE                          5
-#define MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT 6
-#define MESSAGE_TEXT_SEND                            7
-#define MESSAGE_TEXT_RECEIVE                         8
+#define MESSAGES_NEWEST_GET                          1
+#define DEVICE_TOKEN_CONNECT                         2
+#define DEVICE_TOKEN_SAVE                            3
+#define DEVICE_TOKEN_UPDATE                          4
+#define MESSAGE_TEXT_SEND                            5
+#define MESSAGE_TEXT_RECEIVE                         6
 
 // TODO: Find a better way to insert these strings into message compile-time.
 #define USERS_NEAREST_GET_STRING                            @"[0"
-#define USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT_STRING   @"[1"
-#define MESSAGES_NEWEST_GET_STRING                          @"[2"
-#define DEVICE_TOKEN_CONNECT_STRING                         @"[3"
-#define DEVICE_TOKEN_SAVE_STRING                            @"[4"
-#define DEVICE_TOKEN_UPDATE_STRING                          @"[5"
-#define MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING @"[6"
-#define MESSAGE_TEXT_SEND_STRING                            @"[7"
-#define MESSAGE_TEXT_RECEIVE_STRING                         @"[8"
+#define MESSAGES_NEWEST_GET_STRING                          @"[1"
+#define DEVICE_TOKEN_CONNECT_STRING                         @"[2"
+#define DEVICE_TOKEN_SAVE_STRING                            @"[3"
+#define DEVICE_TOKEN_UPDATE_STRING                          @"[4"
+#define MESSAGE_TEXT_SEND_STRING                            @"[5"
+#define MESSAGE_TEXT_RECEIVE_STRING                         @"[6"
 
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
@@ -230,23 +226,21 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
     NSData *deviceToken = [[NSUserDefaults standardUserDefaults] dataForKey:ACDeviceTokenKey];
     UIViewController *topViewController = NAVIGATION_CONTROLLER().topViewController;
     if ([topViewController isMemberOfClass:[ACMessagesViewController class]]) {
+        // MESSAGES_NEWEST_GET:
         if (deviceToken) {
-            // MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT:
-            // [messageType,messagesLength,deviceToken], e.g., [MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT,5,"c9a632..."]
-            [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_AND_DEVICE_TOKEN_CONNECT_STRING",%u,\"%@\"]", [_conversation.messagesLength unsignedIntegerValue], ACHexadecimalStringWithData(deviceToken)]];
+            // [messageType,messagesLength,deviceToken], e.g., [MESSAGES_NEWEST_GET,5,"c9a632..."]
+            [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_STRING",%u,\"%@\"]", [_conversation.messagesLength unsignedIntegerValue], ACHexadecimalStringWithData(deviceToken)]];
         } else {
-            // MESSAGES_NEWEST_GET:
             // [messageType,messagesLength],             e.g., [MESSAGES_NEWEST_GET,5]
             [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_STRING",%u]", [_conversation.messagesLength unsignedIntegerValue]]];
         }
     } else {
+        // USERS_NEAREST_GET:
         if (deviceToken) {
-            // USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT:
-            // [messageType,deviceToken],                e.g., [USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT,"c9a632..."]
-            [_webSocket send:[NSString stringWithFormat:USERS_NEAREST_GET_AND_DEVICE_TOKEN_CONNECT_STRING",\"%@\"]", ACHexadecimalStringWithData(deviceToken)]];
+            // [messageType,deviceToken],                e.g., [USERS_NEAREST_GET,"c9a632..."]
+            [_webSocket send:[NSString stringWithFormat:USERS_NEAREST_GET_STRING",\"%@\"]", ACHexadecimalStringWithData(deviceToken)]];
         } else {
-            // USERS_NEAREST_GET:
-            // messageType,                            e.g., USERS_NEAREST_GET
+            // [messageType],                            e.g., [USERS_NEAREST_GET]
             [_webSocket send:USERS_NEAREST_GET_STRING"]"];
         }
     }
