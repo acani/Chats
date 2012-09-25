@@ -218,7 +218,6 @@
     [fetchRequest setEntity:[NSEntityDescription entityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext]];
     [fetchRequest setFetchBatchSize:20];
     [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"lastMessageSentDate" ascending:YES]]];
-    [fetchRequest setRelationshipKeyPathsForPrefetching:@[@"recipients"]];
     _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:_managedObjectContext sectionNameKeyPath:nil cacheName:@"ACConversation"];
     _fetchedResultsController.delegate = self;
     FRCPerformFetch(_fetchedResultsController);
@@ -229,9 +228,7 @@
     [self.tableView beginUpdates];
 }
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath {
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     UITableView *tableView = self.tableView;
     switch(type) {
         case NSFetchedResultsChangeInsert:

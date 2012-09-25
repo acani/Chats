@@ -28,7 +28,7 @@
 #define MESSAGE_TEXT_LABEL_TAG               102
 
 #define MESSAGE_TEXT_SIZE_WITH_FONT(message, font) \
-[message.text sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
+[message.text sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:NSLineBreakByWordWrapping]
 
 #define UIKeyboardNotificationsObserve() \
 NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \
@@ -263,7 +263,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         messageSentDateLabel.tag = MESSAGE_SENT_DATE_LABEL_TAG;
         messageSentDateLabel.backgroundColor = tableView.backgroundColor;          // speeds scrolling
         messageSentDateLabel.textColor = [UIColor grayColor];
-        messageSentDateLabel.textAlignment = UITextAlignmentCenter;
+        messageSentDateLabel.textAlignment = NSTextAlignmentCenter;
         messageSentDateLabel.font = [UIFont boldSystemFontOfSize:SentDateFontSize];
         [cell.contentView addSubview:messageSentDateLabel];
 
@@ -278,7 +278,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
         messageTextLabel.tag = MESSAGE_TEXT_LABEL_TAG;
         messageTextLabel.backgroundColor = [UIColor clearColor];
         messageTextLabel.numberOfLines = 0;
-        messageTextLabel.lineBreakMode = UILineBreakModeWordWrap;
+        messageTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
         messageTextLabel.font = [UIFont systemFontOfSize:MessageFontSize];
         [cell.contentView addSubview:messageTextLabel];
     } else {

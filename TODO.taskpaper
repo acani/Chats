@@ -55,5 +55,6 @@ Acani:
 		- Study Messages app on the iPad
 
 	Miscellaneous:
+		- Add Default-568h@2x.png.
 		- Clean up README.md.
 		- Create Acani test project with new Xcode and apply differences.
