@@ -8,7 +8,7 @@
 #define UNREAD_DOT_IMAGE_VIEW_TAG              100
 #define LAST_MESSAGE_TEXT_LABEL_TAG            101
 #define LAST_MESSAGE_SENT_DATE_LABEL_TAG       102
-#define USERS_NAMES_LABEL_TAG                  103
+#define TITLE_LABEL_TAG                        103
 
 #define LAST_MESSAGE_TEXT_FONT_SIZE            14
 #define LAST_MESSAGE_SENT_DATE_FONT_SIZE       14
@@ -83,7 +83,7 @@
     self.title = NSLocalizedString(@"Messages", nil);
     ACMessagesViewController *messagesViewController = [[ACMessagesViewController alloc] initWithNibName:nil bundle:nil];
     ACConversation *conversation = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    messagesViewController.title = ((ACUser *)[conversation.users anyObject]).name;
+    messagesViewController.title = ([conversation.users count] == 1 ? conversation.title : NSLocalizedString(@"Group MMS", nil));
     messagesViewController.conversation = conversation;
     messagesViewController.managedObjectContext = _managedObjectContext;
     [self.navigationController pushViewController:messagesViewController animated:YES];
@@ -128,17 +128,17 @@
         lastMessageSentDateLabel.backgroundColor = tableView.backgroundColor; // speeds scrolling
         lastMessageSentDateLabel.textColor = [UIColor colorWithRed:52/255.0f green:111/255.0f blue:212/255.0f alpha:1];
         lastMessageSentDateLabel.highlightedTextColor = [UIColor whiteColor];
-        lastMessageSentDateLabel.textAlignment = UITextAlignmentRight;
+        lastMessageSentDateLabel.textAlignment = NSTextAlignmentRight;
         [cell.contentView addSubview:lastMessageSentDateLabel];
 
-        // Create usersNamesLabel.
-        UILabel *usersNamesLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        usersNamesLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        usersNamesLabel.tag = USERS_NAMES_LABEL_TAG;
-        usersNamesLabel.backgroundColor = tableView.backgroundColor;          // speeds scrolling
-        usersNamesLabel.highlightedTextColor = [UIColor whiteColor];
-        usersNamesLabel.font = [UIFont boldSystemFontOfSize:USERS_NAMES_FONT_SIZE];
-        [cell.contentView addSubview:usersNamesLabel];
+        // Create titleLabel.
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        titleLabel.tag = TITLE_LABEL_TAG;
+        titleLabel.backgroundColor = tableView.backgroundColor;               // speeds scrolling
+        titleLabel.highlightedTextColor = [UIColor whiteColor];
+        titleLabel.font = [UIFont boldSystemFontOfSize:USERS_NAMES_FONT_SIZE];
+        [cell.contentView addSubview:titleLabel];
     }
     [self tableView:tableView configureCell:cell withConversation:[self.fetchedResultsController objectAtIndexPath:indexPath]];
     return cell;
@@ -194,10 +194,10 @@
     CGFloat lastMessageSentDateLabelWidth = [lastMessageSentDateLabel.text sizeWithFont:lastMessageSentDateLabel.font].width;
     lastMessageSentDateLabel.frame = CGRectMake(31+lastMessageTextLabelWidth-lastMessageSentDateLabelWidth, (conversation.lastMessageText ? 5 : 19), lastMessageSentDateLabelWidth, LAST_MESSAGE_SENT_DATE_FONT_SIZE+4);
 
-    // Configure usersNamesLabel.
-    UILabel *usersNamesLabel = (UILabel *)[cell.contentView viewWithTag:USERS_NAMES_LABEL_TAG];
-    usersNamesLabel.frame = CGRectMake(31, (conversation.lastMessageText ? 2 : 18), lastMessageTextLabelWidth-4-lastMessageSentDateLabelWidth, 20);
-    usersNamesLabel.text = ((ACUser *)[conversation.users anyObject]).name;
+    // Configure titleLabel.
+    UILabel *titleLabel = (UILabel *)[cell.contentView viewWithTag:TITLE_LABEL_TAG];
+    titleLabel.frame = CGRectMake(31, (conversation.lastMessageText ? 2 : 18), lastMessageTextLabelWidth-4-lastMessageSentDateLabelWidth, 20);
+    titleLabel.text = conversation.title;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {

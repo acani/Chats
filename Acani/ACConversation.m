@@ -9,6 +9,7 @@
 @dynamic lastMessageText;
 @dynamic unreadMessagesCount;
 @dynamic messagesLength;
+@dynamic title;
 @dynamic messages;
 @dynamic users;
 

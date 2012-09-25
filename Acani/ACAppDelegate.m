@@ -105,7 +105,7 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
         _conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
         _conversation.lastMessageSentDate = [NSDate date];
         ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
-        user.name = @"Acani";
+        _conversation.title = user.name = @"Acani";
         [_conversation addUsersObject:user];
     }
 
