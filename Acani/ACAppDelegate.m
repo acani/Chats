@@ -269,6 +269,7 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
             for (NSString *userString in messageArray[1] /* usersNearest */) {
                 ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
                 user.userID = userString;
+                user.name = userString;
             }
         }
             MOCSave(_managedObjectContext);

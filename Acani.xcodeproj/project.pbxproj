@@ -24,6 +24,7 @@
 		D209008115EE5646001FED65 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D209007215EE5646001FED65 /* SendButtonHighlighted@2x.png */; };
 		D215488B16034E150043F9E7 /* UnreadBulletHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = D215488916034E150043F9E7 /* UnreadBulletHighlighted.png */; };
 		D215488C16034E150043F9E7 /* UnreadBulletHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D215488A16034E150043F9E7 /* UnreadBulletHighlighted@2x.png */; };
+		D222074F1611E9EC008DD17A /* ACUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D222074E1611E9EC008DD17A /* ACUserViewController.m */; };
 		D224A9BC160B4EC100D0CC30 /* ACUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D224A9BB160B4EC100D0CC30 /* ACUsersViewController.m */; };
 		D224A9EA160B780000D0CC30 /* ACUserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D224A9E9160B780000D0CC30 /* ACUserCell.m */; };
 		D237E8C81600AFC600AC42CD /* MessageReceived.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D237E8C71600AFC600AC42CD /* MessageReceived.aiff */; };
@@ -123,6 +124,8 @@
 		D209007215EE5646001FED65 /* SendButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SendButtonHighlighted@2x.png"; sourceTree = "<group>"; };
 		D215488916034E150043F9E7 /* UnreadBulletHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UnreadBulletHighlighted.png; sourceTree = "<group>"; };
 		D215488A16034E150043F9E7 /* UnreadBulletHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UnreadBulletHighlighted@2x.png"; sourceTree = "<group>"; };
+		D222074D1611E9EC008DD17A /* ACUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACUserViewController.h; sourceTree = "<group>"; };
+		D222074E1611E9EC008DD17A /* ACUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACUserViewController.m; sourceTree = "<group>"; };
 		D224A9BA160B4EC100D0CC30 /* ACUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACUsersViewController.h; sourceTree = "<group>"; };
 		D224A9BB160B4EC100D0CC30 /* ACUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACUsersViewController.m; sourceTree = "<group>"; };
 		D224A9E8160B780000D0CC30 /* ACUserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACUserCell.h; sourceTree = "<group>"; };
@@ -311,6 +314,8 @@
 				D27BB01315EAD3870084AECA /* ACMessagesViewController.m */,
 				D224A9BA160B4EC100D0CC30 /* ACUsersViewController.h */,
 				D224A9BB160B4EC100D0CC30 /* ACUsersViewController.m */,
+				D222074D1611E9EC008DD17A /* ACUserViewController.h */,
+				D222074E1611E9EC008DD17A /* ACUserViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -600,6 +605,7 @@
 				D224A9BC160B4EC100D0CC30 /* ACUsersViewController.m in Sources */,
 				D224A9EA160B780000D0CC30 /* ACUserCell.m in Sources */,
 				D29F90AE160CD2DB008666A3 /* ACUser.m in Sources */,
+				D222074F1611E9EC008DD17A /* ACUserViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,5 +1,6 @@
 #import "AcaniDefines.h"
 #import "ACUsersViewController.h"
+#import "ACUserViewController.h"
 #import "ACConversationsViewController.h"
 #import "ACUserCell.h"
 
@@ -32,6 +33,12 @@ static NSString *CellIdentifier = @"ACUserCell";
 
 #pragma mark - UICollectionViewDelegate
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    ACUserViewController *userViewController = [[ACUserViewController alloc] initWithNibName:nil bundle:nil];
+    userViewController.user = [_fetchedResultsController objectAtIndexPath:indexPath];
+    [self.navigationController pushViewController:userViewController animated:YES];
+}
+
 #pragma mark - UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
@@ -39,8 +46,9 @@ static NSString *CellIdentifier = @"ACUserCell";
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
-    cell.contentView.backgroundColor = [UIColor orangeColor];
+    ACUserCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+    cell.contentView.backgroundColor = [UIColor blueColor];
+    cell.user = [_fetchedResultsController objectAtIndexPath:indexPath];
     return cell;
 }
 

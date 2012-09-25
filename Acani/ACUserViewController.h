@@ -2,7 +2,7 @@
 
 @class ACUser;
 
-@interface ACUserCell : UICollectionViewCell
+@interface ACUserViewController : UIViewController
 
 @property (strong, nonatomic) ACUser *user;
 
