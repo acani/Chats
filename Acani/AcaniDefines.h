@@ -5,6 +5,7 @@
 #pragma mark - Networking
 
 #define HOST @"wss://acani-chat.jit.su/"
+//#define HOST @"wss://192.168.0.4:5000/"
 //#define HOST @"ws://localhost:5000/"
 
 static NSUInteger _networkActivityIndicatorCount = 0;

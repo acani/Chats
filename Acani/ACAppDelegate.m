@@ -163,8 +163,12 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
     NSData *deviceToken = [standardUserDefaults dataForKey:ACDeviceTokenKey];
     if ([newDeviceToken isEqualToData:deviceToken]) return;
-    [standardUserDefaults setObject:newDeviceToken forKey:ACDeviceTokenKey];
 
+    // TODO: If _webSocket isnn't open, save/update deviceToken in webSocketDidOpen:.
+    // if (_webSocket.readyState != SR_OPEN) return;
+    assert(_webSocket.readyState == SR_OPEN);
+
+    [standardUserDefaults setObject:newDeviceToken forKey:ACDeviceTokenKey];
     if (!deviceToken) {
         // DEVICE_TOKEN_SAVE:
         // messageType,newDeviceToken, e.g., DEVICE_TOKEN_SAVE,"c9a632..."]
