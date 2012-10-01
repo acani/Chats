@@ -6,19 +6,43 @@ var WebSocketServer                    = require('ws').Server,
     apns_connection                    = new apns.Connection({cert: 'apns/development_cer.pem', key: 'apns/development_p12.pem', gateway: 'gateway.sandbox.push.apple.com'}),
     // apns_connection                    = new apns.Connection({cert: 'apns/production_cer.pem', key: 'apns/production_p12.pem'}),
     redis_client                       = require('redis').createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
+    // mongodb = require('mongodb'),
+    // mongo = new mongodb.Db(process.env.MONGO_NAME, new mongodb.Server(process.env.MONGO_HOST, process.env.MONGO_PORT, {}));
 
-// $ redis-cli -h <hostname> -p <port> -a <password>
-redis_client.auth(process.env.REDIS_AUTH, function(error) { if (error) throw error; });
+
+// $ redis-cli -h <host> -p <port> -a <pass>
+redis_client.auth(process.env.REDIS_PASS, function(error) { if (error) throw error; });
+
+// // $ mongo MONGO_HOST:MONGO_PORT/MONGO_NAME -u MONGO_USER -p MONGO_PASS
+// mongo.open(function (error, db_p) {
+//   if (error) throw error;
+//   mongo.authenticate(process.env.MONGO_USER, process.env.MONGO_PASS, function (error, reply) { if (error) throw error; });
+// });
+
+// Redis Keys
+//
+// User:
+//   Create (Sign Up):
+//     Get userID with deviceID:
+//       - device:<device_id> : <user_id>
+//     
+//   Activate (Log In):
+//     Set user.active to "1":
+//       - user:<user_id> : {"active": "1", "name": "Matt", "unread": "4"}
+//
+//   USERS_NEAREST_GET:
+//     - Sorted set: users:<user_id> : [[<user_id>, <distance>], ... ]
 
 
 // Message Type
-var USERS_NEAREST_GET                            = 0,
-    MESSAGES_NEWEST_GET                          = 1,
-    DEVICE_TOKEN_CONNECT                         = 2,
-    DEVICE_TOKEN_SAVE                            = 3,
-    DEVICE_TOKEN_UPDATE                          = 4,
-    MESSAGE_TEXT_SEND                            = 5,
-    MESSAGE_TEXT_RECEIVE                         = 6;
+var USER_SIGN_UP         = 0,
+    USER_LOG_IN          = 1,
+    USERS_NEAREST_GET    = 2,
+    MESSAGES_NEWEST_GET  = 3,
+    DEVICE_TOKEN_SAVE    = 4,
+    DEVICE_TOKEN_UPDATE  = 5,
+    MESSAGE_TEXT_SEND    = 6,
+    MESSAGE_TEXT_RECEIVE = 7;
 
 
 // WebSocket Server
@@ -31,22 +55,13 @@ web_socket_server.on('connection', function(web_socket_connection) {
 
   web_socket_connection.on('message', function(message) {
 
-    // console.log("message: " + message);
+    console.log("message: " + message);
 
     // Functions
     function sendUsersNearest() {
-      // TODO: Sort by nearest (MongoDB).
-      // TODO: Limit to 50 (sorted set).
-      redis_client.smembers('deviceTokens', function(error, users_nearest) {
+      // TODO: Sort by nearest, limited to 50 (sorted set).
+      redis_client.sort('users', 'BY', 'nosort', 'HGETALL', 'user:*', function(error, users_nearest) {
         if (error) throw error;
-        if (device_token) {
-          var device_token_index = users_nearest.indexOf(device_token);
-          if (device_token_index === -1) {
-            throw "Can't find device_token in deviceTokens"
-          } else {
-            users_nearest.splice(device_token_index, 1); // removes me
-          }
-        }
         web_socket_connection.send('['+USERS_NEAREST_GET+','+JSON.stringify(users_nearest)+']');
       });
     }
@@ -66,51 +81,96 @@ web_socket_server.on('connection', function(web_socket_connection) {
           web_socket_connection.send('['+MESSAGES_NEWEST_GET+'0,[]]');
         }
       });
-    };
+    }
 
     function deviceTokenConnect(deviceToken) {
       redis_client.sadd('deviceTokensConnected', deviceToken, function(error, reply) {
         if (error) throw error;
         device_token = deviceToken;
       });
-    };
+    }
 
+    function deviceTokenSaveThenConnect(deviceToken) {
+      redis_client.sadd('deviceTokens', deviceToken, function(error, reply) {
+        if (error) throw error;
+        deviceTokenConnect(deviceToken);
+      });
+    }
+    
+    function setUserActiveThenDeviceTokenSaveThenConnect(user_id, message_array) {
+      redis_client.hset('user:'+user_id, 'active', '1', function(error, reply) {
+        if (error) throw error;
+        if (message_array.length === 3) {
+          deviceTokenSaveThenConnect(message_array[2] /* deviceToken */);
+        }
+      });
+    }
+    
+
+    // Message Handling
     var message_array = JSON.parse(message); // TODO: Rescue and return error.
     switch (message_array[0]) { // message_type
+
+      case USER_SIGN_UP:
+      // Client messages immediately after connecting to sign up (create) a new user.
+      //
+      // Client Message: [message_type,deviceID,deviceToken], e.g., [USER_SIGN_UP,"25EC4F70-3D...","c9a632..."]
+      // Server Reply:   [message_type,user_id],              e.g., [USER_SIGN_UP,"1"]
+      //
+      // deviceID:    generated & stored by client
+      // deviceToken: see DEVICE_TOKEN_SAVE (optional)
+      // user_id:     generated by Redis INCR user.
+      
+      var device_key = 'device:'+message_array[1] /* deviceID */;
+      redis_client.get(device_key, function(error, user_id) {
+        if (error) throw error;
+        if (user_id) {
+          web_socket_connection.send('['+USER_SIGN_UP+',"'+user_id+'"]');
+          setUserActiveThenDeviceTokenSaveThenConnect(user_id, message_array);
+        } else {
+          redis_client.incr('user', function(error, user_id) {
+            if (error) throw error;
+            web_socket_connection.send('['+USER_SIGN_UP+',"'+user_id+'"]');
+            redis_client.sadd('users', user_id, function(error, reply) {
+              if (error) throw error;
+              redis_client.set(device_key, user_id, function(error, reply) {
+                if (error) throw error;
+                setUserActiveThenDeviceTokenSaveThenConnect(user_id, message_array);
+              });
+            });
+          });
+        }
+      });
+
+      case USER_LOG_IN:
+      // Client messages immediately after connecting to log in (activate) an existing user.
+      //
+      // Client Message: [message_type,userID,deviceToken],   e.g., [USERS_NEAREST_GET,"1","c9a632..."]
+      //
+      // deviceToken:   see DEVICE_TOKEN_SAVE (optional)
+      setUserActiveThenDeviceTokenSaveThenConnect(message_array[1] /* userID */, message_array);
 
       case USERS_NEAREST_GET:
       // Client messages, immediately after connecting, to get users_nearest.
       // Server replies with users_nearest, limited to 50.
       //
-      // Client Message: [message_type,deviceToken],   e.g., [USERS_NEAREST_GET,"c9a632..."]
+      // Client Message: [message_type],   e.g., [USERS_NEAREST_GET]
       // Server Reply:   [message_type,users_nearest], e.g., [USERS_NEAREST_GET,["c9a632...","473aba..."]]
-      //
-      // deviceToken:   see DEVICE_TOKEN_SAVE (optional)
-      // users_nearest: array of deviceTokens (for now)
-      if (message_array.length === 2) {
-        deviceTokenConnect(message_array[1] /* deviceToken */);
-      }
       sendUsersNearest();
       break;
 
       case MESSAGES_NEWEST_GET:
       // TODO: Rm messages_length from reply.
-      // TODO: Rm messages_length from reply.
 
       // Client messages, immediately after connecting, to get messages_newest.
       // Server replies with messages_newest, limited to 50.
       //
-      // Client Message: [message_type,messagesLength,deviceToken],      e.g., [MESSAGES_NEWEST_GET,5,"c9a632..."]
+      // Client Message: [message_type,messagesLength],                  e.g., [MESSAGES_NEWEST_GET,5]
       // Server Reply:   [message_type,messages_length,messages_newest], e.g., [MESSAGES_NEWEST_GET,7,[[978307200.0,"Hi"],[978307201.0,"Hey"]]]
-      //   - If Empty:   [message_type],                                 i.e., [MESSAGES_NEWEST_GET,0,[]]
       //
-      // deviceToken:     see DEVICE_TOKEN_SAVE (optional)
       // messagesLength:  client's last received messages_length or 0, incremented every time client sends/receives a message
       // messages_length: server's 'messages' list length
       // messages_newest: array of sent_messages (See MESSAGE_TEXT_SEND)
-      if (message_array.length === 3) {
-        deviceTokenConnect(message_array[2] /* deviceToken */);
-      }
       sendMessagesNewest(message_array[1] /* messagesLength */);
       break;
 
@@ -120,13 +180,12 @@ web_socket_server.on('connection', function(web_socket_connection) {
       // Client Message: [message_type,newDeviceToken], e.g., [DEVICE_TOKEN_SAVE,"c9a632..."]
       //
       // deviceToken: used with Apple Push Notification Service (APNs)
-      redis_client.sadd('deviceTokens', message_content, function(error, reply) {
-        if (error) throw error;
-        deviceTokenConnect(message_array[1] /* deviceToken */);
-      });
+      deviceTokenSaveThenConnect(message_array[1] /* deviceToken */);
       break;
 
       case DEVICE_TOKEN_UPDATE:
+      // TODO: Remove deviceTokens to which Apple fails to send pushes.
+      //
       // Client sends this message to update its deviceToken.
       //
       // Client Message:  [message_type,deviceToken,newDeviceToken], e.g., [DEVICE_TOKEN_UPDATE,"c9a632...","473aba..."]
@@ -163,7 +222,8 @@ web_socket_server.on('connection', function(web_socket_connection) {
 
       // Set sent_message to [sent_timestamp,messageText].
       var sent_timestamp = Date.now()/1000;
-      var sent_message = JSON.stringify([sent_timestamp, message_array[2] /* messageText */ ]);
+      var message_text = message_array[2];
+      var sent_message = JSON.stringify([sent_timestamp, message_text]);
 
       // Save sent_message to Redis.
       redis_client.rpush('messages', sent_message, function(error, reply) {
@@ -185,9 +245,9 @@ web_socket_server.on('connection', function(web_socket_connection) {
           if (deviceTokensDisconnected.length) {
             var apns_notifcation = new apns.Notification();
             apns_notifcation.expiry = Math.floor(Date.now() / 1000) + 3600; // expires 1 hour from now
-            apns_notifcation.badge = 3;
-            apns_notifcation.sound = "ping.aiff";
-            apns_notifcation.alert = "You have a new message";
+            apns_notifcation.badge = 9;
+            apns_notifcation.sound = "MessageReceived.aiff";
+            apns_notifcation.alert = message_text;
 
             for (var deviceToken in deviceTokensDisconnected) {
                 apns_notifcation.device = new apns.Device(deviceToken);
