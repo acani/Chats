@@ -11,29 +11,28 @@
 
 // messageType
 #define USER_SIGN_UP                0
-#define USER_LOG_IN                 1
+//#define USER_LOG_IN                 1
 #define USERS_NEAREST_GET           2
 #define MESSAGES_NEWEST_GET         3
-#define DEVICE_TOKEN_SAVE           4
-#define DEVICE_TOKEN_UPDATE         5
-#define MESSAGE_TEXT_SEND           6
-#define MESSAGE_TEXT_RECEIVE        7
+#define DEVICE_TOKEN_SAVE_OR_UPDATE 4
+#define MESSAGE_TEXT_SEND           5
+#define MESSAGE_TEXT_RECEIVE        6
 
 // TODO: Find a better way to insert these strings into message compile-time.
-#define USER_CREATE_STRING          @"[0"
-#define USER_CONNECT_STRING         @"[1"
-#define USERS_NEAREST_GET_STRING    @"[2"
-#define MESSAGES_NEWEST_GET_STRING  @"[3"
-#define DEVICE_TOKEN_SAVE_STRING    @"[4"
-#define DEVICE_TOKEN_UPDATE_STRING  @"[5"
-#define MESSAGE_TEXT_SEND_STRING    @"[6"
-#define MESSAGE_TEXT_RECEIVE_STRING @"[7"
+#define USER_SIGN_UP_STRING                @"[0"
+//#define USER_LOG_IN_STRING                 @"[1"
+#define USERS_NEAREST_GET_STRING           @"[2"
+#define MESSAGES_NEWEST_GET_STRING         @"[3"
+#define DEVICE_TOKEN_SAVE_OR_UPDATE_STRING @"[4"
+#define MESSAGE_TEXT_SEND_STRING           @"[5"
+#define MESSAGE_TEXT_RECEIVE_STRING        @"[6"
 
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
 #define ACAppDelegateCreateSystemSoundIDs() \
 ACMessageCreateSystemSoundIDs(&_messageReceivedSystemSoundID, &_messageSentSystemSoundID)
 
+static NSString *const ACDeviceIDKey    = @"ACDeviceIDKey";
 static NSString *const ACDeviceTokenKey = @"ACDeviceTokenKey";
 
 CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSystemSoundID, SystemSoundID *_messageSentSystemSoundID) {
@@ -59,8 +58,19 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
     return string;
 }
 
+NS_INLINE NSString *ACDeviceTokenSaveOrUpdate(SRWebSocket *webSocket, NSData *deviceTokenNew, NSData *deviceTokenOld) {
+    if (deviceTokenOld) {
+        // DEVICE_TOKEN_SAVE_OR_UPDATE_OR_UPDATE:
+        // [messageType,deviceTokenNew], e.g., [DEVICE_TOKEN_SAVE_OR_UPDATE,"c9a632..."]
+        // [messageType,deviceTokenNew,deviceTokenOld], e.g., [DEVICE_TOKEN_SAVE_OR_UPDATE,"c9a632...","473aba..."]
+        [webSocket send:[NSString stringWithFormat:DEVICE_TOKEN_SAVE_OR_UPDATE_STRING",\"%@\",\"%@\"]", ACHexadecimalStringWithData(deviceTokenNew), ACHexadecimalStringWithData(deviceTokenOld)]];
+    } else {
+        [webSocket send:[NSString stringWithFormat:DEVICE_TOKEN_SAVE_OR_UPDATE_STRING",\"%@\"]", ACHexadecimalStringWithData(deviceTokenNew)]];
+    }
+}
+
 @interface ACAppDelegate () <SRWebSocketDelegate> {
-    NSData                 *_deviceToken;
+    NSData                 *_deviceTokenOld;
     NSManagedObjectContext *_managedObjectContext;
     ACConversation         *_conversation; // temporary mock
     NSMutableDictionary    *_messagesSendingDictionary;
@@ -76,9 +86,6 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
 #pragma mark - State Transitions
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSLog(@"uniqueIdentifier: %@", [[UIDevice currentDevice] uniqueIdentifier]);
-    NSLog(@"identifierForVendor: %@", [[UIDevice currentDevice] identifierForVendor]);
-
     // Set up Core Data stack.
     NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Acani" withExtension:@"momd"]]];
     NSError *error;
@@ -163,24 +170,21 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
 
 #pragma mark - Remote Notifications
 
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
-//    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@", newDeviceToken);
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceTokenNew {
+//    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@", deviceTokenNew);
 
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-    NSData *deviceToken = [standardUserDefaults dataForKey:ACDeviceTokenKey];
-    if ([newDeviceToken isEqualToData:deviceToken]) return;
-    [standardUserDefaults setObject:newDeviceToken forKey:ACDeviceTokenKey];
+    NSData *deviceTokenOld = [standardUserDefaults dataForKey:ACDeviceTokenKey];
+    if ([deviceTokenNew isEqualToData:deviceTokenOld]) return;
+    [standardUserDefaults setObject:deviceTokenNew forKey:ACDeviceTokenKey];
 
     // If _webSocket isnn't open, send deviceToken in webSocketDidOpen:.
     if (_webSocket.readyState != SR_OPEN) {
         _shouldSendDeviceToken = YES;
-        return;
+        _deviceTokenOld = deviceTokenOld;
+    } else {
+        ACDeviceTokenSaveOrUpdate(_webSocket, deviceTokenNew, deviceTokenOld);
     }
-    _shouldSendDeviceToken = NO; // in case this method gets called again
-
-    // DEVICE_TOKEN_SAVE:
-    // messageType,newDeviceToken, e.g., DEVICE_TOKEN_SAVE,"c9a632..."]
-    [_webSocket send:[NSString stringWithFormat:DEVICE_TOKEN_SAVE_STRING",\"%@\"]", ACHexadecimalStringWithData(newDeviceToken)]];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -230,8 +234,29 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
 //    NSLog(@"webSocketDidOpen: %@", webSocket);
 
-//    NSData *deviceToken = [[NSUserDefaults standardUserDefaults] dataForKey:ACDeviceTokenKey];
-    
+    // Sign Up or Log In.
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *deviceID = [userDefaults stringForKey:ACDeviceIDKey];
+    if (!deviceID) {
+        // Create a new deviceID.
+        // TODO: Save deviceID to KeyChain for (1) persistence after app deletion, (2) security, and (3) ability to share across different apps with the same Team ID.
+        CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+        deviceID = CFBridgingRelease(CFUUIDCreateString(kCFAllocatorDefault, uuid));
+        CFRelease(uuid);
+        [userDefaults setObject:deviceID forKey:ACDeviceIDKey];
+    }
+
+    // USER_SIGN_UP:
+    // [messageType,deviceID,deviceToken], e.g., [USER_SIGN_UP,"25EC4F70-3D...","c9a632..."]
+    if (_shouldSendDeviceToken) {
+        NSData *deviceTokenNew = [userDefaults dataForKey:ACDeviceTokenKey];
+        if (deviceTokenNew) {
+            [webSocket send:[NSString stringWithFormat:USER_SIGN_UP_STRING",\"%@\"]", ACHexadecimalStringWithData(deviceTokenNew)]];
+            _shouldSendDeviceToken = NO;
+            _deviceTokenOld = nil;
+        }
+    }
+
     if ([NAVIGATION_CONTROLLER().topViewController isMemberOfClass:[ACMessagesViewController class]]) {
         // MESSAGES_NEWEST_GET:
         // [messageType,messagesLength], e.g., [MESSAGES_NEWEST_GET,5]

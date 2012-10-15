@@ -21,7 +21,7 @@
 #define TEXT_VIEW_WIDTH                      249 // 216 (with CameraButton)
 #define TEXT_VIEW_HEIGHT_MIN                 90
 #define ContentHeightMax                     80
-#define MESSAGE_COUNT_LIMIT                  50
+#define MESSAGES_LIMIT                  50
 #define MESSAGE_SENT_DATE_SHOW_TIME_INTERVAL 13*60 // 13 minutes
 #define MESSAGE_SENT_DATE_LABEL_TAG          100
 #define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101
@@ -62,7 +62,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    _heightForRow = [NSMutableArray arrayWithCapacity:MESSAGE_COUNT_LIMIT+3]; // +3 in case I send/receive more messages
+    _heightForRow = [NSMutableArray arrayWithCapacity:MESSAGES_LIMIT+3]; // +3 in case I send/receive more messages
 
     _messageBubbleGray = [[UIImage imageNamed:@"MessageBubbleGray"] stretchableImageWithLeftCapWidth:23 topCapHeight:15];
     _messageBubbleBlue = [[UIImage imageNamed:@"MessageBubbleBlue"] stretchableImageWithLeftCapWidth:15 topCapHeight:13];
@@ -372,8 +372,8 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     NSError __autoreleasing *error = nil;
     NSUInteger messagesCount = [_managedObjectContext countForFetchRequest:fetchRequest error:&error];
     NSAssert(messagesCount != NSNotFound, @"-[NSManagedObjectContext countForFetchRequest:error:] error:\n\n%@", error);
-    if (messagesCount > MESSAGE_COUNT_LIMIT) {
-        [fetchRequest setFetchOffset:messagesCount-MESSAGE_COUNT_LIMIT];
+    if (messagesCount > MESSAGES_LIMIT) {
+        [fetchRequest setFetchOffset:messagesCount-MESSAGES_LIMIT];
     }
     [fetchRequest setFetchBatchSize:10];
     [fetchRequest setSortDescriptors:@[[[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES]]];
