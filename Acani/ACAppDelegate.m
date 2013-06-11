@@ -10,22 +10,22 @@
 #import "ACUser.h"
 
 // messageType
-#define USER_SIGN_UP                0
-//#define USER_LOG_IN                 1
-#define USERS_NEAREST_GET           2
-#define MESSAGES_NEWEST_GET         3
-#define DEVICE_TOKEN_SAVE_OR_UPDATE 4
-#define MESSAGE_TEXT_SEND           5
-#define MESSAGE_TEXT_RECEIVE        6
+#define MESSAGE_TYPE_USER_SIGN_UP         0
+//#define MESSAGE_TYPE_USER_LOG_IN          1
+#define MESSAGE_TYPE_USERS_NEAREST_GET    2
+#define MESSAGE_TYPE_MESSAGES_NEWEST_GET  3
+#define MESSAGE_TYPE_DEVICE_TOKEN_UPDATE  4
+#define MESSAGE_TYPE_MESSAGE_TEXT_SEND    5
+#define MESSAGE_TYPE_MESSAGE_TEXT_RECEIVE 6
 
 // TODO: Find a better way to insert these strings into message compile-time.
-#define USER_SIGN_UP_STRING                @"[0"
-//#define USER_LOG_IN_STRING                 @"[1"
-#define USERS_NEAREST_GET_STRING           @"[2"
-#define MESSAGES_NEWEST_GET_STRING         @"[3"
-#define DEVICE_TOKEN_SAVE_OR_UPDATE_STRING @"[4"
-#define MESSAGE_TEXT_SEND_STRING           @"[5"
-#define MESSAGE_TEXT_RECEIVE_STRING        @"[6"
+#define MESSAGE_TYPE_USER_SIGN_UP_STRING         @"[0"
+//#define MESSAGE_TYPE_USER_LOG_IN_STRING          @"[1"
+#define MESSAGE_TYPE_USERS_NEAREST_GET_STRING    @"[2"
+#define MESSAGE_TYPE_MESSAGES_NEWEST_GET_STRING  @"[3"
+#define MESSAGE_TYPE_DEVICE_TOKEN_UPDATE_STRING  @"[4"
+#define MESSAGE_TYPE_MESSAGE_TEXT_SEND_STRING    @"[5"
+#define MESSAGE_TYPE_MESSAGE_TEXT_RECEIVE_STRING @"[6"
 
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
@@ -34,6 +34,7 @@ ACMessageCreateSystemSoundIDs(&_messageReceivedSystemSoundID, &_messageSentSyste
 
 static NSString *const ACDeviceIDKey    = @"ACDeviceIDKey";
 static NSString *const ACDeviceTokenKey = @"ACDeviceTokenKey";
+static NSString *const ACUserIDKey      = @"ACUserIDKey";
 
 CF_INLINE void ACMessageCreateSystemSoundIDs(SystemSoundID *_messageReceivedSystemSoundID, SystemSoundID *_messageSentSystemSoundID) {
     CFBundleRef mainBundle = CFBundleGetMainBundle();
@@ -58,14 +59,13 @@ NS_INLINE NSString *ACHexadecimalStringWithData(NSData *data) {
     return string;
 }
 
-NS_INLINE NSString *ACDeviceTokenSaveOrUpdate(SRWebSocket *webSocket, NSData *deviceTokenNew, NSData *deviceTokenOld) {
+NS_INLINE NSString *ACDeviceTokenUpdate(SRWebSocket *webSocket, NSData *deviceTokenNew, NSData *deviceTokenOld) {
+    // MESSAGE_TYPE_DEVICE_TOKEN_UPDATE:
+    // [messageType,deviceTokenNew,deviceTokenOld], e.g., [MESSAGE_TYPE_DEVICE_TOKEN_UPDATE,"c9a632...","473aba..."]
     if (deviceTokenOld) {
-        // DEVICE_TOKEN_SAVE_OR_UPDATE_OR_UPDATE:
-        // [messageType,deviceTokenNew], e.g., [DEVICE_TOKEN_SAVE_OR_UPDATE,"c9a632..."]
-        // [messageType,deviceTokenNew,deviceTokenOld], e.g., [DEVICE_TOKEN_SAVE_OR_UPDATE,"c9a632...","473aba..."]
-        [webSocket send:[NSString stringWithFormat:DEVICE_TOKEN_SAVE_OR_UPDATE_STRING",\"%@\",\"%@\"]", ACHexadecimalStringWithData(deviceTokenNew), ACHexadecimalStringWithData(deviceTokenOld)]];
+        [webSocket send:[NSString stringWithFormat:MESSAGE_TYPE_DEVICE_TOKEN_UPDATE_STRING",\"%@\",\"%@\"]", ACHexadecimalStringWithData(deviceTokenNew), ACHexadecimalStringWithData(deviceTokenOld)]];
     } else {
-        [webSocket send:[NSString stringWithFormat:DEVICE_TOKEN_SAVE_OR_UPDATE_STRING",\"%@\"]", ACHexadecimalStringWithData(deviceTokenNew)]];
+        [webSocket send:[NSString stringWithFormat:MESSAGE_TYPE_DEVICE_TOKEN_UPDATE_STRING",\"%@\"]", ACHexadecimalStringWithData(deviceTokenNew)]];
     }
 }
 
@@ -173,17 +173,17 @@ NS_INLINE NSString *ACDeviceTokenSaveOrUpdate(SRWebSocket *webSocket, NSData *de
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceTokenNew {
 //    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken: %@", deviceTokenNew);
 
-    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-    NSData *deviceTokenOld = [standardUserDefaults dataForKey:ACDeviceTokenKey];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSData *deviceTokenOld = [userDefaults dataForKey:ACDeviceTokenKey];
     if ([deviceTokenNew isEqualToData:deviceTokenOld]) return;
-    [standardUserDefaults setObject:deviceTokenNew forKey:ACDeviceTokenKey];
+    [userDefaults setObject:deviceTokenNew forKey:ACDeviceTokenKey];
 
-    // If _webSocket isnn't open, send deviceToken in webSocketDidOpen:.
+    // If _webSocket isnn't open, update deviceToken in webSocketDidOpen:.
     if (_webSocket.readyState != SR_OPEN) {
         _shouldSendDeviceToken = YES;
         _deviceTokenOld = deviceTokenOld;
     } else {
-        ACDeviceTokenSaveOrUpdate(_webSocket, deviceTokenNew, deviceTokenOld);
+        ACDeviceTokenUpdate(_webSocket, deviceTokenNew, deviceTokenOld);
     }
 }
 
@@ -213,18 +213,18 @@ NS_INLINE NSString *ACDeviceTokenSaveOrUpdate(SRWebSocket *webSocket, NSData *de
     AppSetNetworkActivityIndicatorVisible(YES);
 }
 
-// messageArray: @[sent_timestamp,messageText], e.g., @[978307200.0,@"Hi"]
+// messageArray: @[sentTimestamp,messageText], e.g., @[978307200.0,@"Hi"]
 - (void)addMessageWithArray:(NSArray *)messageArray {
     ACMessage *message = [NSEntityDescription insertNewObjectForEntityForName:@"ACMessage" inManagedObjectContext:_managedObjectContext];
-    _conversation.lastMessageSentDate = message.sentDate = [NSDate dateWithTimeIntervalSince1970:[messageArray[0] /* sent_timestamp */ doubleValue]];
+    _conversation.lastMessageSentDate = message.sentDate = [NSDate dateWithTimeIntervalSince1970:[messageArray[0] /* sentTimestamp */ doubleValue]];
     _conversation.lastMessageText = message.text = messageArray[1] /* messageText */;
     [_conversation addMessagesObject:message];
 }
 
 - (void)sendMessage:(ACMessage *)message {
-    // MESSAGE_TEXT_SEND:
-    // [messageType,messagesSendingKey,messageText], e.g., [MESSAGE_TEXT_SEND,0,"Hi"]
-    [_webSocket send:[NSString stringWithFormat:MESSAGE_TEXT_SEND_STRING",%u,\"%@\"]", [_messagesSendingDictionaryPrimaryKey unsignedIntegerValue], [message.text stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange(0, [message.text length])]]];
+    // MESSAGE_TYPE_MESSAGE_TEXT_SEND:
+    // [messageType,messagesSendingKey,messageText], e.g., [MESSAGE_TYPE_MESSAGE_TEXT_SEND,0,"Hi"]
+    [_webSocket send:[NSString stringWithFormat:MESSAGE_TYPE_MESSAGE_TEXT_SEND_STRING",%u,\"%@\"]", [_messagesSendingDictionaryPrimaryKey unsignedIntegerValue], [message.text stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange(0, [message.text length])]]];
     [_messagesSendingDictionary setObject:message forKey:_messagesSendingDictionaryPrimaryKey];
     _messagesSendingDictionaryPrimaryKey = @([_messagesSendingDictionaryPrimaryKey unsignedIntegerValue]+1);
 }
@@ -246,25 +246,29 @@ NS_INLINE NSString *ACDeviceTokenSaveOrUpdate(SRWebSocket *webSocket, NSData *de
         [userDefaults setObject:deviceID forKey:ACDeviceIDKey];
     }
 
-    // USER_SIGN_UP:
-    // [messageType,deviceID,deviceToken], e.g., [USER_SIGN_UP,"25EC4F70-3D...","c9a632..."]
+    // MESSAGE_TYPE_USER_SIGN_UP:
+    // [messageType,deviceID,deviceTokenNew,deviceTokenOld], e.g., [MESSAGE_TYPE_USER_SIGN_UP,"25EC4F70-3D...","c9a632...","473aba..."]
     if (_shouldSendDeviceToken) {
         NSData *deviceTokenNew = [userDefaults dataForKey:ACDeviceTokenKey];
-        if (deviceTokenNew) {
-            [webSocket send:[NSString stringWithFormat:USER_SIGN_UP_STRING",\"%@\"]", ACHexadecimalStringWithData(deviceTokenNew)]];
-            _shouldSendDeviceToken = NO;
-            _deviceTokenOld = nil;
+        if (_deviceTokenOld) {
+            [webSocket send:[NSString stringWithFormat:MESSAGE_TYPE_USER_SIGN_UP_STRING",\"%@\",\"%@\",\"%@\"]", deviceID, ACHexadecimalStringWithData(deviceTokenNew), ACHexadecimalStringWithData(_deviceTokenOld)]];
+        } else {
+            [webSocket send:[NSString stringWithFormat:MESSAGE_TYPE_USER_SIGN_UP_STRING",\"%@\",\"%@\"]", deviceID, ACHexadecimalStringWithData(deviceTokenNew)]];
         }
+        _shouldSendDeviceToken = NO;
+        _deviceTokenOld = nil;
+    } else {
+        [webSocket send:[NSString stringWithFormat:MESSAGE_TYPE_USER_SIGN_UP_STRING",\"%@\"]", deviceID]];
     }
 
     if ([NAVIGATION_CONTROLLER().topViewController isMemberOfClass:[ACMessagesViewController class]]) {
-        // MESSAGES_NEWEST_GET:
-        // [messageType,messagesLength], e.g., [MESSAGES_NEWEST_GET,5]
-        [_webSocket send:[NSString stringWithFormat:MESSAGES_NEWEST_GET_STRING",%u]", [_conversation.messagesLength unsignedIntegerValue]]];
+        // MESSAGE_TYPE_MESSAGES_NEWEST_GET:
+        // [messageType,messagesLength], e.g., [MESSAGE_TYPE_MESSAGES_NEWEST_GET,5]
+        [_webSocket send:[NSString stringWithFormat:MESSAGE_TYPE_MESSAGES_NEWEST_GET_STRING",%u]", [_conversation.messagesLength unsignedIntegerValue]]];
     } else {
-        // USERS_NEAREST_GET:
-        // [messageType],                e.g., [USERS_NEAREST_GET]
-        [_webSocket send:USERS_NEAREST_GET_STRING"]"];
+        // MESSAGE_TYPE_USERS_NEAREST_GET:
+        // [messageType],                e.g., [MESSAGE_TYPE_USERS_NEAREST_GET]
+        [_webSocket send:MESSAGE_TYPE_USERS_NEAREST_GET_STRING"]"];
     }
 }
 
@@ -282,16 +286,15 @@ NS_INLINE NSString *ACDeviceTokenSaveOrUpdate(SRWebSocket *webSocket, NSData *de
     NSUInteger messagesCount;
     NSArray *messageArray = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
     switch ([message[0] /* messageType */ integerValue]) {
-        case USER_SIGN_UP:
-            // [messageType,usersID], e.g., [USER_SIGN_UP,"1"]
+        case MESSAGE_TYPE_USER_SIGN_UP:
+            // [messageType,usersID], e.g., [MESSAGE_TYPE_USER_SIGN_UP,"1"]
             AppSetNetworkActivityIndicatorVisible(NO);
-            // Save userID to pasteboard & NSUserDefaults.
-            
-            MOCSave(_managedObjectContext);
+            [[NSUserDefaults standardUserDefaults] setObject:messageArray[1] forKey:ACUserIDKey];
+            // TODO: Save userID to pasteboard.
             return;
 
-        case USERS_NEAREST_GET:
-            // [messageType,usersNearest], e.g., [USERS_NEAREST_GET,["c9a632...","473aba..."]]
+        case MESSAGE_TYPE_USERS_NEAREST_GET:
+            // [messageType,usersNearest], e.g., [MESSAGE_TYPE_USERS_NEAREST_GET,["c9a632...","473aba..."]]
             AppSetNetworkActivityIndicatorVisible(NO);
         {
             // TODO: Only add new users (no duplicates).
@@ -304,8 +307,8 @@ NS_INLINE NSString *ACDeviceTokenSaveOrUpdate(SRWebSocket *webSocket, NSData *de
             MOCSave(_managedObjectContext);
             return;
 
-        case MESSAGES_NEWEST_GET:
-            // [messageType,messagesLength,messageArraysNewest], e.g., [MESSAGES_NEWEST_GET,7,[[978307200.0,"Hi"], [978307201.0,"Hey"]]]
+        case MESSAGE_TYPE_MESSAGES_NEWEST_GET:
+            // [messageType,messagesLength,messageArraysNewest], e.g., [MESSAGE_TYPE_MESSAGES_NEWEST_GET,7,[[978307200.0,"Hi"], [978307201.0,"Hey"]]]
             AppSetNetworkActivityIndicatorVisible(NO);
         {
             NSArray *messageArraysNewest = messageArray[2];
@@ -320,8 +323,8 @@ NS_INLINE NSString *ACDeviceTokenSaveOrUpdate(SRWebSocket *webSocket, NSData *de
             }
         } break;
 
-        case MESSAGE_TEXT_SEND:
-            // [messageType,messagesSendingKey,sent_timestamp], e.g., [MESSAGE_TEXT_SEND,0,978307200.0]
+        case MESSAGE_TYPE_MESSAGE_TEXT_SEND:
+            // [messageType,messagesSendingKey,sentTimestamp], e.g., [MESSAGE_TYPE_MESSAGE_TEXT_SEND,0,978307200.0]
             AudioServicesPlaySystemSound(_messageSentSystemSoundID);
             _conversation.messagesLength = @([_conversation.messagesLength unsignedIntegerValue]+((NSUInteger)1));
         {
@@ -335,8 +338,8 @@ NS_INLINE NSString *ACDeviceTokenSaveOrUpdate(SRWebSocket *webSocket, NSData *de
             MOCSave(_managedObjectContext);
             return;
 
-        case MESSAGE_TEXT_RECEIVE:
-            // [messageType,[sent_timestamp,messageText]], e.g., [MESSAGE_TEXT_RECEIVE,[978307200.0,"Hi"]]
+        case MESSAGE_TYPE_MESSAGE_TEXT_RECEIVE:
+            // [messageType,[sentTimestamp,messageText]], e.g., [MESSAGE_TYPE_MESSAGE_TEXT_RECEIVE,[978307200.0,"Hi"]]
             messagesCount = 1;
             [self addMessageWithArray:messageArray[1]];
             break;
