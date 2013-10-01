@@ -13,11 +13,14 @@ UIKIT_STATIC_INLINE void AppSetNetworkActivityIndicatorVisible(BOOL visible) {
     if (visible) {
         ++_networkActivityIndicatorCount;
     } else {
-        assert(_networkActivityIndicatorCount > 0);
-        --_networkActivityIndicatorCount;
+        if (_networkActivityIndicatorCount > 0) {
+            --_networkActivityIndicatorCount;
+        }
     }
     [UIApplication sharedApplication].networkActivityIndicatorVisible = (_networkActivityIndicatorCount > 0);
 }
+
+# define ACANI_TEST_USER_NAME @"Acani"
 
 #pragma mark - Core Data
 
@@ -68,5 +71,20 @@ NS_INLINE void NSManagedObjectContextDelete(id self, SEL _cmd, NSManagedObjectCo
     NSArray *fetchedObjects = MOCFetch(managedObjectContext, fetchRequest);
     for (NSManagedObject *fetchedObject in fetchedObjects) {
         [managedObjectContext deleteObject:fetchedObject];
+    }
+}
+
+NS_INLINE void NSManagedObjectContextSave(NSManagedObjectContext *managedObjectContext) {
+    NSError * error;
+    if (![managedObjectContext save:&error]) {
+        NSLog(@"NSManagedObjectSave: ERROR: %@", [error localizedDescription]);
+        NSArray* detailedErrors = [[error userInfo] objectForKey:NSDetailedErrorsKey];
+        if(detailedErrors != nil && [detailedErrors count] > 0) {
+            for(NSError* detailedError in detailedErrors) {
+                NSLog(@"NSManagedObjectSave: DetailedError: %@", [detailedError userInfo]);
+            }
+        } else {
+            NSLog(@"  %@", [error userInfo]);
+        }
     }
 }

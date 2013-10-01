@@ -141,13 +141,13 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [_tableView flashScrollIndicators];
     _conversation.unreadMessagesCount = @((NSUInteger)0);
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-    MOCSave(_managedObjectContext);
+    NSManagedObjectContextSave(_managedObjectContext);
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     UIKeyboardNotificationsUnobserve(); // as soon as possible
     _conversation.draft = ([_textView.text length] ? _textView.text: nil);
-    MOCSave(_managedObjectContext);
+    NSManagedObjectContextSave(_managedObjectContext);
     [super viewWillDisappear:animated];
 }
 
