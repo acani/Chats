@@ -118,7 +118,8 @@ NS_INLINE NSString *ACDeviceTokenUpdate(SRWebSocket *webSocket, NSData *deviceTo
         _conversation = [NSEntityDescription insertNewObjectForEntityForName:@"ACConversation" inManagedObjectContext:_managedObjectContext];
         _conversation.lastMessageSentDate = [NSDate date];
         ACUser *user = [NSEntityDescription insertNewObjectForEntityForName:@"ACUser" inManagedObjectContext:_managedObjectContext];
-        _conversation.title = user.name = @"Acani";
+        _conversation.title = user.name = ACANI_TEST_USER_NAME;
+        user.userID = ACANI_TEST_USER_NAME;
         [_conversation addUsersObject:user];
     }
 
@@ -152,7 +153,7 @@ NS_INLINE NSString *ACDeviceTokenUpdate(SRWebSocket *webSocket, NSData *deviceTo
     [self _reconnect];
 
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
-
+    
     return YES;
 }
 
@@ -232,7 +233,7 @@ NS_INLINE NSString *ACDeviceTokenUpdate(SRWebSocket *webSocket, NSData *deviceTo
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-//    NSLog(@"webSocketDidOpen: %@", webSocket);
+    NSLog(@"webSocketDidOpen: %@", webSocket);
 
     // Sign Up or Log In.
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -285,7 +286,8 @@ NS_INLINE NSString *ACDeviceTokenUpdate(SRWebSocket *webSocket, NSData *deviceTo
 
     NSUInteger messagesCount;
     NSArray *messageArray = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL];
-    switch ([message[0] /* messageType */ integerValue]) {
+    NSLog(@"webSocket: didReceiveMessage: type: %@", messageArray[0]);
+    switch ([messageArray[0] /* messageType */ integerValue]) {
         case MESSAGE_TYPE_USER_SIGN_UP:
             // [messageType,usersID], e.g., [MESSAGE_TYPE_USER_SIGN_UP,"1"]
             AppSetNetworkActivityIndicatorVisible(NO);
@@ -304,7 +306,7 @@ NS_INLINE NSString *ACDeviceTokenUpdate(SRWebSocket *webSocket, NSData *deviceTo
                 user.name = userString;
             }
         }
-            MOCSave(_managedObjectContext);
+            NSManagedObjectContextSave(_managedObjectContext);
             return;
 
         case MESSAGE_TYPE_MESSAGES_NEWEST_GET:
@@ -335,7 +337,7 @@ NS_INLINE NSString *ACDeviceTokenUpdate(SRWebSocket *webSocket, NSData *deviceTo
             if (![_messagesSendingDictionary count]) {
                 _messagesSendingDictionaryPrimaryKey = @(0);
             }
-            MOCSave(_managedObjectContext);
+            NSManagedObjectContextSave(_managedObjectContext);
             return;
 
         case MESSAGE_TYPE_MESSAGE_TEXT_RECEIVE:
@@ -358,10 +360,11 @@ NS_INLINE NSString *ACDeviceTokenUpdate(SRWebSocket *webSocket, NSData *deviceTo
     }
 
     AudioServicesPlayAlertSound(_messageReceivedSystemSoundID);
-    MOCSave(_managedObjectContext);
+    NSManagedObjectContextSave(_managedObjectContext);
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
+    NSLog(@"webSocket didCloseWithCode");
     _webSocket.delegate = nil;
     _webSocket = nil;
     _messagesSendingDictionary = nil;
