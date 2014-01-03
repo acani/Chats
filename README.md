@@ -37,9 +37,8 @@ Heroku doesn't support websockets yet, so I went with nodejitsu. modulus.io is a
 
 Acani uses [Objective-C literals][8], so make sure you have Xcode 4.5 or later, which you can download from [iOS Dev Center : Beta Downloads][9].
 
-    git clone https://github.com/acani/Acani.git
+    git clone https://github.com/acani/AcaniChat.git --recursive
     cd Acani
-    git submodule update --init
     open Acani.xcodeproj
 
 
