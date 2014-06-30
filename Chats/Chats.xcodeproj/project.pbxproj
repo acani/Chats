@@ -34,7 +34,7 @@
 
 /* Begin PBXFileReference section */
 		D29AEE8F1960C79700925449 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		D29AEE911960E14A00925449 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = LICENSE.md; path = ../LICENSE.md; sourceTree = "<group>"; };
+		D29AEE911960E14A00925449 /* CREDITS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CREDITS.md; path = ../CREDITS.md; sourceTree = "<group>"; };
 		D29AEE921960F02600925449 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = TODO.md; path = ../TODO.md; sourceTree = "<group>"; };
 		D2DEC39A195B33C20097CB9D /* Chats.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chats.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2DEC39E195B33C20097CB9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -79,7 +79,7 @@
 				D2DEC39C195B33C20097CB9D /* Chats */,
 				D2DEC3AA195B33C20097CB9D /* ChatsTests */,
 				D2DEC39B195B33C20097CB9D /* Products */,
-				D29AEE911960E14A00925449 /* LICENSE.md */,
+				D29AEE911960E14A00925449 /* CREDITS.md */,
 				D29AEE8F1960C79700925449 /* README.md */,
 				D29AEE921960F02600925449 /* TODO.md */,
 			);
