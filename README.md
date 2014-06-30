@@ -2,7 +2,7 @@
 
 ## iOS Messages App Clone
 
-Work in progress...
+Because every app needs chats!
 
 ![Acani Chats Screenshot][1] &nbsp;&nbsp;&nbsp;&nbsp; ![Acani Chat Screenshot][2]
 
