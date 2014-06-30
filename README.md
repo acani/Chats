@@ -14,7 +14,14 @@ It's just the UI right now. All the content is hardcoded.
 
 Chats is released under the [MIT License][3].
 
+## Thanks
+
+Like this project? [Thank me on Venmo][4].
+
+Your love, feedback, questions, issues, contributions, etc. make this project better.
+
 
 [1]: https://github.com/acani/Chats/raw/master/Screenshots/Chats.png
 [2]: https://github.com/acani/Chats/raw/master/Screenshots/Chat.png
 [3]: http://opensource.org/licenses/MIT
+[4]: https://venmo.com/mattdipasquale
