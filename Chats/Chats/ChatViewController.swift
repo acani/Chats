@@ -89,6 +89,9 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.estimatedRowHeight = 44
         tableView.separatorStyle = .None
         view.addSubview(tableView)
+
+        let notificationCenter = NSNotificationCenter.defaultCenter()
+        notificationCenter.addObserver(self, selector: "keyboardWillChangeFrame:", name: UIKeyboardWillChangeFrameNotification, object: nil)
     }
 
 //    // #iOS7.1
@@ -133,6 +136,15 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func textViewDidChange(textView: UITextView!) {
         updateTextViewHeight()
         sendButton.enabled = textView.hasText()
+    }
+
+    // Called twice during rotation, but that's OK
+    func keyboardWillChangeFrame(notification: NSNotification) {
+        let frameEnd = notification.userInfo[UIKeyboardFrameEndUserInfoKey].CGRectValue()
+        let insetBottom = tableView.convertRect(frameEnd, fromView: nil).height
+        println("bottom: \(insetBottom)")
+        tableView.contentInset.bottom = insetBottom
+        tableView.scrollIndicatorInsets.bottom = insetBottom
     }
 
     func updateTextViewHeight() {

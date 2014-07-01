@@ -10,7 +10,6 @@
 
 ## ChatViewController
 
-* Fix tableView.contentInsets.bottom #bug
 * Add sent dates
 * Tap & hold to copy text
 * Add "Load Earlier Messages" button
