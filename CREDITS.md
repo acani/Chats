@@ -4,8 +4,8 @@
 
 Compliments of Apple
 
-* [`MessageBubble@2x.png`][1] is a derivation of [`bubble@2x.png`][2].
-* [`MessageIncoming.aiff`][3] is a copy of [`SIMToolkitSMS.aiff`][4].
+* [`MessageBubble@2x.png`][1] is a derivation of <a href="file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/PrivateFrameworks/ChatKit.framework/bubble@2x.png"><code>bubble@2x.png</code></a>.
+* [`MessageIncoming.aiff`][3] is a copy of <a href="file:///Applications/Xcode.app//Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/CoreServices/SpringBoard.app/SIMToolkitSMS.aiff"><code>SIMToolkitSMS.aiff</code></a>.
 * [`MessageOutgoing.aiff`][5] is a copy of [`message-sent.aiff`][6].
 
 Command to find files: `find /Applications/Xcode.app/ -name *.png`
@@ -38,9 +38,7 @@ Compliments of [uiFaces][7] and these users:
 
 
 [1]: https://github.com/acani/Chats/raw/master/Chats/Chats/Images.xcassets/MessageBubble.imageset/MessageBubble@2x.png
-[2]: file:///Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/PrivateFrameworks/ChatKit.framework/bubble@2x.png
 [3]: https://github.com/acani/Chats/raw/master/Chats/Chats/Resources/MessageIncoming.aiff
-[4]: file:///Applications/Xcode.app//Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/CoreServices/SpringBoard.app/SIMToolkitSMS.aiff
 [5]: https://github.com/acani/Chats/raw/master/Chats/Chats/Resources/MessageOutgoing.aiff
 [6]: https://github.com/oovoodev/iOS-SDK-Sample/blob/master/ooVooSample/JSMessagesViewController/Resources/Sounds/message-sent.aiff
 [7]: http://uifaces.com
