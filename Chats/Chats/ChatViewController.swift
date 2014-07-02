@@ -140,7 +140,6 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 
     func keyboardWillShow(notification: NSNotification) {
-        println("show")
         let userInfo = notification.userInfo
         let frameNew = userInfo[UIKeyboardFrameEndUserInfoKey].CGRectValue()
         let insetNewBottom = tableView.convertRect(frameNew, fromView: nil).height
@@ -150,9 +149,6 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey].doubleValue
         let animations: (() -> Void) = {
-            println(self.tableView.tracking)
-            println(self.tableView.dragging)
-            println(self.tableView.decelerating)
             if !(self.tableView.tracking || self.tableView.decelerating) {
                 // Scroll content with keyboard
                 if overflow > 0 {                   // scrollable before
@@ -197,10 +193,15 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 
     func sendAction() {
+        // Autocomplete text before sending #hack
+        textView.resignFirstResponder()
+        textView.becomeFirstResponder()
+
         chat.loadedMessages += Message(incoming: false, text: textView.text, sentDate: NSDate.date())
         textView.text = nil
         updateTextViewHeight()
         sendButton.enabled = false
+
         tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: tableView.numberOfRowsInSection(0), inSection: 0)], withRowAnimation: .Automatic)
         tableViewScrollToBottomAnimated(true)
         AudioServicesPlaySystemSound(messageSoundOutgoing)
