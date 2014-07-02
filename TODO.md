@@ -11,10 +11,10 @@
 ## ChatViewController
 
 * Add sent dates
-* Tap & hold to copy text
 * Add "Load Earlier Messages" button
 * Detect all data types in message text
 * Show sending progress indicator
 * Animate mesage during sending (going from textView to tableView)
 * Send photos & videos
 * Add red (!) button on failed message send
+* Fix resulting contentOffset when pasting multiple lines into textView #bug #messenger

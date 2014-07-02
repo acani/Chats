@@ -1,6 +1,7 @@
 import UIKit
 
 let incomingTag = 0, outgoingTag = 1
+let bubbleTag = 8
 
 class MessageCell: UITableViewCell {
     let bubbleImageView: UIImageView
@@ -8,11 +9,13 @@ class MessageCell: UITableViewCell {
 
     init(style: UITableViewCellStyle, reuseIdentifier: String) {
         bubbleImageView = UIImageView(image: bubbleImage.incoming, highlightedImage: bubbleImage.incomingHighlighed)
-        bubbleImageView.tag = 8
+        bubbleImageView.tag = bubbleTag
+        bubbleImageView.userInteractionEnabled = true // #CopyMesage
 
         messageLabel = UILabel(frame: CGRectZero)
         messageLabel.font = UIFont.systemFontOfSize(messageFontSize)
         messageLabel.numberOfLines = 0
+        messageLabel.userInteractionEnabled = false   // #CopyMessage
 
         super.init(style: .Default, reuseIdentifier: reuseIdentifier)
         selectionStyle = .None
@@ -60,7 +63,6 @@ class MessageCell: UITableViewCell {
             layoutConstraint.constant = -layoutConstraint.constant
 
             let constraints: NSArray = contentView.constraints()
-            let bubbleTag = bubbleImageView.tag
             let indexOfConstraint = constraints.indexOfObjectPassingTest { (var constraint, idx, stop) in
                 return (constraint.firstItem as UIView).tag == bubbleTag && (constraint.firstAttribute == NSLayoutAttribute.Left || constraint.firstAttribute == NSLayoutAttribute.Right)
             }
@@ -69,6 +71,7 @@ class MessageCell: UITableViewCell {
         }
     }
 
+    // Highlight cell #CopyMessage
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         bubbleImageView.highlighted = selected
