@@ -93,10 +93,34 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         notificationCenter.addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         notificationCenter.addObserver(self, selector: "keyboardDidShow:", name: UIKeyboardDidShowNotification, object: nil)
         notificationCenter.addObserver(self, selector: "menuControllerWillHide:", name: UIMenuControllerWillHideMenuNotification, object: nil) // #CopyMessage
+
+        // tableViewScrollToBottomAnimated(false) // doesn't work
     }
 
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+
+    override func viewDidAppear(animated: Bool)  {
+        super.viewDidAppear(animated)
+        tableView.flashScrollIndicators()
+    }
+
+    override func viewWillDisappear(animated: Bool)  {
+        super.viewWillDisappear(animated)
+        chat.draft = textView.text
+    }
+
+    // This gets called a lot. Perhaps there's a better way to know when `view.window` has been set?
+    override func viewDidLayoutSubviews()  {
+        super.viewDidLayoutSubviews()
+
+        if !chat.draft.isEmpty {
+            textView.text = chat.draft
+            chat.draft = ""
+            textViewDidChange(textView)
+            textView.becomeFirstResponder()
+        }
     }
 
 //    // #iOS7.1

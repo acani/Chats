@@ -12,7 +12,7 @@ class Chat {
     var loadedMessages = Message[]()
     var unreadMessageCount: UInt = 0 // subtacted from total when read
     var hasUnloadedMessages = false
-    var draft: String?
+    var draft = ""
 
     init(user: User, lastMessageText: String, lastMessageSentDate: NSDate) {
         self.user = user

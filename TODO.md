@@ -10,6 +10,7 @@
 
 ## ChatViewController
 
+* Enter multilines, scroll to top of tableView, delete line #bug
 * Add sent dates
 * Add "Load Earlier Messages" button
 * Detect all data types in message text
