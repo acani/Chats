@@ -23,7 +23,7 @@ class ChatCell: UITableViewCell {
         lastMessageTextLabel = UILabel(frame: CGRectZero)
         lastMessageTextLabel.backgroundColor = UIColor.whiteColor()
         lastMessageTextLabel.font = UIFont.systemFontOfSize(15)
-        lastMessageTextLabel.numberOfLines = 2;
+        lastMessageTextLabel.numberOfLines = 2
         lastMessageTextLabel.textColor = UIColor(red: 142/255, green: 142/255, blue: 147/255, alpha: 1)
 
         lastMessageSentDateLabel = UILabel(frame: CGRectZero)

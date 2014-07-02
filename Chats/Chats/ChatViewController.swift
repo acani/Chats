@@ -91,7 +91,8 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         view.addSubview(tableView)
 
         let notificationCenter = NSNotificationCenter.defaultCenter()
-        notificationCenter.addObserver(self, selector: "keyboardWillChangeFrame:", name: UIKeyboardWillChangeFrameNotification, object: nil)
+        notificationCenter.addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+        notificationCenter.addObserver(self, selector: "keyboardDidShow:", name: UIKeyboardDidShowNotification, object: nil)
     }
 
 //    // #iOS7.1
@@ -138,13 +139,47 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         sendButton.enabled = textView.hasText()
     }
 
-    // Called twice during rotation, but that's OK
-    func keyboardWillChangeFrame(notification: NSNotification) {
-        let frameEnd = notification.userInfo[UIKeyboardFrameEndUserInfoKey].CGRectValue()
-        let insetBottom = tableView.convertRect(frameEnd, fromView: nil).height
-        println("bottom: \(insetBottom)")
-        tableView.contentInset.bottom = insetBottom
-        tableView.scrollIndicatorInsets.bottom = insetBottom
+    func keyboardWillShow(notification: NSNotification) {
+        println("show")
+        let userInfo = notification.userInfo
+        let frameNew = userInfo[UIKeyboardFrameEndUserInfoKey].CGRectValue()
+        let insetNewBottom = tableView.convertRect(frameNew, fromView: nil).height
+        let insetOld = tableView.contentInset
+        let insetChange = insetNewBottom - insetOld.bottom
+        let overflow = tableView.contentSize.height - (tableView.frame.height-insetOld.top-insetOld.bottom)
+
+        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey].doubleValue
+        let animations: (() -> Void) = {
+            println(self.tableView.tracking)
+            println(self.tableView.dragging)
+            println(self.tableView.decelerating)
+            if !(self.tableView.tracking || self.tableView.decelerating) {
+                // Scroll content with keyboard
+                if overflow > 0 {                   // scrollable before
+                    self.tableView.contentOffset.y = self.tableView.contentOffset.y+insetChange
+                } else if overflow > -insetChange { // scrollable after
+                    self.tableView.contentOffset.y = self.tableView.contentOffset.y+insetChange+overflow
+                }
+            }
+        }
+        if duration > 0 {
+            let options = UIViewAnimationOptions(UInt(userInfo[UIKeyboardAnimationCurveUserInfoKey].integerValue << 16)) // http://stackoverflow.com/a/18873820/242933
+            UIView.animateWithDuration(duration, delay: 0, options: options, animations: animations, completion: nil)
+        } else {
+            animations()
+        }
+    }
+
+    func keyboardDidShow(notification: NSNotification) {
+        let userInfo = notification.userInfo
+        let frameNew = userInfo[UIKeyboardFrameEndUserInfoKey].CGRectValue()
+        let insetNewBottom = tableView.convertRect(frameNew, fromView: nil).height
+
+        // Inset `tableView` with keyboard
+        let contentOffsetY = tableView.contentOffset.y
+        tableView.contentInset.bottom = insetNewBottom
+        tableView.scrollIndicatorInsets.bottom = insetNewBottom
+        tableView.contentOffset.y = contentOffsetY
     }
 
     func updateTextViewHeight() {
