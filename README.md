@@ -16,12 +16,16 @@ Chats is released under the [MIT License][3].
 
 ## Thanks
 
-Like this project? [Thank me on Venmo][4].
+Your love (feedback, questions, [contributions][4], etc.) makes this project better.
 
-Thanks! Your love, feedback, questions, issues, contributions, etc. make this project better.
+More [credits][5]...
+
+Like this project? [Thank me on Venmo][6].
 
 
 [1]: https://github.com/acani/Chats/raw/master/Screenshots/Chats.png
 [2]: https://github.com/acani/Chats/raw/master/Screenshots/Chat.png
 [3]: http://opensource.org/licenses/MIT
-[4]: https://venmo.com/mattdipasquale
+[4]: https://github.com/acani/Chats/blob/master/TODO.md
+[5]: https://github.com/acani/Chats/blob/master/CREDITS.md
+[6]: https://venmo.com/mattdipasquale
