@@ -194,11 +194,14 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey].doubleValue
         let animations: (() -> Void) = {
             if !(self.tableView.tracking || self.tableView.decelerating) {
-                // Scroll content with keyboard
+                // Move content with keyboard
                 if overflow > 0 {                   // scrollable before
-                    self.tableView.contentOffset.y = self.tableView.contentOffset.y+insetChange
-                } else if overflow > -insetChange { // scrollable after
-                    self.tableView.contentOffset.y = self.tableView.contentOffset.y+insetChange+overflow
+                    self.tableView.contentOffset.y += insetChange
+                    if self.tableView.contentOffset.y < -insetOld.top {
+                        self.tableView.contentOffset.y = -insetOld.top
+                    }
+                } else if insetChange > -overflow { // scrollable after
+                    self.tableView.contentOffset.y += insetChange + overflow
                 }
             }
         }
@@ -219,7 +222,10 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let contentOffsetY = tableView.contentOffset.y
         tableView.contentInset.bottom = insetNewBottom
         tableView.scrollIndicatorInsets.bottom = insetNewBottom
-        tableView.contentOffset.y = contentOffsetY
+        // Prevents jump after keyboard dismissal
+        if (self.tableView.tracking || self.tableView.decelerating) {
+            tableView.contentOffset.y = contentOffsetY
+        }
     }
 
     func updateTextViewHeight() {
