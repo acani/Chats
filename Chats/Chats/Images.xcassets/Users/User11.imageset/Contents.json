@@ -1,6 +1,13 @@
 {
   "images" : [
     {
+      "idiom" : "universal"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
       "idiom" : "universal",
       "scale" : "2x",
       "filename" : "User11@2x.jpg"

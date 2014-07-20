@@ -185,13 +185,13 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func keyboardWillShow(notification: NSNotification) {
         let userInfo = notification.userInfo
-        let frameNew = userInfo[UIKeyboardFrameEndUserInfoKey].CGRectValue()
+        let frameNew = (userInfo[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
         let insetNewBottom = tableView.convertRect(frameNew, fromView: nil).height
         let insetOld = tableView.contentInset
         let insetChange = insetNewBottom - insetOld.bottom
         let overflow = tableView.contentSize.height - (tableView.frame.height-insetOld.top-insetOld.bottom)
 
-        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey].doubleValue
+        let duration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as NSNumber).doubleValue
         let animations: (() -> Void) = {
             if !(self.tableView.tracking || self.tableView.decelerating) {
                 // Move content with keyboard
@@ -206,7 +206,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         }
         if duration > 0 {
-            let options = UIViewAnimationOptions(UInt(userInfo[UIKeyboardAnimationCurveUserInfoKey].integerValue << 16)) // http://stackoverflow.com/a/18873820/242933
+            let options = UIViewAnimationOptions(UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as NSNumber).integerValue << 16)) // http://stackoverflow.com/a/18873820/242933
             UIView.animateWithDuration(duration, delay: 0, options: options, animations: animations, completion: nil)
         } else {
             animations()
@@ -215,7 +215,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     func keyboardDidShow(notification: NSNotification) {
         let userInfo = notification.userInfo
-        let frameNew = userInfo[UIKeyboardFrameEndUserInfoKey].CGRectValue()
+        let frameNew = (userInfo[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
         let insetNewBottom = tableView.convertRect(frameNew, fromView: nil).height
 
         // Inset `tableView` with keyboard

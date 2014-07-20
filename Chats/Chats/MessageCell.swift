@@ -95,7 +95,6 @@ func bubbleImageMake() -> (incoming: UIImage, incomingHighlighed: UIImage, outgo
     return (incoming, incomingHighlighted, outgoing, outgoingHighlighted)
 }
 
-// CGContextClipToMask may be better
 func coloredImage(image: UIImage, red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) -> UIImage! {
     let rect = CGRect(origin: CGPointZero, size: image.size)
     UIGraphicsBeginImageContext(image.size)

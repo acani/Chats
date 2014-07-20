@@ -1,7 +1,7 @@
 import UIKit
 
 class ChatsViewController: UITableViewController {
-    var chats: Chat[] { return account.chats }
+    var chats: [Chat] { return account.chats }
 
     convenience init() {
         self.init(style: .Plain)

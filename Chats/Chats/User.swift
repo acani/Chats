@@ -1,5 +1,3 @@
-import Foundation
-
 class User {
     let ID: Int
     var name: String
