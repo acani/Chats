@@ -70,7 +70,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
         chat.loadedMessages = [
             [
-                Message(incoming: true, text: "I really enjoyed programming with you! :-)", sentDate: NSDate(timeIntervalSinceNow: -60*60*24*2)),
+                Message(incoming: true, text: "I really enjoyed programming with you! :-)", sentDate: NSDate(timeIntervalSinceNow: -60*60*24*2-60*60)),
                 Message(incoming: false, text: "Thanks! Me too! :-)", sentDate: NSDate(timeIntervalSinceNow: -60*60*24*2))
             ],
             [
