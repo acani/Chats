@@ -165,11 +165,11 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // #iOS7 - not needed for #iOS8
     func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
         let message = chat.loadedMessages[indexPath.row]
-        let height = (message.text as NSString).boundingRectWithSize(CGSize(width: 218, height: CGFLOAT_MAX), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFontOfSize(messageFontSize)], context: nil).height
+        let height = (message.text as NSString).boundingRectWithSize(CGSize(width: 218, height: CGFloat.max), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFontOfSize(messageFontSize)], context: nil).height
         #if arch(x86_64) || arch(arm64)
             return ceil(height) + 24
         #else
-            return ceilf(height) + 24
+            return CGFloat(ceilf(height.native) + 24)
         #endif
     }
 
@@ -231,11 +231,11 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func updateTextViewHeight() {
         let oldHeight = textView.frame.height
         let maxHeight = UIInterfaceOrientationIsPortrait(interfaceOrientation) ? textViewMaxHeight.portrait : textViewMaxHeight.landscape
-        var newHeight = min(textView.sizeThatFits(CGSize(width: textView.frame.width, height: CGFLOAT_MAX)).height, maxHeight)
+        var newHeight = min(textView.sizeThatFits(CGSize(width: textView.frame.width, height: CGFloat.max)).height, maxHeight)
         #if arch(x86_64) || arch(arm64)
             newHeight = ceil(newHeight)
         #else
-            newHeight = ceilf(newHeight)
+            newHeight = CGFloat(ceilf(newHeight.native))
         #endif
         if newHeight != oldHeight {
             toolBar.frame.size.height = newHeight+8*2-0.5
