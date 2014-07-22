@@ -68,10 +68,16 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        chat.loadedMessages += [
-            Message(incoming: true, text: "Hey, would you like to spend some time together tonight and work on Acani?", sentDate: NSDate(timeIntervalSinceNow: 33)),
-            Message(incoming: false, text: "Sure, I'd love to. How's 6 PM?", sentDate: NSDate(timeIntervalSinceNow: 19)),
-            Message(incoming: true, text: "6 sounds good :-)", sentDate: NSDate.date())
+        chat.loadedMessages = [
+            [
+                Message(incoming: true, text: "I really enjoyed programming with you! :-)", sentDate: NSDate(timeIntervalSinceNow: -60*60*24*2)),
+                Message(incoming: false, text: "Thanks! Me too! :-)", sentDate: NSDate(timeIntervalSinceNow: -60*60*24*2))
+            ],
+            [
+                Message(incoming: true, text: "Hey, would you like to spend some time together tonight and work on Acani?", sentDate: NSDate(timeIntervalSinceNow: -33)),
+                Message(incoming: false, text: "Sure, I'd love to. How's 6 PM?", sentDate: NSDate(timeIntervalSinceNow: -19)),
+                Message(incoming: true, text: "6 sounds good :-)", sentDate: NSDate.date())
+            ]
         ]
 
         let whiteColor = UIColor.whiteColor()
@@ -87,6 +93,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.keyboardDismissMode = .Interactive
         tableView.estimatedRowHeight = 44
         tableView.separatorStyle = .None
+        tableView.registerClass(MessageSentDateCell.self, forCellReuseIdentifier: NSStringFromClass(MessageSentDateCell))
         view.addSubview(tableView)
 
         let notificationCenter = NSNotificationCenter.defaultCenter()
@@ -140,37 +147,54 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 //        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
 //    }
 
-
-    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView!) -> Int {
         return chat.loadedMessages.count
     }
 
-    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
-        let cellIdentifier = NSStringFromClass(MessageCell)
-        var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as MessageCell!
-        if cell == nil {
-            cell = MessageCell(style: .Default, reuseIdentifier: cellIdentifier)
+    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+        return chat.loadedMessages[section].count + 1 // for sent-date cell
+    }
 
-            // Add gesture recognizers #CopyMessage
-            let action: Selector = "messageShowMenuAction:"
-            let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: action)
-            doubleTapGestureRecognizer.numberOfTapsRequired = 2
-            cell.bubbleImageView.addGestureRecognizer(doubleTapGestureRecognizer)
-            cell.bubbleImageView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: action))
+    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+        if indexPath.row == 0 {
+            let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(MessageSentDateCell), forIndexPath: indexPath) as MessageSentDateCell
+            let message = chat.loadedMessages[indexPath.section][0]
+            dateFormatter.dateStyle = .ShortStyle
+            dateFormatter.timeStyle = .ShortStyle
+            cell.sentDateLabel.text = dateFormatter.stringFromDate(message.sentDate)
+            return cell
+        } else {
+            let cellIdentifier = NSStringFromClass(MessageBubbleCell)
+            var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as MessageBubbleCell!
+            if cell == nil {
+                cell = MessageBubbleCell(style: .Default, reuseIdentifier: cellIdentifier)
+
+                // Add gesture recognizers #CopyMessage
+                let action: Selector = "messageShowMenuAction:"
+                let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: action)
+                doubleTapGestureRecognizer.numberOfTapsRequired = 2
+                cell.bubbleImageView.addGestureRecognizer(doubleTapGestureRecognizer)
+                cell.bubbleImageView.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: action))
+            }
+            let message = chat.loadedMessages[indexPath.section][indexPath.row-1]
+            cell.configureWithMessage(message)
+            return cell
         }
-        cell.configureWithMessage(chat.loadedMessages[indexPath.row])
-        return cell
     }
 
     // #iOS7 - not needed for #iOS8
     func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-        let message = chat.loadedMessages[indexPath.row]
-        let height = (message.text as NSString).boundingRectWithSize(CGSize(width: 218, height: CGFloat.max), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFontOfSize(messageFontSize)], context: nil).height
-        #if arch(x86_64) || arch(arm64)
-            return ceil(height) + 24
-        #else
-            return CGFloat(ceilf(height.native) + 24)
-        #endif
+        if indexPath.row == 0 {
+            return 31
+        } else {
+            let message = chat.loadedMessages[indexPath.section][indexPath.row-1]
+            let height = (message.text as NSString).boundingRectWithSize(CGSize(width: 218, height: CGFloat.max), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFontOfSize(messageFontSize)], context: nil).height
+            #if arch(x86_64) || arch(arm64)
+                return ceil(height) + 24
+            #else
+                return CGFloat(ceilf(height.native) + 24)
+            #endif
+        }
     }
 
     // Reserve row selection #CopyMessage
@@ -247,12 +271,19 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         textView.resignFirstResponder()
         textView.becomeFirstResponder()
 
-        chat.loadedMessages += Message(incoming: false, text: textView.text, sentDate: NSDate.date())
+        chat.loadedMessages += [Message(incoming: false, text: textView.text, sentDate: NSDate.date())]
         textView.text = nil
         updateTextViewHeight()
         sendButton.enabled = false
 
-        tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: tableView.numberOfRowsInSection(0), inSection: 0)], withRowAnimation: .Automatic)
+        let lastSection = tableView.numberOfSections()
+        tableView.beginUpdates()
+        tableView.insertSections(NSIndexSet(index: lastSection), withRowAnimation: .Automatic)
+        tableView.insertRowsAtIndexPaths([
+            NSIndexPath(forRow: 0, inSection: lastSection),
+            NSIndexPath(forRow: 1, inSection: lastSection)
+            ], withRowAnimation: .Automatic)
+        tableView.endUpdates()
         tableViewScrollToBottomAnimated(true)
         AudioServicesPlaySystemSound(messageSoundOutgoing)
     }
@@ -283,7 +314,8 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     // 2. Copy text to pasteboard
     func messageCopyTextAction(menuController: UIMenuController) {
-        let selectedMessage = chat.loadedMessages[tableView.indexPathForSelectedRow().row]
+        let selectedIndexPath = tableView.indexPathForSelectedRow()
+        let selectedMessage = chat.loadedMessages[selectedIndexPath.section][selectedIndexPath.row-1]
         UIPasteboard.generalPasteboard().string = selectedMessage.text
     }
     // 3. Deselect row
@@ -297,7 +329,6 @@ func createMessageSoundOutgoing() -> SystemSoundID {
     var soundID: SystemSoundID = 0
     let soundURL = CFBundleCopyResourceURL(CFBundleGetMainBundle(), "MessageOutgoing", "aiff", nil)
     AudioServicesCreateSystemSoundID(soundURL, &soundID)
-    CFRelease(soundURL)
     return soundID
 }
 

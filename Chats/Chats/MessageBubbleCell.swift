@@ -3,7 +3,7 @@ import UIKit
 let incomingTag = 0, outgoingTag = 1
 let bubbleTag = 8
 
-class MessageCell: UITableViewCell {
+class MessageBubbleCell: UITableViewCell {
     let bubbleImageView: UIImageView
     let messageLabel: UILabel
 

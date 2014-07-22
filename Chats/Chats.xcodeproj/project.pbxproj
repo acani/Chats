@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D23EFE56197F053100C575C5 /* MessageSentDateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23EFE55197F053100C575C5 /* MessageSentDateCell.swift */; };
 		D2D24672197C6976000B6317 /* MessageBubble@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D2D24671197C6976000B6317 /* MessageBubble@2x.png */; };
 		D2DEC3A0195B33C20097CB9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC39F195B33C20097CB9D /* AppDelegate.swift */; };
 		D2DEC3A2195B33C20097CB9D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2DEC3A1195B33C20097CB9D /* Images.xcassets */; };
@@ -18,7 +19,7 @@
 		D2DEC3C4195B35390097CB9D /* ChatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC3C3195B35390097CB9D /* ChatsViewController.swift */; };
 		D2DEC3C6195B35440097CB9D /* ChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC3C5195B35440097CB9D /* ChatCell.swift */; };
 		D2DEC3C8195B354F0097CB9D /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC3C7195B354F0097CB9D /* ChatViewController.swift */; };
-		D2DEC3CA195B35560097CB9D /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC3C9195B35560097CB9D /* MessageCell.swift */; };
+		D2DEC3CA195B35560097CB9D /* MessageBubbleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC3C9195B35560097CB9D /* MessageBubbleCell.swift */; };
 		D2DEC3CE195B39290097CB9D /* MessageIncoming.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D2DEC3CC195B39290097CB9D /* MessageIncoming.aiff */; };
 		D2DEC3CF195B39290097CB9D /* MessageOutgoing.aiff in Resources */ = {isa = PBXBuildFile; fileRef = D2DEC3CD195B39290097CB9D /* MessageOutgoing.aiff */; };
 /* End PBXBuildFile section */
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D23EFE55197F053100C575C5 /* MessageSentDateCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSentDateCell.swift; sourceTree = "<group>"; };
 		D29AEE8F1960C79700925449 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		D29AEE911960E14A00925449 /* CREDITS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CREDITS.md; path = ../CREDITS.md; sourceTree = "<group>"; };
 		D29AEE921960F02600925449 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = TODO.md; path = ../TODO.md; sourceTree = "<group>"; };
@@ -52,7 +54,7 @@
 		D2DEC3C3195B35390097CB9D /* ChatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatsViewController.swift; sourceTree = "<group>"; };
 		D2DEC3C5195B35440097CB9D /* ChatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
 		D2DEC3C7195B354F0097CB9D /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
-		D2DEC3C9195B35560097CB9D /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		D2DEC3C9195B35560097CB9D /* MessageBubbleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBubbleCell.swift; sourceTree = "<group>"; };
 		D2DEC3CC195B39290097CB9D /* MessageIncoming.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = MessageIncoming.aiff; sourceTree = "<group>"; };
 		D2DEC3CD195B39290097CB9D /* MessageOutgoing.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = MessageOutgoing.aiff; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -159,7 +161,8 @@
 			isa = PBXGroup;
 			children = (
 				D2DEC3C7195B354F0097CB9D /* ChatViewController.swift */,
-				D2DEC3C9195B35560097CB9D /* MessageCell.swift */,
+				D23EFE55197F053100C575C5 /* MessageSentDateCell.swift */,
+				D2DEC3C9195B35560097CB9D /* MessageBubbleCell.swift */,
 			);
 			name = Chat;
 			sourceTree = "<group>";
@@ -279,10 +282,11 @@
 				D2DEC3C8195B354F0097CB9D /* ChatViewController.swift in Sources */,
 				D2DEC3BF195B34B10097CB9D /* Message.swift in Sources */,
 				D2DEC3B9195B34700097CB9D /* Account.swift in Sources */,
+				D23EFE56197F053100C575C5 /* MessageSentDateCell.swift in Sources */,
 				D2DEC3C6195B35440097CB9D /* ChatCell.swift in Sources */,
 				D2DEC3C4195B35390097CB9D /* ChatsViewController.swift in Sources */,
 				D2DEC3BB195B34A20097CB9D /* User.swift in Sources */,
-				D2DEC3CA195B35560097CB9D /* MessageCell.swift in Sources */,
+				D2DEC3CA195B35560097CB9D /* MessageBubbleCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
