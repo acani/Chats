@@ -39,8 +39,9 @@ Compliments of [uiFaces][7] and these users:
 ## Related
 
 * [JSQMessagesViewController][8]
-* [TextSecure for iOS][9]
-* [Chat - Messaging SDK for iOS][10]
+* [UIBubbleTableView][9]
+* [TextSecure for iOS][10]
+* [Chat - Messaging SDK for iOS][11]
 
 
 [1]: https://github.com/acani/Chats/raw/master/Chats/Chats/Images.xcassets/MessageBubble.imageset/MessageBubble@2x.png
@@ -51,5 +52,6 @@ Compliments of [uiFaces][7] and these users:
 [6]: https://github.com/oovoodev/iOS-SDK-Sample/blob/master/ooVooSample/JSMessagesViewController/Resources/Sounds/message-sent.aiff
 [7]: http://uifaces.com
 [8]: https://github.com/jessesquires/JSQMessagesViewController
-[9]: https://github.com/WhisperSystems/TextSecure-iOS
-[10]: http://www.binpress.com/app/chat-messaging-sdk-for-ios/1644
+[9]: http://alexbarinov.github.io/UIBubbleTableView/
+[10]: https://github.com/WhisperSystems/TextSecure-iOS
+[11]: http://www.binpress.com/app/chat-messaging-sdk-for-ios/1644
