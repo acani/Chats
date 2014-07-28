@@ -71,13 +71,19 @@ class ChatCell: UITableViewCell {
 
     func configureWithChat(chat: Chat) {
         userPictureImageView.image = chat.user.profilePicture
-        if chat.user.name.initials.lengthOfBytesUsingEncoding(NSASCIIStringEncoding) == 0 {
-            userPictureImageView.image = UIImage(named: "ProfilePicture")
-            userNameInitialsLabel.hidden = true
+        
+        if !userPictureImageView.image {
+            if chat.user.name.initials.lengthOfBytesUsingEncoding(NSASCIIStringEncoding) == 0 {
+                userPictureImageView.image = UIImage(named: "ProfilePicture")
+                userNameInitialsLabel.hidden = true
+            } else {
+                userNameInitialsLabel.text = chat.user.name.initials
+                userNameInitialsLabel.hidden = false
+            }
         } else {
-            userNameInitialsLabel.text = chat.user.name.initials
-            userNameInitialsLabel.hidden = false
+            userNameInitialsLabel.hidden = true
         }
+
         userNameLabel.text = chat.user.name
         lastMessageTextLabel.text = chat.lastMessageText
         lastMessageSentDateLabel.text = chat.lastMessageSentDateString
