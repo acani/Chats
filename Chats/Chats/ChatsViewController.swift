@@ -13,6 +13,7 @@ class ChatsViewController: UITableViewController {
 
         let minute: NSTimeInterval = 60, hour = minute * 60, day = hour * 24
         account.chats = [
+            Chat(user: User(name: "中文 日本語 한국인"), lastMessageText: "Empty names or names including non-ASCII characters", lastMessageSentDate: NSDate()),
             Chat(user: User(name: "Ben Lu"), lastMessageText: "Now my initials show up if I don't provide a profile picture :)", lastMessageSentDate: NSDate()),
             Chat(user: User(name: "Angel Rao"), lastMessageText: "6 sounds good :-)", lastMessageSentDate: NSDate()),
             Chat(user: User(name: "Valentine Sanchez"), lastMessageText: "Haha", lastMessageSentDate: NSDate(timeIntervalSinceNow: -minute)),
@@ -38,7 +39,7 @@ class ChatsViewController: UITableViewController {
         
         var index = 2
         for chat in account.chats {
-            if chat.user.name == "Ben Lu" {
+            if chat.user.name == "Ben Lu" || chat.user.name == "中文 日本語 한국인" {
                 continue
             }
             chat.user.profilePicture = UIImage(named: "User\(index++).jpg")
