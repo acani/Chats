@@ -12,8 +12,6 @@ Command to find files: `find /Applications/Xcode.app/ -name *.png`
 
 ## Avatars
 
-Compliments of [uiFaces][7] and these users:
-
 1. http://uifaces.com/mattdipasquale
 2. http://uifaces.com/samihah
 3. http://uifaces.com/walterstephanie
@@ -36,14 +34,15 @@ Compliments of [uiFaces][7] and these users:
 20. http://uifaces.com/cynthiasavard
 21. http://uifaces.com/stushona
 
+Blank Avatar. [User][7] designed by [Lynn Christensen][8] from the [Noun Project][9]
+
+
 ## Related
 
-* [JSQMessagesViewController][8]
-* [UIBubbleTableView][9]
-* [TextSecure for iOS][10]
-* [Chat - Messaging SDK for iOS][11]
-* Profile icon "User" designed by <a href="http://www.thenounproject.com/lynnthemac">Lynn Christensen</a> from the <a href="http://www.thenounproject.com">Noun Project</a>
-
+* [JSQMessagesViewController][10]
+* [UIBubbleTableView][11]
+* [TextSecure for iOS][12]
+* [Chat - Messaging SDK for iOS][13]
 
 
 [1]: https://github.com/acani/Chats/raw/master/Chats/Chats/Images.xcassets/MessageBubble.imageset/MessageBubble@2x.png
@@ -52,8 +51,10 @@ Compliments of [uiFaces][7] and these users:
 [4]: file:///Applications/Xcode.app//Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.1.sdk/System/Library/CoreServices/SpringBoard.app/SIMToolkitSMS.aiff
 [5]: https://github.com/acani/Chats/raw/master/Chats/Chats/Resources/MessageOutgoing.aiff
 [6]: https://github.com/oovoodev/iOS-SDK-Sample/blob/master/ooVooSample/JSMessagesViewController/Resources/Sounds/message-sent.aiff
-[7]: http://uifaces.com
-[8]: https://github.com/jessesquires/JSQMessagesViewController
-[9]: http://alexbarinov.github.io/UIBubbleTableView/
-[10]: https://github.com/WhisperSystems/TextSecure-iOS
-[11]: http://www.binpress.com/app/chat-messaging-sdk-for-ios/1644
+[7]: http://www.thenounproject.com/term/user/4520/
+[8]: http://www.thenounproject.com/lynnthemac
+[9]: http://www.thenounproject.com
+[10]: https://github.com/jessesquires/JSQMessagesViewController
+[11]: http://alexbarinov.github.io/UIBubbleTableView/
+[12]: https://github.com/WhisperSystems/TextSecure-iOS
+[13]: http://www.binpress.com/app/chat-messaging-sdk-for-ios/1644
