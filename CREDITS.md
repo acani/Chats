@@ -42,6 +42,8 @@ Compliments of [uiFaces][7] and these users:
 * [UIBubbleTableView][9]
 * [TextSecure for iOS][10]
 * [Chat - Messaging SDK for iOS][11]
+* Profile icon "User" designed by <a href="http://www.thenounproject.com/lynnthemac">Lynn Christensen</a> from the <a href="http://www.thenounproject.com">Noun Project</a>
+
 
 
 [1]: https://github.com/acani/Chats/raw/master/Chats/Chats/Images.xcassets/MessageBubble.imageset/MessageBubble@2x.png
