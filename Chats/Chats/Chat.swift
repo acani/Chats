@@ -10,7 +10,7 @@ class Chat {
     return formatDate(lastMessageSentDate)
     }
     var loadedMessages = [[Message]]()
-    var unreadMessageCount: UInt = 0 // subtacted from total when read
+    var unreadMessageCount: Int = 0 // subtacted from total when read
     var hasUnloadedMessages = false
     var draft = ""
 

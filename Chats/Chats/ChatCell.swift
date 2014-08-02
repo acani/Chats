@@ -37,8 +37,7 @@ class ChatCell: UITableViewCell {
         userNameInitialsLabel.textColor = UIColor(white: 128/255, alpha: 1)
         userNameInitialsLabel.font = UIFont.systemFontOfSize(22)
         userNameInitialsLabel.textAlignment = .Center
-        userNameInitialsLabel.hidden = true
-        
+
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(userPictureImageView)
         contentView.addSubview(userNameLabel)
@@ -70,8 +69,7 @@ class ChatCell: UITableViewCell {
     }
 
     func configureWithChat(chat: Chat) {
-        userPictureImageView.image = chat.user.profilePicture
-        
+        userPictureImageView.image = UIImage(named: chat.user.pictureName())
         if !userPictureImageView.image {
             if chat.user.name.initials.lengthOfBytesUsingEncoding(NSASCIIStringEncoding) == 0 {
                 userPictureImageView.image = UIImage(named: "ProfilePicture")
@@ -83,7 +81,6 @@ class ChatCell: UITableViewCell {
         } else {
             userNameInitialsLabel.hidden = true
         }
-
         userNameLabel.text = chat.user.name
         lastMessageTextLabel.text = chat.lastMessageText
         lastMessageSentDateLabel.text = chat.lastMessageSentDateString

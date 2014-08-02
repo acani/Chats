@@ -7,6 +7,7 @@
 
 * Add search bar
 * Edit, done, sentDateLabel.x #bug
+* Use KVO to set edit button enabled
 
 ## ChatViewController
 

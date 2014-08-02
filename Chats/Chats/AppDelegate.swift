@@ -1,6 +1,6 @@
 import UIKit
 
-var account = Account(user: User(name: "Matt Di Pasquale"))
+var account = Account(user: User(ID: 1, name: "Matt Di Pasquale"))
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

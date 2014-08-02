@@ -1,15 +1,13 @@
-import UIKit
-
 class User {
+    let ID: Int
     var name: String
-    var profilePicture: UIImage?
-    
-    init(name: String, profilePicture: UIImage?) {
+
+    init(ID: Int, name: String) {
+        self.ID = ID
         self.name = name
-        self.profilePicture = profilePicture;
     }
-    
-    convenience init(name: String) {
-        self.init(name: name, profilePicture: nil)
+
+    func pictureName() -> String {
+        return "User\(ID).jpg"
     }
 }
