@@ -16,7 +16,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     override var inputAccessoryView: UIView! {
     get {
-        if !toolBar {
+        if toolBar == nil {
             toolBar = UIToolbar(frame: CGRectMake(0, 0, 0, toolBarMinHeight-0.5))
 
             textView = InputTextView(frame: CGRectZero)
@@ -59,6 +59,10 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.chat = chat
         super.init(nibName: nil, bundle: nil)
         title = chat.user.name
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func canBecomeFirstResponder() -> Bool {
@@ -182,21 +186,6 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
 
-    // #iOS7 - not needed for #iOS8
-    func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-        if indexPath.row == 0 {
-            return 31
-        } else {
-            let message = chat.loadedMessages[indexPath.section][indexPath.row-1]
-            let height = (message.text as NSString).boundingRectWithSize(CGSize(width: 218, height: CGFloat.max), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName: UIFont.systemFontOfSize(messageFontSize)], context: nil).height
-            #if arch(x86_64) || arch(arm64)
-                return ceil(height) + 24
-            #else
-                return CGFloat(ceilf(height.native) + 24)
-            #endif
-        }
-    }
-
     // Reserve row selection #CopyMessage
     func tableView(tableView: UITableView!, willSelectRowAtIndexPath indexPath: NSIndexPath!) -> NSIndexPath! {
         return nil
@@ -208,7 +197,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 
     func keyboardWillShow(notification: NSNotification) {
-        let userInfo = notification.userInfo
+        let userInfo = notification.userInfo as NSDictionary!
         let frameNew = (userInfo[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
         let insetNewBottom = tableView.convertRect(frameNew, fromView: nil).height
         let insetOld = tableView.contentInset
@@ -238,7 +227,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
 
     func keyboardDidShow(notification: NSNotification) {
-        let userInfo = notification.userInfo
+        let userInfo = notification.userInfo as NSDictionary!
         let frameNew = (userInfo[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
         let insetNewBottom = tableView.convertRect(frameNew, fromView: nil).height
 
@@ -247,7 +236,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.contentInset.bottom = insetNewBottom
         tableView.scrollIndicatorInsets.bottom = insetNewBottom
         // Prevents jump after keyboard dismissal
-        if (self.tableView.tracking || self.tableView.decelerating) {
+        if self.tableView.tracking || self.tableView.decelerating {
             tableView.contentOffset.y = contentOffsetY
         }
     }
@@ -271,7 +260,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         textView.resignFirstResponder()
         textView.becomeFirstResponder()
 
-        chat.loadedMessages += [Message(incoming: false, text: textView.text, sentDate: NSDate.date())]
+        chat.loadedMessages.append([Message(incoming: false, text: textView.text, sentDate: NSDate.date())])
         textView.text = nil
         updateTextViewHeight()
         sendButton.enabled = false
@@ -301,7 +290,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let twoTaps = (gestureRecognizer.numberOfTapsRequired == 2)
         let doubleTap = (twoTaps && gestureRecognizer.state == .Ended)
         let longPress = (!twoTaps && gestureRecognizer.state == .Began)
-        if (doubleTap || longPress) {
+        if doubleTap || longPress {
             let pressedIndexPath = tableView.indexPathForRowAtPoint(gestureRecognizer.locationInView(tableView))
             tableView.selectRowAtIndexPath(pressedIndexPath, animated: false, scrollPosition: .None)
 
@@ -335,7 +324,7 @@ func createMessageSoundOutgoing() -> SystemSoundID {
 // Only show "Copy" when editing `textView` #CopyMessage
 class InputTextView: UITextView {
     override func canPerformAction(action: Selector, withSender sender: AnyObject!) -> Bool {
-        if (delegate as ChatViewController).tableView.indexPathForSelectedRow() {
+        if (delegate as ChatViewController).tableView.indexPathForSelectedRow() != nil {
             return action == "messageCopyTextAction:"
         } else {
             return super.canPerformAction(action, withSender: sender)

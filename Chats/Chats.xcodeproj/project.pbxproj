@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D23EFE56197F053100C575C5 /* MessageSentDateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23EFE55197F053100C575C5 /* MessageSentDateCell.swift */; };
+		D2C0D26F19A519CE00F4B4DD /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC3BA195B34A20097CB9D /* User.swift */; };
 		D2DEC3A0195B33C20097CB9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC39F195B33C20097CB9D /* AppDelegate.swift */; };
 		D2DEC3A2195B33C20097CB9D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2DEC3A1195B33C20097CB9D /* Images.xcassets */; };
 		D2DEC3AE195B33C20097CB9D /* ChatsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC3AD195B33C20097CB9D /* ChatsTests.swift */; };
@@ -290,6 +291,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2C0D26F19A519CE00F4B4DD /* User.swift in Sources */,
 				D2DEC3AE195B33C20097CB9D /* ChatsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -388,7 +390,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = Chats/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -400,7 +401,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				INFOPLIST_FILE = Chats/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

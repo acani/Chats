@@ -10,10 +10,10 @@ class ChatCell: UITableViewCell {
     let lastMessageSentDateLabel: UILabel
     let userNameInitialsLabel: UILabel
     
-    init(style: UITableViewCellStyle, reuseIdentifier: String) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String) {
         let pictureSize: CGFloat = 64
         userPictureImageView = UIImageView(frame: CGRect(x: 8, y: (chatCellHeight-pictureSize)/2, width: pictureSize, height: pictureSize))
-        userPictureImageView.backgroundColor = UIColor(white: 238/255, alpha: 1)
+        userPictureImageView.backgroundColor = UIColor(red: 199/255.0, green: 199/255.0, blue: 204/255.0, alpha: 1)
         userPictureImageView.layer.cornerRadius = pictureSize/2
         userPictureImageView.layer.masksToBounds = true
 
@@ -34,9 +34,9 @@ class ChatCell: UITableViewCell {
         lastMessageSentDateLabel.textColor = lastMessageTextLabel.textColor
 
         userNameInitialsLabel = UILabel(frame: CGRectZero)
-        userNameInitialsLabel.textColor = UIColor(white: 128/255, alpha: 1)
-        userNameInitialsLabel.font = UIFont.systemFontOfSize(22)
+        userNameInitialsLabel.font = UIFont.systemFontOfSize(33)
         userNameInitialsLabel.textAlignment = .Center
+        userNameInitialsLabel.textColor = UIColor.whiteColor()
 
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(userPictureImageView)
@@ -61,39 +61,31 @@ class ChatCell: UITableViewCell {
         contentView.addConstraint(NSLayoutConstraint(item: lastMessageSentDateLabel, attribute: .Baseline, relatedBy: .Equal, toItem: userNameLabel, attribute: .Baseline, multiplier: 1, constant: 0))
         
         userNameInitialsLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
-        userPictureImageView.addConstraint(NSLayoutConstraint(item: userNameInitialsLabel, attribute: .Left, relatedBy: .Equal, toItem: userPictureImageView, attribute: .Left, multiplier: 1, constant: 0))
-        userPictureImageView.addConstraint(NSLayoutConstraint(item: userNameInitialsLabel, attribute: .Right, relatedBy: .Equal, toItem: userPictureImageView, attribute: .Right, multiplier: 1, constant: 0))
-        userPictureImageView.addConstraint(NSLayoutConstraint(item: userNameInitialsLabel, attribute: .Top, relatedBy: .Equal, toItem: userPictureImageView, attribute: .Top, multiplier: 1, constant: 0))
-        userPictureImageView.addConstraint(NSLayoutConstraint(item: userNameInitialsLabel, attribute: .Bottom, relatedBy: .Equal, toItem: userPictureImageView, attribute: .Bottom, multiplier: 1, constant: 0))
+        userPictureImageView.addConstraint(NSLayoutConstraint(item: userNameInitialsLabel, attribute: .CenterX, relatedBy: .Equal, toItem: userPictureImageView, attribute: .CenterX, multiplier: 1, constant: 0))
+        userPictureImageView.addConstraint(NSLayoutConstraint(item: userNameInitialsLabel, attribute: .CenterY, relatedBy: .Equal, toItem: userPictureImageView, attribute: .CenterY, multiplier: 1, constant: -1))
+    }
 
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     func configureWithChat(chat: Chat) {
-        userPictureImageView.image = UIImage(named: chat.user.pictureName())
-        if !userPictureImageView.image {
-            if chat.user.name.initials.lengthOfBytesUsingEncoding(NSASCIIStringEncoding) == 0 {
-                userPictureImageView.image = UIImage(named: "ProfilePicture")
-                userNameInitialsLabel.hidden = true
-            } else {
-                userNameInitialsLabel.text = chat.user.name.initials
+        let user = chat.user
+        userPictureImageView.image = UIImage(named: user.pictureName())
+        if userPictureImageView.image == nil {
+            let initials = user.initials
+            if initials != nil {
+                userNameInitialsLabel.text = initials
                 userNameInitialsLabel.hidden = false
+            } else {
+                userPictureImageView.image = UIImage(named: "User0")
+                userNameInitialsLabel.hidden = true
             }
         } else {
             userNameInitialsLabel.hidden = true
         }
-        userNameLabel.text = chat.user.name
+        userNameLabel.text = user.name
         lastMessageTextLabel.text = chat.lastMessageText
         lastMessageSentDateLabel.text = chat.lastMessageSentDateString
-    }
-}
-
-extension String {
-    var initials: String {
-        get {
-            return "".join(self.componentsSeparatedByString(" ").map {
-                (component: String) -> String in
-                return component.substringToIndex(advance(component.startIndex, 1))
-            })
-        }
     }
 }

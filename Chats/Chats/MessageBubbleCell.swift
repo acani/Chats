@@ -7,7 +7,7 @@ class MessageBubbleCell: UITableViewCell {
     let bubbleImageView: UIImageView
     let messageLabel: UILabel
 
-    init(style: UITableViewCellStyle, reuseIdentifier: String) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String) {
         bubbleImageView = UIImageView(image: bubbleImage.incoming, highlightedImage: bubbleImage.incomingHighlighed)
         bubbleImageView.tag = bubbleTag
         bubbleImageView.userInteractionEnabled = true // #CopyMesage
@@ -34,6 +34,10 @@ class MessageBubbleCell: UITableViewCell {
         bubbleImageView.addConstraint(NSLayoutConstraint(item: messageLabel, attribute: .CenterY, relatedBy: .Equal, toItem: bubbleImageView, attribute: .CenterY, multiplier: 1, constant: -0.5))
         messageLabel.preferredMaxLayoutWidth = 218
         bubbleImageView.addConstraint(NSLayoutConstraint(item: messageLabel, attribute: .Height, relatedBy: .Equal, toItem: bubbleImageView, attribute: .Height, multiplier: 1, constant: -15))
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     func configureWithMessage(message: Message) {

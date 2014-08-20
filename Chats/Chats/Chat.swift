@@ -23,15 +23,9 @@ class Chat {
     func formatDate(date: NSDate) -> String {
         let calendar = NSCalendar.currentCalendar()
 
-        // #iOS7.1
         let last18hours = (-18*60*60 < date.timeIntervalSinceNow)
-        let dateComponents = calendar.components(.EraCalendarUnit | .YearCalendarUnit | .MonthCalendarUnit | .DayCalendarUnit, fromDate: NSDate.date())
-        let isToday = (calendar.dateFromComponents(dateComponents).compare(date) != .OrderedDescending)
-        dateComponents.day -= 7
-        let isLast7Days = (calendar.dateFromComponents(dateComponents).compare(date) == .OrderedAscending)
-//        // #iOS8
-//        let isToday = calendar.isDateInToday(date)
-//        let isLast7Days = (calendar.compareDate(NSDate(timeIntervalSinceNow: -7*24*60*60), toDate: date, toUnitGranularity: .CalendarUnitDay) == NSComparisonResult.OrderedAscending)
+        let isToday = calendar.isDateInToday(date)
+        let isLast7Days = (calendar.compareDate(NSDate(timeIntervalSinceNow: -7*24*60*60), toDate: date, toUnitGranularity: .CalendarUnitDay) == NSComparisonResult.OrderedAscending)
 
         if last18hours || isToday {
             dateFormatter.dateStyle = .NoStyle
