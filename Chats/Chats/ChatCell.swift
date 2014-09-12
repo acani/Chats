@@ -10,7 +10,7 @@ class ChatCell: UITableViewCell {
     let lastMessageSentDateLabel: UILabel
     let userNameInitialsLabel: UILabel
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String) {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         let pictureSize: CGFloat = 64
         userPictureImageView = UIImageView(frame: CGRect(x: 8, y: (chatCellHeight-pictureSize)/2, width: pictureSize, height: pictureSize))
         userPictureImageView.backgroundColor = UIColor(red: 199/255.0, green: 199/255.0, blue: 204/255.0, alpha: 1)
