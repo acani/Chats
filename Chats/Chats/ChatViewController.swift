@@ -33,7 +33,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
             sendButton = UIButton.buttonWithType(.System) as UIButton
             sendButton.enabled = false
-            sendButton.titleLabel.font = UIFont.boldSystemFontOfSize(17)
+            sendButton.titleLabel?.font = UIFont.boldSystemFontOfSize(17)
             sendButton.setTitle("Send", forState: .Normal)
             sendButton.setTitleColor(UIColor(red: 142/255, green: 142/255, blue: 147/255, alpha: 1), forState: .Disabled)
             sendButton.setTitleColor(UIColor(red: 1/255, green: 122/255, blue: 255/255, alpha: 1), forState: .Normal)
@@ -155,11 +155,11 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return chat.loadedMessages.count
     }
 
-    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chat.loadedMessages[section].count + 1 // for sent-date cell
     }
 
-    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
             let cell = tableView.dequeueReusableCellWithIdentifier(NSStringFromClass(MessageSentDateCell), forIndexPath: indexPath) as MessageSentDateCell
             let message = chat.loadedMessages[indexPath.section][0]
@@ -291,12 +291,12 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let doubleTap = (twoTaps && gestureRecognizer.state == .Ended)
         let longPress = (!twoTaps && gestureRecognizer.state == .Began)
         if doubleTap || longPress {
-            let pressedIndexPath = tableView.indexPathForRowAtPoint(gestureRecognizer.locationInView(tableView))
+            let pressedIndexPath = tableView.indexPathForRowAtPoint(gestureRecognizer.locationInView(tableView))!
             tableView.selectRowAtIndexPath(pressedIndexPath, animated: false, scrollPosition: .None)
 
             let menuController = UIMenuController.sharedMenuController()
-            let bubbleImageView = gestureRecognizer.view
-            menuController.setTargetRect(bubbleImageView.frame, inView: bubbleImageView.superview)
+            let bubbleImageView = gestureRecognizer.view!
+            menuController.setTargetRect(bubbleImageView.frame, inView: bubbleImageView.superview!)
             menuController.menuItems = [UIMenuItem(title: "Copy", action: "messageCopyTextAction:")]
             menuController.setMenuVisible(true, animated: true)
         }
@@ -304,12 +304,12 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // 2. Copy text to pasteboard
     func messageCopyTextAction(menuController: UIMenuController) {
         let selectedIndexPath = tableView.indexPathForSelectedRow()
-        let selectedMessage = chat.loadedMessages[selectedIndexPath.section][selectedIndexPath.row-1]
+        let selectedMessage = chat.loadedMessages[selectedIndexPath!.section][selectedIndexPath!.row-1]
         UIPasteboard.generalPasteboard().string = selectedMessage.text
     }
     // 3. Deselect row
     func menuControllerWillHide(notification: NSNotification) {
-        tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow(), animated: false)
+        tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow()!, animated: false)
         (notification.object as UIMenuController).menuItems = nil
     }
 }
