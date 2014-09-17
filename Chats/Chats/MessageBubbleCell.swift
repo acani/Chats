@@ -101,7 +101,7 @@ func bubbleImageMake() -> (incoming: UIImage, incomingHighlighed: UIImage, outgo
 
 func coloredImage(image: UIImage, red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) -> UIImage! {
     let rect = CGRect(origin: CGPointZero, size: image.size)
-    UIGraphicsBeginImageContext(image.size)
+    UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
     let context = UIGraphicsGetCurrentContext()
     image.drawInRect(rect)
     CGContextSetRGBFillColor(context, red, green, blue, alpha)
