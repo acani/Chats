@@ -15,6 +15,7 @@ class MessageBubbleCell: UITableViewCell {
         messageLabel = UILabel(frame: CGRectZero)
         messageLabel.font = UIFont.systemFontOfSize(messageFontSize)
         messageLabel.numberOfLines = 0
+        messageLabel.textAlignment = NSTextAlignment.Center
         messageLabel.userInteractionEnabled = false   // #CopyMessage
 
         super.init(style: .Default, reuseIdentifier: reuseIdentifier)
