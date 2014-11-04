@@ -80,7 +80,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
             [
                 Message(incoming: true, text: "Hey, would you like to spend some time together tonight and work on Acani?", sentDate: NSDate(timeIntervalSinceNow: -33)),
                 Message(incoming: false, text: "Sure, I'd love to. How's 6 PM?", sentDate: NSDate(timeIntervalSinceNow: -19)),
-                Message(incoming: true, text: "6 sounds good :-)", sentDate: NSDate.date())
+                Message(incoming: true, text: "6 sounds good :-)", sentDate: NSDate())
             ]
         ]
 
@@ -260,7 +260,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         textView.resignFirstResponder()
         textView.becomeFirstResponder()
 
-        chat.loadedMessages.append([Message(incoming: false, text: textView.text, sentDate: NSDate.date())])
+        chat.loadedMessages.append([Message(incoming: false, text: textView.text, sentDate: NSDate())])
         textView.text = nil
         updateTextViewHeight()
         sendButton.enabled = false
