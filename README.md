@@ -1,4 +1,4 @@
-# Chats by Acani
+# Acani Chats
 
 ## iOS Messages UI
 
