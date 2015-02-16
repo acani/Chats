@@ -85,7 +85,7 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
         ]
 
         let whiteColor = UIColor.whiteColor()
-        view.backgroundColor = whiteColor // fixes push animation
+        view.backgroundColor = whiteColor // smooths push animation
 
         tableView = UITableView(frame: view.bounds, style: .Plain)
         tableView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
