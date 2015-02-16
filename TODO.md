@@ -1,7 +1,6 @@
 # Chats
 
 * Add app icon
-* Add launch image
 
 ## ChatsViewController
 
