@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D23EFE56197F053100C575C5 /* MessageSentDateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23EFE55197F053100C575C5 /* MessageSentDateCell.swift */; };
+		D277A9761A9277C800924B86 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D277A9751A9277C800924B86 /* LaunchScreen.storyboard */; };
 		D2C0D26F19A519CE00F4B4DD /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC3BA195B34A20097CB9D /* User.swift */; };
 		D2DEC3A0195B33C20097CB9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DEC39F195B33C20097CB9D /* AppDelegate.swift */; };
 		D2DEC3A2195B33C20097CB9D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2DEC3A1195B33C20097CB9D /* Images.xcassets */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		D23EFE55197F053100C575C5 /* MessageSentDateCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSentDateCell.swift; sourceTree = "<group>"; };
+		D277A9751A9277C800924B86 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D29AEE8F1960C79700925449 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		D29AEE911960E14A00925449 /* CREDITS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CREDITS.md; path = ../CREDITS.md; sourceTree = "<group>"; };
 		D29AEE921960F02600925449 /* TODO.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = TODO.md; path = ../TODO.md; sourceTree = "<group>"; };
@@ -104,7 +106,6 @@
 				D2DEC3C0195B34ED0097CB9D /* Chats */,
 				D2DEC3C1195B34F10097CB9D /* Chat */,
 				D2DEC3B7195B34580097CB9D /* Models */,
-				D2DEC3A1195B33C20097CB9D /* Images.xcassets */,
 				D2DEC3CB195B39290097CB9D /* Resources */,
 				D2DEC39D195B33C20097CB9D /* Supporting Files */,
 			);
@@ -169,10 +170,12 @@
 		D2DEC3CB195B39290097CB9D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				D277A9751A9277C800924B86 /* LaunchScreen.storyboard */,
+				D2DEC3A1195B33C20097CB9D /* Images.xcassets */,
 				D2DEC3CC195B39290097CB9D /* MessageIncoming.aiff */,
 				D2DEC3CD195B39290097CB9D /* MessageOutgoing.aiff */,
 			);
-			path = Resources;
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -255,6 +258,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2DEC3CE195B39290097CB9D /* MessageIncoming.aiff in Resources */,
+				D277A9761A9277C800924B86 /* LaunchScreen.storyboard in Resources */,
 				D2DEC3CF195B39290097CB9D /* MessageOutgoing.aiff in Resources */,
 				D2DEC3A2195B33C20097CB9D /* Images.xcassets in Resources */,
 			);
