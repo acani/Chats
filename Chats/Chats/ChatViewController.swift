@@ -309,7 +309,9 @@ class ChatViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     // 3. Deselect row
     func menuControllerWillHide(notification: NSNotification) {
-        tableView.deselectRowAtIndexPath(tableView.indexPathForSelectedRow()!, animated: false)
+        if let selectedIndexPath = tableView.indexPathForSelectedRow() {
+            tableView.deselectRowAtIndexPath(selectedIndexPath, animated: false)
+        }
         (notification.object as UIMenuController).menuItems = nil
     }
 }
