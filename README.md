@@ -1,8 +1,8 @@
 # Chats
 
-An umbrella project
+Messaging app example
 
-## Components
+Be sure to `git clone --recursive`.
 
 ### Clients
 
@@ -13,13 +13,13 @@ An umbrella project
 * [Chats-Server-REST][2]
 
 
-## Demo Flow
+## Explore
 
 1. Sign up
-    * Entor phone number
+    * Enter phone number
     * Verify phone number
     * Fill out profile
-        * picture
+        * picture (incomplete)
         * first name
         * last name
 2. Log out
@@ -35,19 +35,25 @@ Accounts may be deleted arbitrarily.
 
 * [Passwordless Authentication][3]
 * [WhatsApp][4]
-* [TapTalk][5]
-* [Snapchat][6]
-* [Uber][7]
-* iOS Messages
+    * [WhatsApp Onboarding Flow][5]
+    * [How WhatsApp Onboards New Users][6]
+* [TapTalk][7]
+* [Snapchat][8]
+* [Uber][9]
+* [iOS Messages][10]
 
-This project is released under the [Unlicense][8].
+This project, excluding [works credited][11], is released under the [Unlicense][12].
 
 
-  [1]: https://github.com/acani/Chats
+  [1]: https://github.com/acani/Chats-iPhone
   [2]: https://github.com/acani/Chats-Server-REST
   [3]: http://passwordless.org/
   [4]: https://www.whatsapp.com
-  [5]: https://www.taptalk.me
-  [6]: https://www.snapchat.com
-  [7]: https://www.uber.com
-  [8]: http://unlicense.org
+  [5]: http://sandimac.com/post/72007846754/whatsapp-onboarding-flow
+  [6]: https://www.useronboard.com/how-whatsapp-onboards-new-users/
+  [7]: https://www.taptalk.me
+  [8]: https://www.snapchat.com
+  [9]: https://www.uber.com
+  [10]: https://www.apple.com/ios/whats-new/messages/
+  [11]: https://github.com/acani/Chats-iPhone/blob/master/CREDITS.md
+  [12]: http://unlicense.org
