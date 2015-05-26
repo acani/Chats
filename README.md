@@ -1,19 +1,14 @@
-# Chats
-
-Messaging app example
-
-Be sure to `git clone --recursive`.
-
-### Clients
+#### Clients
 
 * [Chats-iPhone][1]
+* [Chats-Android][2]
+* [Chats-Web][3]
 
-### Servers
+#### Servers
 
-* [Chats-Server-REST][2]
+* [Chats-Server-REST][4]
 
-
-## Explore
+#### Explore
 
 1. Sign up
     * Enter phone number
@@ -30,30 +25,31 @@ Be sure to `git clone --recursive`.
 
 Accounts may be deleted arbitrarily.
 
+#### Inspiration
 
-## Inspiration
+* [Passwordless Authentication][5]
+* [WhatsApp][6]
+    * [WhatsApp Onboarding Flow][7]
+    * [How WhatsApp Onboards New Users][8]
+* [TapTalk][9]
+* [Snapchat][10]
+* [Uber][11]
+* [iOS Messages][12]
 
-* [Passwordless Authentication][3]
-* [WhatsApp][4]
-    * [WhatsApp Onboarding Flow][5]
-    * [How WhatsApp Onboards New Users][6]
-* [TapTalk][7]
-* [Snapchat][8]
-* [Uber][9]
-* [iOS Messages][10]
-
-This project, excluding [works credited][11], is released under the [Unlicense][12].
+This project, excluding [works credited][13], is released under the [Unlicense][14].
 
 
   [1]: https://github.com/acani/Chats-iPhone
-  [2]: https://github.com/acani/Chats-Server-REST
-  [3]: http://passwordless.org/
-  [4]: https://www.whatsapp.com
-  [5]: http://sandimac.com/post/72007846754/whatsapp-onboarding-flow
-  [6]: https://www.useronboard.com/how-whatsapp-onboards-new-users/
-  [7]: https://www.taptalk.me
-  [8]: https://www.snapchat.com
-  [9]: https://www.uber.com
-  [10]: https://www.apple.com/ios/whats-new/messages/
-  [11]: https://github.com/acani/Chats-iPhone/blob/master/CREDITS.md
-  [12]: http://unlicense.org
+  [2]: https://github.com/acani/Chats/issues/49
+  [3]: https://github.com/acani/Chats/issues/50
+  [4]: https://github.com/acani/Chats-Server-REST
+  [5]: http://passwordless.org/
+  [6]: https://www.whatsapp.com
+  [7]: http://sandimac.com/post/72007846754/whatsapp-onboarding-flow
+  [8]: https://www.useronboard.com/how-whatsapp-onboards-new-users/
+  [9]: https://www.taptalk.me
+  [10]: https://www.snapchat.com
+  [11]: https://www.uber.com
+  [12]: https://www.apple.com/ios/whats-new/messages/
+  [13]: https://github.com/acani/Chats-iPhone/blob/master/CREDITS.md
+  [14]: http://unlicense.org
