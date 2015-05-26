@@ -1,12 +1,12 @@
 #### Clients
 
-* [Chats-iPhone][1]
-* [Chats-Android][2]
-* [Chats-Web][3]
+* [iPhone][1]
+* [Android][2]
+* [Web][3]
 
 #### Servers
 
-* [Chats-Server-REST][4]
+* [REST][4]
 
 #### Explore
 
