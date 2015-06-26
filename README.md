@@ -2,9 +2,9 @@
 
 Open-Source Native iOS Messages App
 
-Acani Chats is an [instant messaging][1] [social application][2]. Use it as an example for building an app that requires user accounts, profiles, messaging, etc.
-
 ![iPhone Client Screenshots][3]
+
+Acani Chats is an [instant messaging][1] [social application][2]. Use it as an example for building an app that requires user accounts, profiles, messaging, etc.
 
 
 ## Instructions for Running the iPhone app on OS X
