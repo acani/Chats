@@ -1,6 +1,0 @@
-DROP DATABASE IF EXISTS chats;
-CREATE DATABASE chats;
-
-\c chats
-
-CREATE EXTENSION "uuid-ossp";

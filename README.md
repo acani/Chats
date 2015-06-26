@@ -1,12 +1,13 @@
 # Acani Chats
 
-Acani Chats is an [instant messaging][1] [social application][2]. Use it as an example for building an app that requires user accounts, profiles, communication, etc.
+Open-Source Native iOS Messages App
+
+Acani Chats is an [instant messaging][1] [social application][2]. Use it as an example for building an app that requires user accounts, profiles, messaging, etc.
+
+![iPhone Client Screenshots][3]
 
 
-![Screenshots][3]
-
-
-## Instructions for OS X
+## Instructions for Running the iPhone app on OS X
 
 1. Download & install [Xcode 6.3.2 from the App Store][4]
 
@@ -18,17 +19,21 @@ Acani Chats is an [instant messaging][1] [social application][2]. Use it as an e
 
 Note: User data (e.g., phone number, first & last names, email address, etc.) are sent over SSL to [Heroku][5], stored with [PostgreSQL][6], and may be deleted at anytime for any reason.
 
+For more information, check out the [wiki][7].
+
 
 ## License
 
-This project, excluding [works credited][7], are released under the [Unlicense][98].
+This project, including its [components][8] and excluding [works credited][9], is released under the [Unlicense][10].
 
 
   [1]: https://en.wikipedia.org/wiki/Instant_messaging
   [2]: https://en.wikipedia.org/wiki/Social_software
-  [3]: Documents/iPhone-Screenshots.gif
+  [3]: Documents/iPhone-Client-Screenshots.gif
   [4]: http://itunes.apple.com/us/app/xcode/id497799835?ls=1&mt=12
   [5]: https://www.heroku.com
   [6]: http://www.postgresql.org
-  [7]: https://github.com/acani/Chats/blob/master/CREDITS.md
-  [8]: http://unlicense.org
+  [7]: https://github.com/acani/Chats/wiki
+  [8]: https://github.com/acani/Chats/wiki/Components
+  [9]: https://github.com/acani/Chats/wiki/Credits
+  [10]: http://unlicense.org
