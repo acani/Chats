@@ -1,55 +1,34 @@
-#### Clients
+# Acani Chats
 
-* [iPhone][1]
-* [Android][2]
-* [Web][3]
-
-#### Servers
-
-* [REST][4]
-
-#### Explore
-
-1. Sign up
-    * Enter phone number
-    * Verify phone number
-    * Fill out profile
-        * picture (incomplete)
-        * first name
-        * last name
-2. Log out
-3. Log in
-    * Enter phone number
-    * Verify phone number
-4. Delete account
-
-Accounts may be deleted arbitrarily.
-
-#### Inspiration
-
-* [Passwordless Authentication][5]
-* [WhatsApp][6]
-    * [WhatsApp Onboarding Flow][7]
-    * [How WhatsApp Onboards New Users][8]
-* [TapTalk][9]
-* [Snapchat][10]
-* [Uber][11]
-* [iOS Messages][12]
-
-This project, excluding [works credited][13], is released under the [Unlicense][14].
+Acani Chats is an [instant messaging][1] [social application][2]. Use it as an example for building an app that requires user accounts, profiles, communication, etc.
 
 
-  [1]: https://github.com/acani/Chats-iPhone
-  [2]: https://github.com/acani/Chats/issues/49
-  [3]: https://github.com/acani/Chats/issues/50
-  [4]: https://github.com/acani/Chats-Server-REST
-  [5]: http://passwordless.org/
-  [6]: https://www.whatsapp.com
-  [7]: http://sandimac.com/post/72007846754/whatsapp-onboarding-flow
-  [8]: https://www.useronboard.com/how-whatsapp-onboards-new-users/
-  [9]: https://www.taptalk.me
-  [10]: https://www.snapchat.com
-  [11]: https://www.uber.com
-  [12]: https://www.apple.com/ios/whats-new/messages/
-  [13]: https://github.com/acani/Chats-iPhone/blob/master/CREDITS.md
-  [14]: http://unlicense.org
+![Screenshots][3]
+
+
+## Instructions for OS X
+
+1. Download & install [Xcode 6.3.2 from the App Store][4]
+
+2. Download this project, including its submodules
+
+        git clone --recursive git@github.com:acani/Chats.git
+
+3. Open `Clients/iPhone/Chats.xcodeproj` and press Command-R to run the app
+
+Note: User data (e.g., phone number, first & last names, email address, etc.) are sent over SSL to [Heroku][5], stored with [PostgreSQL][6], and may be deleted at anytime for any reason.
+
+
+## License
+
+This project, excluding [works credited][7], are released under the [Unlicense][98].
+
+
+  [1]: https://en.wikipedia.org/wiki/Instant_messaging
+  [2]: https://en.wikipedia.org/wiki/Social_software
+  [3]: Documents/iPhone-Screenshots.gif
+  [4]: http://itunes.apple.com/us/app/xcode/id497799835?ls=1&mt=12
+  [5]: https://www.heroku.com
+  [6]: http://www.postgresql.org
+  [7]: https://github.com/acani/Chats/blob/master/CREDITS.md
+  [8]: http://unlicense.org

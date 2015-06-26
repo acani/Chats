@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Matt Di Pasquale | Welcome!</title>
+</head>
+<body>
+<form action="<%= post['url'] %>" method="post" enctype="multipart/form-data">
+  <% post['fields'].each do |name, value| -%>
+  <input type="hidden" name="<%= name %>" value="<%= value %>">
+  <% end -%>
+  <p><input type="file" name="file"></p>
+  <p><button type=submit>Submit</button></p>
+</form>
+</body>
+</html>

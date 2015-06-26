@@ -1,6 +1,3 @@
-[submodule "Clients/iPhone"]
-	path = Clients/iPhone
-	url = git@github.com:acani/Chats-iPhone.git
-[submodule "Servers/REST"]
-	path = Servers/REST
-	url = git@github.com:acani/Chats-Server-REST.git
+[submodule "Clients/iPhone/Libraries/UIButtonBackgroundColor"]
+	path = Clients/iPhone/Libraries/UIButtonBackgroundColor
+	url = git@github.com:acani/UIButtonBackgroundColor.git

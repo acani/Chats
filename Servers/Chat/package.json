@@ -1,0 +1,10 @@
+{
+  "name": "acani-chats",
+  "version": "0.0.0",
+  "license": "Unlicense",
+  "repository": "acani/Chats",
+  "dependencies": {
+    "pg": "",
+    "ws": ""
+  }
+}
