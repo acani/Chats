@@ -1,0 +1,3 @@
+database: postgres -D /usr/local/var/postgres
+rest: cd REST && bundle exec puma
+chat: cd Chat && node server.js
