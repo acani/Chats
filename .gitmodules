@@ -1,6 +1,3 @@
-[submodule "Servers/Database"]
-	path = Servers/Database
-	url = git@github.com:acani/Chats-Database-Server.git
 [submodule "Servers/REST"]
 	path = Servers/REST
 	url = git@github.com:acani/Chats-REST-Server.git

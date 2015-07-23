@@ -1,0 +1,23 @@
+task :psql do
+  sh "psql postgres -f chats.sql"
+  run_psql('functions', 'helpers')
+  ['tables', 'functions'].each do |dir|
+    run_psql_each(dir, [
+      'codes',
+      'keys',
+      'users',
+      'sessions'
+    ])
+  end
+  run_psql('functions', 'me')
+end
+
+# Helpers
+
+def run_psql(*strings)
+  sh "psql chats -f #{File.join(strings)}.sql"
+end
+
+def run_psql_each(dirname, filenames)
+  filenames.each { |f| run_psql(dirname, f) }
+end
