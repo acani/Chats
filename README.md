@@ -29,7 +29,7 @@ This project, including its [components][8] and excluding [works credited][9], i
 
   [1]: https://en.wikipedia.org/wiki/Instant_messaging
   [2]: https://en.wikipedia.org/wiki/Social_software
-  [3]: Documents/iPhone-Client-Screenshots.gif
+  [3]: Documents/iPhone-Client-Screenshots/iPhone-Client-Screenshots.gif
   [4]: http://itunes.apple.com/us/app/xcode/id497799835?ls=1&mt=12
   [5]: https://www.heroku.com
   [6]: http://www.postgresql.org

@@ -1,9 +1,7 @@
-\c chats
-
 -- Get user with user_id & session_id
-CREATE FUNCTION me_get(bigint, uuid) RETURNS TABLE(u bigint, p char(32), f varchar(50), l varchar(50), m char(10)) AS
+CREATE FUNCTION me_get(bigint, uuid) RETURNS TABLE(u bigint, f varchar(50), l varchar(50), e varchar(254)) AS
 $$
-    SELECT u.id, strip_hyphens(picture_id), first_name, last_name, phone
+    SELECT u.id, first_name, last_name, email
     FROM users u, sessions s
     WHERE u.id = $1
     AND s.user_id = u.id
@@ -11,10 +9,11 @@ $$
 $$
 LANGUAGE SQL;
 
--- Patch user first_name, last_name with user_id & session_id
+-- Patch user first_name & last_name with user_id & session_id
 CREATE FUNCTION me_patch(bigint, uuid, varchar(50), varchar(50)) RETURNS SETOF boolean AS
 $$
     WITH s AS (
+        -- Authenticate user
         SELECT 1
         FROM sessions
         WHERE user_id = $1

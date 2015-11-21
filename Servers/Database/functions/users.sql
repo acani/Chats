@@ -1,33 +1,38 @@
-\c chats
-
 -- Get all users
-CREATE FUNCTION users_get() RETURNS TABLE(u bigint, p char(32), f varchar(50), l varchar(50)) AS
+CREATE FUNCTION users_get() RETURNS TABLE(u bigint, f varchar(50), l varchar(50)) AS
 $$
-    SELECT id, strip_hyphens(picture_id), first_name, last_name
+    SELECT id, first_name, last_name
     FROM users
     LIMIT 20;
 $$
 LANGUAGE SQL STABLE;
 
--- Sign up: Create user & session with phone, key, first_name, last_name, and email
-CREATE FUNCTION users_post(char(10), uuid, varchar(50), varchar(50), varchar(254)) RETURNS SETOF bigint AS
+-- Sign up: Create user & session with email & code
+CREATE FUNCTION users_post(varchar(254), smallint) RETURNS TABLE(u bigint, s char(32)) AS
 $$
     WITH d AS (
-        -- Delete matching phone & key
-        DELETE FROM keys
-        WHERE phone = $1
-        AND key = $2
-        RETURNING key
-    ), u AS (
-        -- Create user with phone, first_name, and last_name
-        INSERT INTO users (phone, first_name, last_name, email)
-        SELECT $1, $3, $4, $5
+        -- Delete matching email & code
+        DELETE FROM signup
+        WHERE email = $1
+        AND code = $2
+        RETURNING first_name, last_name, created_at
+    ), s AS (
+        -- Confirm that code is still fresh
+        SELECT 1
         FROM d
+        WHERE age(now(), d.created_at) < '3 minutes'
+    ), u AS (
+        -- Create user with first_name, last_name, and email
+        INSERT INTO users (first_name, last_name, email)
+        SELECT first_name, last_name, $1
+        FROM d
+        WHERE EXISTS (SELECT 1 FROM s)
         RETURNING id
     )
-    -- Create session with user_id & id
+    -- Create session with user_id
     INSERT INTO sessions
-    SELECT id, key FROM u, d
-    RETURNING user_id;
+    SELECT id FROM u
+    WHERE EXISTS (SELECT 1 FROM u)
+    RETURNING user_id, strip_hyphens(id);
 $$
 LANGUAGE SQL;

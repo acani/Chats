@@ -1,5 +1,3 @@
-\c chats
-
 -- Strip hyphens ('-') from uuid
 CREATE FUNCTION strip_hyphens(uuid) RETURNS char(32) AS
 $$
