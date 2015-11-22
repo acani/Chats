@@ -15,7 +15,7 @@ Acani Chats is an [instant messaging][1] [social application][2]. Use it as an e
 
 3. Open `Clients/iPhone/Chats.xcodeproj` and press Command-R to run the app
 
-Note: User data (e.g., phone number, first & last names, email address, etc.) are sent over SSL to [Heroku][5], stored with [PostgreSQL][6], and may be deleted at anytime for any reason.
+Note: User data (e.g., first & last names, email address, etc.) are sent over SSL to [Heroku][5], stored with [PostgreSQL][6], and may be deleted at anytime for any reason.
 
 For more information, check out the [wiki][7].
 
