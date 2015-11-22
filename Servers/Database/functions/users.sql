@@ -20,7 +20,7 @@ $$
         -- Confirm that code is still fresh
         SELECT 1
         FROM d
-        WHERE age(now(), d.created_at) < '3 minutes'
+        WHERE age(now(), d.created_at) < '10 minutes'
     ), u AS (
         -- Create user with first_name, last_name, and email
         INSERT INTO users (first_name, last_name, email)

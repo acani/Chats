@@ -20,7 +20,7 @@ $$
         SELECT id
         FROM users, d
         WHERE EXISTS (SELECT 1 FROM d)
-        AND age(now(), d.created_at) < '3 minutes'
+        AND age(now(), d.created_at) < '10 minutes'
         AND lower(email) = lower($1)
     ), g AS (
         -- Get session_id with user_id
