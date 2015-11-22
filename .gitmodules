@@ -1,6 +1,6 @@
 [submodule "Servers/REST"]
 	path = Servers/REST
-	url = git://github.com/github.com:acani/Chats-REST-Server.git
+	url = git://github.com/acani/Chats-REST-Server.git
 [submodule "Servers/Chat"]
 	path = Servers/Chat
 	url = git://github.com/acani/Chats-Chat-Server.git
