@@ -9,7 +9,7 @@ Acani Chats is an [instant messaging][1] [social application][2]. Use it as an e
 
 ## Instructions for Running the iPhone app on OS X
 
-1. Download & install [Xcode 6.3.2 from the App Store][4]
+1. Download & install the [latest version of Xcode from the App Store][4]
 
 2. Download this project, including its submodules
 
