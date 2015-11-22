@@ -1,15 +1,15 @@
 [submodule "Servers/REST"]
 	path = Servers/REST
-	url = git@github.com:acani/Chats-REST-Server.git
+	url = git://github.com/github.com:acani/Chats-REST-Server.git
 [submodule "Servers/Chat"]
 	path = Servers/Chat
-	url = git@github.com:acani/Chats-Chat-Server.git
+	url = git://github.com/acani/Chats-Chat-Server.git
 [submodule "Clients/iPhone"]
 	path = Clients/iPhone
-	url = git@github.com:acani/Chats-iPhone-Client.git
+	url = git://github.com/acani/Chats-iPhone-Client.git
 [submodule "Clients/Android"]
 	path = Clients/Android
-	url = git@github.com:acani/Chats-Android-Client.git
+	url = git://github.com/acani/Chats-Android-Client.git
 [submodule "Clients/Web"]
 	path = Clients/Web
-	url = git@github.com:acani/Chats-Web-Client.git
+	url = git://github.com/acani/Chats-Web-Client.git
