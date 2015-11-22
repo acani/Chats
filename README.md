@@ -11,9 +11,7 @@ Acani Chats is an [instant messaging][1] [social application][2]. Use it as an e
 
 1. Download & install the [latest version of Xcode from the App Store][4]
 
-2. Download this project, including its submodules
-
-        git clone --recursive git@github.com:acani/Chats.git
+2. Clone this project and its submodules with `git clone --recursive`
 
 3. Open `Clients/iPhone/Chats.xcodeproj` and press Command-R to run the app
 
