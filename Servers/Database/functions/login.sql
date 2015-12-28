@@ -8,7 +8,7 @@ $$
         WHERE lower(email) = lower($1)
     ), u AS (
         -- Update login code if exists
-        UPDATE login c
+        UPDATE login
         SET code = DEFAULT, created_at = DEFAULT
         WHERE EXISTS (SELECT 1 FROM s)
         AND email = $1

@@ -8,7 +8,7 @@ $$
         WHERE lower(email) = lower($3)
     ), u AS (
         -- Update signup code if exists
-        UPDATE signup c
+        UPDATE signup
         SET first_name = $1, last_name = $2, code = DEFAULT, created_at = DEFAULT
         WHERE NOT EXISTS (SELECT 1 FROM s)
         AND email = $3
