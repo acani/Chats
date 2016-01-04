@@ -11,7 +11,7 @@ $$
         UPDATE login
         SET code = DEFAULT, created_at = DEFAULT
         WHERE EXISTS (SELECT 1 FROM s)
-        AND email = $1
+        AND lower(email) = lower($1)
         RETURNING code
     ), i AS (
         -- Else, insert login code

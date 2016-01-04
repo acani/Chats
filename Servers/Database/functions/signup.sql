@@ -11,7 +11,7 @@ $$
         UPDATE signup
         SET first_name = $1, last_name = $2, code = DEFAULT, created_at = DEFAULT
         WHERE NOT EXISTS (SELECT 1 FROM s)
-        AND email = $3
+        AND lower(email) = lower($3)
         RETURNING code
     ), i AS (
         -- Else, insert signup code

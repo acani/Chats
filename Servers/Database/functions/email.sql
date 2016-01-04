@@ -9,12 +9,12 @@ $$
         AND id = $2
     ), s AS (
         -- Check if user with email already exists
-        SELECT -1::smallint as e
+        SELECT (CASE WHEN id = $1 THEN -1 ELSE -2 END)::smallint as e
         FROM users
         WHERE EXISTS (SELECT 1 FROM a)
         AND lower(email) = lower($3)
     ), u AS (
-        -- Update email code if not exists
+        -- Update email code if exists
         UPDATE email
         SET email = $3, code = DEFAULT, created_at = DEFAULT
         WHERE EXISTS (SELECT 1 FROM a)
@@ -36,7 +36,7 @@ $$
 LANGUAGE SQL;
 
 -- Update email with email & code
-CREATE FUNCTION email_put(varchar(254), smallint) RETURNS SETOF boolean AS
+CREATE FUNCTION email_put(varchar(254), smallint) RETURNS SETOF varchar(254) AS
 $$
     WITH d AS (
         -- Verify email code and then delete
@@ -46,11 +46,12 @@ $$
         RETURNING user_id, created_at
     )
     -- Update user's email
-    UPDATE users
+    UPDATE users AS u
     SET email = $1
-    FROM d
+    FROM d, users AS old
     WHERE age(now(), d.created_at) < '10 minutes'
-    AND id = user_id
-    RETURNING TRUE;
+    AND u.id = old.id
+    AND u.id = d.user_id
+    RETURNING old.email;
 $$
 LANGUAGE SQL;
