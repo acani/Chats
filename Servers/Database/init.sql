@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS acanichats;
-CREATE DATABASE acanichats;
+DROP DATABASE IF EXISTS acani_chats_:env;
+CREATE DATABASE acani_chats_:env;
 
-\c acanichats
+\c acani_chats_:env
 
 CREATE EXTENSION "uuid-ossp";
