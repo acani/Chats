@@ -1,4 +1,0 @@
-database: postgres -D /usr/local/var/postgres
-rest: cd REST && bundle exec puma -C config/puma_development.rb
-chat: cd Chat && node server.js
-mock: cd REST/test/servers && puma mailgun_mock_server.ru
